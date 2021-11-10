@@ -12,11 +12,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class Ui {
-    private Service service;
+public class Ui implements AutoCloseable {
+    private final Service service;
+    private final BufferedReader inputReader;
 
     public Ui(Service service) {
         this.service = service;
+        inputReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     /**
@@ -36,17 +38,16 @@ public class Ui {
         System.out.println("9.The most sociable community");
         System.out.println("10.Print all friendships");
         System.out.println("Select command:");
-
     }
 
     /**
      * ui function to add users
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void addUserUi(BufferedReader inputReader) throws IOException {
+    private void addUserUi() throws IOException {
         //System.out.println("id=");
-       // Long id = Long.parseLong(inputReader.readLine());
+        // Long id = Long.parseLong(inputReader.readLine());
         System.out.println("firstName=");
         String firstName = inputReader.readLine();
         System.out.println("lastName=");
@@ -55,12 +56,13 @@ public class Ui {
         if (result != null)
             System.out.println("The user already exists!");
     }
+
     /**
      * ui function to update users
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void updateUserUi(BufferedReader inputReader) throws IOException {
+    private void updateUserUi() throws IOException {
         System.out.println("id=");
         Long id = Long.parseLong(inputReader.readLine());
         System.out.println("firstName=");
@@ -74,10 +76,10 @@ public class Ui {
 
     /**
      * ui function to delete users
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void deleteUserUi(BufferedReader inputReader) throws IOException {
+    private void deleteUserUi() throws IOException {
         System.out.println("id=");
         Long id = Long.parseLong(inputReader.readLine());
         User result = service.deleteUser(id);
@@ -85,12 +87,13 @@ public class Ui {
             System.out.println("The user with id=" + id + " does not exist!");
 
     }
+
     /**
      * ui function to find users
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void findUserUi(BufferedReader inputReader) throws IOException {
+    private void findUserUi() throws IOException {
         System.out.println("id=");
         Long id = Long.parseLong(inputReader.readLine());
         User result = service.findUser(id);
@@ -100,7 +103,6 @@ public class Ui {
 
     /**
      * ui function to print the users
-     *
      */
     private void getAllUsersUI() {
         for (User user : service.getAllUsers().values())
@@ -109,10 +111,10 @@ public class Ui {
 
     /**
      * ui function to add a friendship
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void addFriendshipUi(BufferedReader inputReader) throws IOException {
+    private void addFriendshipUi() throws IOException {
         System.out.println("id user=");
         Long idUser = Long.parseLong(inputReader.readLine());
         System.out.println("id new friend=");
@@ -124,10 +126,10 @@ public class Ui {
 
     /**
      * ui function to delete a friendship
-     * @param inputReader buffered reader to read from console
+     *
      * @throws IOException if the readline() fails
      */
-    private void deleteFriendshipUi(BufferedReader inputReader) throws IOException {
+    private void deleteFriendshipUi() throws IOException {
         System.out.println("id user1=");
         Long idUser = Long.parseLong(inputReader.readLine());
         System.out.println("id user2=");
@@ -155,11 +157,12 @@ public class Ui {
             System.out.println(user);
         }
     }
+
     /**
      * ui function to print all the friendships
      */
-    private void printAllFriendships(){
-        for(Friendship friendship: service.getAllFriendships())
+    private void printAllFriendships() {
+        for (Friendship friendship : service.getAllFriendships())
             System.out.println(friendship);
     }
 
@@ -167,65 +170,59 @@ public class Ui {
      * starts the application
      */
     public void start() {
-
-        try (BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in))) {
-            while (true) {
-                printMenu();
-
-                try {
-                    String command = inputReader.readLine();
-                    switch (command) {
-                        case "0":
-                            return;
-                        case "1":
-                            addUserUi(inputReader);
-                            break;
-                        case "2":
-                            deleteUserUi(inputReader);
-                            break;
-                        case "3":
-                            updateUserUi(inputReader);
-                            break;
-                        case "4":
-                            findUserUi(inputReader);
-                            break;
-                        case "5":
-                            getAllUsersUI();
-                            break;
-                        case "6":
-                            addFriendshipUi(inputReader);
-                            break;
-                        case "7":
-                            deleteFriendshipUi(inputReader);
-                            break;
-                        case "8":
-                            numberOfCommunitiesUi();
-                            break;
-                        case "9":
-                            theMostSociableCommunityUi();
-                            break;
-                        case "10":
-                            printAllFriendships();
-                            break;
-                        default:
-                            System.out.println("Command not found!");
-                    }
-                }catch(NumberFormatException numberFormatException){
-                    System.out.println("Wrong input for number");
+        while (true) {
+            printMenu();
+            try {
+                String command = inputReader.readLine();
+                switch (command) {
+                    case "0":
+                        return;
+                    case "1":
+                        addUserUi();
+                        break;
+                    case "2":
+                        deleteUserUi();
+                        break;
+                    case "3":
+                        updateUserUi();
+                        break;
+                    case "4":
+                        findUserUi();
+                        break;
+                    case "5":
+                        getAllUsersUI();
+                        break;
+                    case "6":
+                        addFriendshipUi();
+                        break;
+                    case "7":
+                        deleteFriendshipUi();
+                        break;
+                    case "8":
+                        numberOfCommunitiesUi();
+                        break;
+                    case "9":
+                        theMostSociableCommunityUi();
+                        break;
+                    case "10":
+                        printAllFriendships();
+                        break;
+                    default:
+                        System.out.println("Command not found!");
                 }
-                catch (ValidationException | IllegalArgumentException | ServiceException validationException) {
-                    System.out.println(validationException.getMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+            } catch (NumberFormatException numberFormatException) {
+                System.out.println("Wrong input for number");
+            } catch (ValidationException | IllegalArgumentException | ServiceException validationException) {
+                System.out.println(validationException.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+    }
 
-
+    @Override
+    public void close() throws Exception {
+        inputReader.close();
     }
 }
 
