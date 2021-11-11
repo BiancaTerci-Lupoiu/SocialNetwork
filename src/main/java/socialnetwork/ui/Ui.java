@@ -10,92 +10,122 @@ import socialnetwork.service.ServiceException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class Ui implements AutoCloseable {
     private final Service service;
     private final BufferedReader inputReader;
+    private final Map<String, UIFunction> commands;
 
     public Ui(Service service) {
         this.service = service;
         inputReader = new BufferedReader(new InputStreamReader(System.in));
+        commands = new TreeMap<>();
+        Initialize();
+    }
+
+    private void Initialize() {
+        for (var method : Ui.class.getMethods()) {
+            var attribute = method.getAnnotation(UIMethod.class);
+            if (attribute != null) {
+                var function = new UIFunction(method, attribute);
+                commands.put(function.getName(), function);
+            }
+        }
     }
 
     /**
-     * prints the menu
+     * starts the application
      */
-    private void printMenu() {
-        System.out.println("Meniu");
-        System.out.println("0.Quit");
-        System.out.println("1.Add User");
-        System.out.println("2.Delete User");
-        System.out.println("3.Update User");
-        System.out.println("4.Find user by id");
-        System.out.println("5.Print all users");
-        System.out.println("6.Add friend for some user");
-        System.out.println("7.Delete friend for some user");
-        System.out.println("8.Number of communities");
-        System.out.println("9.The most sociable community");
-        System.out.println("10.Print all friendships");
-        System.out.println("Select command:");
+    public void start() {
+        while (true) {
+            try {
+                System.out.print(">>>");
+                String commandLine = inputReader.readLine();
+                String[] args = commandLine.split(" ");
+                String command = args[0];
+                if (command.equals("exit"))
+                    break;
+                var function = commands.get(command);
+                if (function == null) {
+                    System.out.println("The command is not recognized!");
+                    System.out.println("Try the command help!");
+                    continue;
+                }
+
+                function.Call(this, Arrays.copyOfRange(args, 1, args.length));
+            } catch (NumberFormatException ex) {
+                System.out.println("Wrong input for number");
+            } catch (ServiceException | ValidationException ex) {
+                System.out.println(ex.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Shows the specified message to the user and reads a line from standard input
+     *
+     * @param message String The message to be show
+     * @return String
+     */
+    public String readString(String message) throws IOException {
+        System.out.print(message);
+        return inputReader.readLine();
+    }
+
+    @UIMethod(name = "help", description = "Shows this menu")
+    public void help()
+    {
+        for(var command: commands.values())
+        {
+            System.out.println(command.getName()+" "+String.join(" ",command.getParametersName().stream().map(x->"<"+x+">").toList()) +" -> "+command.getDescription());
+        }
+        System.out.println("exit -> close the application");
     }
 
     /**
      * ui function to add users
-     *
-     * @throws IOException if the readline() fails
      */
-    private void addUserUi() throws IOException {
-        //System.out.println("id=");
-        // Long id = Long.parseLong(inputReader.readLine());
-        System.out.println("firstName=");
-        String firstName = inputReader.readLine();
-        System.out.println("lastName=");
-        String lastName = inputReader.readLine();
-        boolean result = service.addUser(firstName, lastName);
-        if (result ==false)
+    @UIMethod(name = "addUser",description = "adds a user")
+    public void addUserUi(@UIParameter("first name") String firstName,
+                          @UIParameter("last name") String lastName) {
+        Boolean result = service.addUser(firstName, lastName);
+        if (result)
             System.out.println("The user already exists!");
     }
 
     /**
      * ui function to update users
-     *
-     * @throws IOException if the readline() fails
      */
-    private void updateUserUi() throws IOException {
-        System.out.println("id=");
-        Long id = Long.parseLong(inputReader.readLine());
-        System.out.println("firstName=");
-        String firstName = inputReader.readLine();
-        System.out.println("lastName=");
-        String lastName = inputReader.readLine();
+    @UIMethod(name = "updateUser", description = "updates a user")
+    public void updateUserUi(@UIParameter("id") Long id,
+                             @UIParameter("first name") String firstName,
+                             @UIParameter("last name") String lastName){
         boolean result = service.updateUser(id, firstName, lastName);
-        if (result ==false)
+        if (result)
             System.out.println("The user with id=" + id + " does not exist!");
     }
 
     /**
      * ui function to delete users
-     *
-     * @throws IOException if the readline() fails
      */
-    private void deleteUserUi() throws IOException {
-        System.out.println("id=");
-        Long id = Long.parseLong(inputReader.readLine());
+    @UIMethod(name = "deleteUser", description = "deletes a user")
+    public void deleteUserUi(@UIParameter("id") Long id){
         boolean result = service.deleteUser(id);
-        if (result == false)
+        if (result)
             System.out.println("The user with id=" + id + " does not exist!");
-
     }
 
     /**
      * ui function to find users
-     *
-     * @throws IOException if the readline() fails
      */
-    private void findUserUi() throws IOException {
-        System.out.println("id=");
-        Long id = Long.parseLong(inputReader.readLine());
+    @UIMethod(name = "findUser",description = "finds a user by their id")
+    public void findUserUi(@UIParameter("id") Long id) {
         User result = service.findUser(id);
         if (result == null)
             System.out.println("The user with id=" + id + " does not exist!");
@@ -104,45 +134,39 @@ public class Ui implements AutoCloseable {
     /**
      * ui function to print the users
      */
-    private void getAllUsersUI() {
+    @UIMethod(name = "showUsers", description = "shows all the users")
+    public void getAllUsersUI() {
         for (User user : service.getAllUsers().values())
             System.out.println(user);
     }
 
     /**
      * ui function to add a friendship
-     *
-     * @throws IOException if the readline() fails
      */
-    private void addFriendshipUi() throws IOException {
-        System.out.println("id user=");
-        Long idUser = Long.parseLong(inputReader.readLine());
-        System.out.println("id new friend=");
-        Long idNewFriend = Long.parseLong(inputReader.readLine());
+    @UIMethod(name = "addFriend", description = "adds a friendship")
+    public void addFriendshipUi(@UIParameter("id user") Long idUser,
+                                @UIParameter("id new friend") Long idNewFriend) {
         boolean result = service.addFriendship(idUser, idNewFriend);
-        if (result ==false)
+        if (result)
             System.out.println("They are already friends!");
     }
 
     /**
      * ui function to delete a friendship
-     *
-     * @throws IOException if the readline() fails
      */
-    private void deleteFriendshipUi() throws IOException {
-        System.out.println("id user1=");
-        Long idUser = Long.parseLong(inputReader.readLine());
-        System.out.println("id user2=");
-        Long idNewFriend = Long.parseLong(inputReader.readLine());
+    @UIMethod(name = "deleteFriend", description = "deletes a friendship")
+    public void deleteFriendshipUi(@UIParameter("id user1") Long idUser,
+                                   @UIParameter("id user2") Long idNewFriend) {
         boolean result = service.deleteFriendship(idUser, idNewFriend);
-        if (result == false)
+        if (result)
             System.out.println("Friendship does not exist!");
     }
 
     /**
      * ui function to print the number of communities
      */
-    private void numberOfCommunitiesUi() {
+    @UIMethod(name = "communities", description = "shows the number of communities")
+    public void numberOfCommunitiesUi() {
         int numberOfCommunities = service.numberOfCommunities();
         System.out.println("Number of communities: " + numberOfCommunities);
     }
@@ -150,7 +174,8 @@ public class Ui implements AutoCloseable {
     /**
      * ui function to print the most sociable community
      */
-    private void theMostSociableCommunityUi() {
+    @UIMethod(name = "sociable", description = "shows the most sociable community")
+    public void theMostSociableCommunityUi() {
         Community community = service.theMostSociableCommunity();
         System.out.println("The most sociable community is:");
         for (User user : community.getCommunityUsers()) {
@@ -161,63 +186,10 @@ public class Ui implements AutoCloseable {
     /**
      * ui function to print all the friendships
      */
-    private void printAllFriendships() {
+    @UIMethod(name = "showFriendships", description = "shows all the friendships")
+    public void printAllFriendships() {
         for (Friendship friendship : service.getAllFriendships())
             System.out.println(friendship);
-    }
-
-    /**
-     * starts the application
-     */
-    public void start() {
-        while (true) {
-            printMenu();
-            try {
-                String command = inputReader.readLine();
-                switch (command) {
-                    case "0":
-                        return;
-                    case "1":
-                        addUserUi();
-                        break;
-                    case "2":
-                        deleteUserUi();
-                        break;
-                    case "3":
-                        updateUserUi();
-                        break;
-                    case "4":
-                        findUserUi();
-                        break;
-                    case "5":
-                        getAllUsersUI();
-                        break;
-                    case "6":
-                        addFriendshipUi();
-                        break;
-                    case "7":
-                        deleteFriendshipUi();
-                        break;
-                    case "8":
-                        numberOfCommunitiesUi();
-                        break;
-                    case "9":
-                        theMostSociableCommunityUi();
-                        break;
-                    case "10":
-                        printAllFriendships();
-                        break;
-                    default:
-                        System.out.println("Command not found!");
-                }
-            } catch (NumberFormatException numberFormatException) {
-                System.out.println("Wrong input for number");
-            } catch (ValidationException | IllegalArgumentException | ServiceException validationException) {
-                System.out.println(validationException.getMessage());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
