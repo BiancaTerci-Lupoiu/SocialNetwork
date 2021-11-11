@@ -56,8 +56,8 @@ public class Service {
      *
      * @param firstName String
      * @param lastName  String
-     * @return null- if the given entity is saved
-     * otherwise returns the entity (id already exists)
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.
      */
@@ -107,8 +107,8 @@ public class Service {
      * @param id        Long
      * @param firstName String
      * @param lastName  String
-     * @return null - if the entity is updated,
-     * otherwise  returns the entity  - (e.g id does not exist).
+     * @return true - if the entity is updated,
+     * otherwise  returns false  - (e.g id does not exist).
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ValidationException      if the entity is not valid.
      */
@@ -123,7 +123,7 @@ public class Service {
      * deletes user with id
      *
      * @param id Long
-     * @return the removed entity or null if there is no entity with the given id
+     * @return true if the entity with id=id is removed or false if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteUser(Long id) {
@@ -155,8 +155,8 @@ public class Service {
      *
      * @param id1 id user1
      * @param id2 id user2
-     * @return null- if the given entity is saved
-     * otherwise returns the entity (id already exists)
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ServiceException         if the users does not exist
@@ -185,7 +185,7 @@ public class Service {
      *
      * @param id1 id user1
      * @param id2 id user2
-     * @return the removed entity or null if there is no entity with the given id
+     * @return true if the friendship is deleted or false if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteFriendship(Long id1, Long id2) {
@@ -264,7 +264,7 @@ public class Service {
                 sociableCommunity = community;
             }
         }
-        //System.out.println(longestPath);
+
         return sociableCommunity;
 
     }
