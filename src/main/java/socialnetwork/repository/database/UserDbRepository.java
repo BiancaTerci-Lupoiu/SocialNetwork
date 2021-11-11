@@ -90,13 +90,13 @@ public class UserDbRepository implements Repository<Long, User> {
 
     /**
      * @param entity entity must be not null
-     * @return null- if the given user is saved
-     * otherwise returns the user (id already exists)
-     * @throws ValidationException      if the user is not valid
-     * @throws IllegalArgumentException if the given user is null.     *
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
+     * @throws ValidationException      if the entity is not valid
+     * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public User save(User entity) {
+    public boolean save(User entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
@@ -113,18 +113,18 @@ public class UserDbRepository implements Repository<Long, User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return true;
     }
 
     /**
      * removes the user with the specified id
      *
      * @param aLong aLong must be not null
-     * @return the removed user or null if there is no user with the given id(aLong)
+     * @return @return true if the entity is deleted or false if there is no entity with the given id (aLong)
      * @throws IllegalArgumentException if the given id(aLong) is null.
      */
     @Override
-    public User delete(Long aLong) {
+    public boolean delete(Long aLong) {
         if (aLong == null)
             throw new IllegalArgumentException("id must be not null!");
 
@@ -142,19 +142,20 @@ public class UserDbRepository implements Repository<Long, User> {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            return true;
         }
-        return result;
+        return false;
     }
 
     /**
      * @param entity entity must not be null
-     * @return null - if the user is updated,
-     * otherwise  returns the user  - (e.g id does not exist).
-     * @throws IllegalArgumentException if the given user is null.
-     * @throws ValidationException      if the user is not valid.
+     * @return true - if the entity is updated,
+     * otherwise  returns false  - (e.g id does not exist).
+     * @throws IllegalArgumentException if the given entity is null.
+     * @throws ValidationException      if the entity is not valid.
      */
     @Override
-    public User update(User entity) {
+    public boolean update(User entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
@@ -170,12 +171,12 @@ public class UserDbRepository implements Repository<Long, User> {
 
             Integer numberOfRowsAffected = statement.executeUpdate();
             if (numberOfRowsAffected != 1)
-                return entity;
+                return false;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return true;
     }
 }

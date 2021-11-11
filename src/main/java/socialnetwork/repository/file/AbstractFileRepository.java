@@ -1,6 +1,7 @@
 package socialnetwork.repository.file;
 
 import socialnetwork.domain.Entity;
+import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.memory.InMemoryRepository;
 
@@ -104,37 +105,46 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
 
     /**
      * @param entity entity must be not null
-     * @return
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
+     * @throws ValidationException      if the entity is not valid
+     * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public E save(E entity) {
-        E result = super.save(entity);
-        if (result == null)
+    public boolean save(E entity) {
+        boolean result = super.save(entity);
+        if (result == true)
             writeToFile(entity);
         return result;
 
     }
 
     /**
+     * removes the entity with the specified id
+     *
      * @param id id must be not null
-     * @return
+     * @return true if the entity is deleted or false if there is no entity with the given id
+     * @throws IllegalArgumentException if the given id is null.
      */
     @Override
-    public E delete(ID id) {
-        E result = super.delete(id);
-        if (result != null)
+    public boolean delete(ID id) {
+        boolean result = super.delete(id);
+        if (result == true)
             storeData();
         return result;
     }
 
     /**
      * @param entity entity must not be null
-     * @return
+     * @return true - if the entity is updated,
+     * otherwise  returns false  - (e.g id does not exist).
+     * @throws IllegalArgumentException if the given entity is null.
+     * @throws ValidationException      if the entity is not valid.
      */
     @Override
-    public E update(E entity) {
-        E result = super.update(entity);
-        if (result == null)
+    public boolean update(E entity) {
+        boolean result = super.update(entity);
+        if (result == true)
             storeData();
         return result;
 

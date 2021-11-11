@@ -53,53 +53,57 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
 
     /**
      * @param entity entity must be not null
-     * @return null- if the given entity is saved
-     * otherwise returns the entity (id already exists)
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public E save(E entity) {
+    public boolean save(E entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         if (entities.get(entity.getId()) != null)
-            return entity;
+            return false;
         else
             entities.put(entity.getId(), entity);
-        return null;
+        return true;
     }
 
     /**
+     * removes the entity with the specified id
+     *
      * @param id id must be not null
-     * @return the removed entity or null if there is no entity with the given id
+     * @return true if the entity is deleted or false if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     @Override
-    public E delete(ID id) {
+    public boolean delete(ID id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
         E entityToDelete = entities.get(id);
-        if (entityToDelete != null)
+        if (entityToDelete != null) {
             entities.remove(id);
-        return entityToDelete;
+            return true;
+        }
+        return false;
     }
 
     /**
      * @param entity entity must not be null
-     * @return null - if the entity is updated,
-     * otherwise  returns the entity  - (e.g id does not exist).
+     * @return true - if the entity is updated,
+     * otherwise  returns false  - (e.g id does not exist).
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ValidationException      if the entity is not valid.
      */
     @Override
-    public E update(E entity) {
+    public boolean update(E entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         if (entities.get(entity.getId()) == null)
-            return entity;
+            return false;
         entities.put(entity.getId(), entity);
-        return null;
+        return true;
     }
 }

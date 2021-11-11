@@ -84,20 +84,20 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
 
     /**
      * @param entity entity must be not null
-     * @return null- if the given friendship is saved
-     * otherwise returns the friendship (id already exists)
-     * @throws ValidationException      if the friendship is not valid
-     * @throws IllegalArgumentException if the given friendship is null.
+     * @return true- if the given entity is saved
+     * otherwise returns false (id already exists)
+     * @throws ValidationException      if the entity is not valid
+     * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public Friendship save(Friendship entity) {
+    public boolean save(Friendship entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         Friendship result = findOne(entity.getId());
         // daca exista deja prietenia
         if (result != null)
-            return entity;
+            return false;
         String sql = "insert into friendships (id_user1,id_user2) values (?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
@@ -109,18 +109,18 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             e.printStackTrace();
         }
 
-        return null;
+        return true;
     }
 
     /**
      * removes the friendship with the specified id
      *
      * @param id id must be not null
-     * @return the removed friendship or null if there is no friendship with the given id
+     * @return @return true if the entity is deleted or false if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     @Override
-    public Friendship delete(Tuple<Long, Long> id) {
+    public boolean delete(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
         Friendship result = findOne(id);
@@ -140,25 +140,26 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            return true;
         }
-        return result;
+        return false;
     }
 
     /**
      * @param entity entity must not be null
-     * @return null - if the friendship is updated,
-     * otherwise  returns the friendship  - (e.g id does not exist).
-     * @throws IllegalArgumentException if the given friendship is null.
-     * @throws ValidationException      if the friendship is not valid.
+     * @return true - if the entity is updated,
+     * otherwise  returns false  - (e.g id does not exist).
+     * @throws IllegalArgumentException if the given entity is null.
+     * @throws ValidationException      if the entity is not valid.
      */
     @Override
-    public Friendship update(Friendship entity) {
+    public boolean update(Friendship entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         Friendship result = findOne(entity.getId());
         if (result == null)
-            return entity;
+            return false;
         /*String sql="update friendships set id_user1=?,id_user2=? where (id_user1=? and id_user2=?) or (id_user1=? and id_user2=?)";
         try(Connection connection=DriverManager.getConnection(url,username,password);
             PreparedStatement statement= connection.prepareStatement(sql)
@@ -173,11 +174,11 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
 
             Integer numberOfRowsAffected= statement.executeUpdate();
             if(numberOfRowsAffected!=1)
-                return entity;
+                return false;
 
         }catch(SQLException e){
             e.printStackTrace();
         }*/
-        return null;
+        return true;
     }
 }

@@ -61,11 +61,11 @@ public class Service {
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.
      */
-    public User addUser(String firstName, String lastName) {
+    public boolean addUser(String firstName, String lastName) {
         User user = new User(firstName, lastName);
         user.setId(idMax+1);
-        User result = repoUsers.save(user);
-        if(result==null)
+        boolean result = repoUsers.save(user);
+        if(result==true)
             idMax++;
         return result;
     }
@@ -112,10 +112,10 @@ public class Service {
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ValidationException      if the entity is not valid.
      */
-    public User updateUser(Long id, String firstName, String lastName) {
+    public boolean updateUser(Long id, String firstName, String lastName) {
         User updatedUser = new User(firstName, lastName);
         updatedUser.setId(id);
-        User result = repoUsers.update(updatedUser);
+        boolean result = repoUsers.update(updatedUser);
         return result;
     }
 
@@ -126,10 +126,10 @@ public class Service {
      * @return the removed entity or null if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
-    public User deleteUser(Long id) {
+    public boolean deleteUser(Long id) {
         Map<Long,User> usersWithFriends=getAllUsers();
-        User result = repoUsers.delete(id);
-        if (result != null) {
+        boolean result = repoUsers.delete(id);
+        if (result == true) {
             // s-a sters userul, trebuie sa stergem si prieteniile
             for(User user:usersWithFriends.get(id).getFriends())
                 repoFriendships.delete(new Tuple<>(id, user.getId()));
@@ -161,14 +161,14 @@ public class Service {
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ServiceException         if the users does not exist
      */
-    public Friendship addFriendship(Long id1, Long id2) {
+    public boolean addFriendship(Long id1, Long id2) {
         //verifica daca exista userii
 
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
             Friendship friendship = new Friendship(id1, id2);
-            Friendship result = repoFriendships.save(friendship);
+            boolean result = repoFriendships.save(friendship);
             // daca se salveaza prietenia, adaugam prietenii in lista de prieteni
             /*if (result == null) {
                 user1.addFriend(user2);
@@ -188,8 +188,8 @@ public class Service {
      * @return the removed entity or null if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
-    public Friendship deleteFriendship(Long id1, Long id2) {
-        Friendship result = repoFriendships.delete(new Tuple<>(id1, id2));
+    public boolean deleteFriendship(Long id1, Long id2) {
+        boolean result = repoFriendships.delete(new Tuple<>(id1, id2));
         /*if (result != null) {
             User user1 = repoUsers.findOne(id1);
             user1.removeFriend(id2);

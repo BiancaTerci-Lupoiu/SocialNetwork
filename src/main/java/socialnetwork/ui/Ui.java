@@ -52,8 +52,8 @@ public class Ui implements AutoCloseable {
         String firstName = inputReader.readLine();
         System.out.println("lastName=");
         String lastName = inputReader.readLine();
-        User result = service.addUser(firstName, lastName);
-        if (result != null)
+        boolean result = service.addUser(firstName, lastName);
+        if (result ==false)
             System.out.println("The user already exists!");
     }
 
@@ -69,8 +69,8 @@ public class Ui implements AutoCloseable {
         String firstName = inputReader.readLine();
         System.out.println("lastName=");
         String lastName = inputReader.readLine();
-        User result = service.updateUser(id, firstName, lastName);
-        if (result != null)
+        boolean result = service.updateUser(id, firstName, lastName);
+        if (result ==false)
             System.out.println("The user with id=" + id + " does not exist!");
     }
 
@@ -82,8 +82,8 @@ public class Ui implements AutoCloseable {
     private void deleteUserUi() throws IOException {
         System.out.println("id=");
         Long id = Long.parseLong(inputReader.readLine());
-        User result = service.deleteUser(id);
-        if (result == null)
+        boolean result = service.deleteUser(id);
+        if (result == false)
             System.out.println("The user with id=" + id + " does not exist!");
 
     }
@@ -119,8 +119,8 @@ public class Ui implements AutoCloseable {
         Long idUser = Long.parseLong(inputReader.readLine());
         System.out.println("id new friend=");
         Long idNewFriend = Long.parseLong(inputReader.readLine());
-        Friendship result = service.addFriendship(idUser, idNewFriend);
-        if (result != null)
+        boolean result = service.addFriendship(idUser, idNewFriend);
+        if (result ==false)
             System.out.println("They are already friends!");
     }
 
@@ -134,8 +134,8 @@ public class Ui implements AutoCloseable {
         Long idUser = Long.parseLong(inputReader.readLine());
         System.out.println("id user2=");
         Long idNewFriend = Long.parseLong(inputReader.readLine());
-        Friendship result = service.deleteFriendship(idUser, idNewFriend);
-        if (result == null)
+        boolean result = service.deleteFriendship(idUser, idNewFriend);
+        if (result == false)
             System.out.println("Friendship does not exist!");
     }
 
