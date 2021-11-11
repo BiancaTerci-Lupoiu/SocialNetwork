@@ -12,42 +12,46 @@ public class UIFunction {
     private final Parameter[] parameters;
     private final UIMethod methodSpecification;
     private final List<String> parametersName;
-    public UIFunction(Method method, UIMethod attribute)
-    {
-        methodSpecification=attribute;
-        this.method=method;
-        parameters=method.getParameters();
+    private String shortName;
+
+    public UIFunction(Method method, UIMethod attribute) {
+        methodSpecification = attribute;
+        this.method = method;
+        parameters = method.getParameters();
         parametersName = new ArrayList<>();
-        for(var parameter: parameters)
+        for (var parameter : parameters)
             parametersName.add(parameter.getAnnotation(UIParameter.class).value());
     }
 
-    public List<String> getParametersName()
-    {
+    public List<String> getParametersName() {
         return parametersName;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return methodSpecification.name();
     }
 
-    public String getDescription()
-    {
+    public String getShortName() {
+        return shortName;
+    }
+
+    public void setShortName(String name) {
+        shortName = name;
+    }
+
+    public String getDescription() {
         return methodSpecification.description();
     }
 
-    public void Call(Ui ui, String[] argsString) throws Throwable
-    {
+    public void Call(Ui ui, String[] argsString) throws Throwable {
         Object[] args = new Object[parameters.length];
-        if(argsString.length == 0 && parameters.length > 0)
+        if (argsString.length == 0 && parameters.length > 0)
             argsString = readArguments(ui);
 
-        for(int i=0;i<args.length;i++)
-        {
-            String arg=argsString[i];
+        for (int i = 0; i < args.length; i++) {
+            String arg = argsString[i];
             var type = parameters[i].getType();
-            args[i]=convertStringToType(arg, type);
+            args[i] = convertStringToType(arg, type);
         }
 
         try {
@@ -59,22 +63,20 @@ public class UIFunction {
         }
     }
 
-    private String[] readArguments(Ui ui) throws IOException
-    {
+    private String[] readArguments(Ui ui) throws IOException {
         String[] argsString = new String[parameters.length];
-        for(int i=0;i<parameters.length;i++)
-            argsString[i] = ui.readString(parametersName.get(i)+"=");
+        for (int i = 0; i < parameters.length; i++)
+            argsString[i] = ui.readString(parametersName.get(i) + "=");
 
         return argsString;
     }
 
-    private Object convertStringToType(String arg, Class<?> type)
-    {
+    private Object convertStringToType(String arg, Class<?> type) {
         if (String.class.equals(type))
             return arg;
-        if(Integer.class.equals(type))
+        if (Integer.class.equals(type))
             return Integer.parseInt(arg);
-        if(Long.class.equals(type))
+        if (Long.class.equals(type))
             return Long.parseLong(arg);
 
         throw new TypeNotFoundException(type, method);

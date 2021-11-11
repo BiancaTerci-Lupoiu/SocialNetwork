@@ -10,20 +10,20 @@ import socialnetwork.service.ServiceException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class Ui implements AutoCloseable {
     private final Service service;
     private final BufferedReader inputReader;
     private final Map<String, UIFunction> commands;
+    private final Map<String, UIFunction> shortCommands;
 
     public Ui(Service service) {
         this.service = service;
         inputReader = new BufferedReader(new InputStreamReader(System.in));
         commands = new TreeMap<>();
+        shortCommands = new TreeMap<>();
         Initialize();
     }
 
@@ -34,6 +34,12 @@ public class Ui implements AutoCloseable {
                 var function = new UIFunction(method, attribute);
                 commands.put(function.getName(), function);
             }
+        }
+        int number = 1;
+        for (var command : commands.values()) {
+            command.setShortName(Integer.toString(number));
+            number += 1;
+            shortCommands.put(command.getShortName(), command);
         }
     }
 
@@ -50,6 +56,8 @@ public class Ui implements AutoCloseable {
                 if (command.equals("exit"))
                     break;
                 var function = commands.get(command);
+                if (function == null)
+                    function = shortCommands.get(command);
                 if (function == null) {
                     System.out.println("The command is not recognized!");
                     System.out.println("Try the command help!");
@@ -79,11 +87,9 @@ public class Ui implements AutoCloseable {
     }
 
     @UIMethod(name = "help", description = "Shows this menu")
-    public void help()
-    {
-        for(var command: commands.values())
-        {
-            System.out.println(command.getName()+" "+String.join(" ",command.getParametersName().stream().map(x->"<"+x+">").toList()) +" -> "+command.getDescription());
+    public void help() {
+        for (var command : commands.values()) {
+            System.out.println(command.getShortName() + ") " + command.getName() + " " + String.join(" ", command.getParametersName().stream().map(x -> "<" + x + ">").toList()) + " -> " + command.getDescription());
         }
         System.out.println("exit -> close the application");
     }
@@ -91,11 +97,11 @@ public class Ui implements AutoCloseable {
     /**
      * ui function to add users
      */
-    @UIMethod(name = "addUser",description = "adds a user")
+    @UIMethod(name = "addUser", description = "adds a user")
     public void addUserUi(@UIParameter("first name") String firstName,
                           @UIParameter("last name") String lastName) {
-        Boolean result = service.addUser(firstName, lastName);
-        if (result)
+        boolean result = service.addUser(firstName, lastName);
+        if (!result)
             System.out.println("The user already exists!");
     }
 
@@ -105,9 +111,9 @@ public class Ui implements AutoCloseable {
     @UIMethod(name = "updateUser", description = "updates a user")
     public void updateUserUi(@UIParameter("id") Long id,
                              @UIParameter("first name") String firstName,
-                             @UIParameter("last name") String lastName){
+                             @UIParameter("last name") String lastName) {
         boolean result = service.updateUser(id, firstName, lastName);
-        if (result)
+        if (!result)
             System.out.println("The user with id=" + id + " does not exist!");
     }
 
@@ -115,16 +121,16 @@ public class Ui implements AutoCloseable {
      * ui function to delete users
      */
     @UIMethod(name = "deleteUser", description = "deletes a user")
-    public void deleteUserUi(@UIParameter("id") Long id){
+    public void deleteUserUi(@UIParameter("id") Long id) {
         boolean result = service.deleteUser(id);
-        if (result)
+        if (!result)
             System.out.println("The user with id=" + id + " does not exist!");
     }
 
     /**
      * ui function to find users
      */
-    @UIMethod(name = "findUser",description = "finds a user by their id")
+    @UIMethod(name = "findUser", description = "finds a user by their id")
     public void findUserUi(@UIParameter("id") Long id) {
         User result = service.findUser(id);
         if (result == null)
@@ -147,7 +153,7 @@ public class Ui implements AutoCloseable {
     public void addFriendshipUi(@UIParameter("id user") Long idUser,
                                 @UIParameter("id new friend") Long idNewFriend) {
         boolean result = service.addFriendship(idUser, idNewFriend);
-        if (result)
+        if (!result)
             System.out.println("They are already friends!");
     }
 
@@ -158,7 +164,7 @@ public class Ui implements AutoCloseable {
     public void deleteFriendshipUi(@UIParameter("id user1") Long idUser,
                                    @UIParameter("id user2") Long idNewFriend) {
         boolean result = service.deleteFriendship(idUser, idNewFriend);
-        if (result)
+        if (!result)
             System.out.println("Friendship does not exist!");
     }
 
