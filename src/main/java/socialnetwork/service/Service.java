@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Service {
-    private Repository<Long, User> repoUsers;
-    private Repository<Tuple<Long, Long>, Friendship> repoFriendships;
-    private Long idMax=0L;
+    private final Repository<Long, User> repoUsers;
+    private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
+    private Long idMax = 0L;
 
     /**
      * @param repoUsers       the repository with users
@@ -29,25 +29,13 @@ public class Service {
     }
 
     /**
-     * based on friendships, adds the friends to each user
-     */
-    private void connectFriends() {
-        for (Friendship friendship : repoFriendships.findAll()) {
-            User user1 = repoUsers.findOne(friendship.getId().getLeft());
-            User user2 = repoUsers.findOne(friendship.getId().getRight());
-            user1.addFriend(user2);
-            user2.addFriend(user1);
-        }
-    }
-
-    /**
-     *  finds the maximum value for the user ids
+     * finds the maximum value for the user ids
      * and sets the idMax data member to that value
      */
-    private void setIdMax(){
-        for(User user: repoUsers.findAll())
-            if(user.getId()>idMax)
-                idMax=user.getId();
+    private void setIdMax() {
+        for (User user : repoUsers.findAll())
+            if (user.getId() > idMax)
+                idMax = user.getId();
 
     }
 
@@ -63,9 +51,9 @@ public class Service {
      */
     public boolean addUser(String firstName, String lastName) {
         User user = new User(firstName, lastName);
-        user.setId(idMax+1);
+        user.setId(idMax + 1);
         boolean result = repoUsers.save(user);
-        if(result==true)
+        if (result)
             idMax++;
         return result;
     }
@@ -73,19 +61,18 @@ public class Service {
     /**
      * @return all the users
      */
-    public Map<Long,User> getAllUsers() {
+    public Map<Long, User> getAllUsers() {
         // trebuie sa completam si listele de prietenie
-        Map<Long,User> usersWithFriends=new HashMap<>();
+        Map<Long, User> usersWithFriends = new HashMap<>();
         // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
-        for(User user:repoUsers.findAll()) {
-            User newUser=new User(user.getFirstName(), user.getLastName());
+        for (User user : repoUsers.findAll()) {
+            User newUser = new User(user.getFirstName(), user.getLastName());
             newUser.setId(user.getId());
             usersWithFriends.put(newUser.getId(), newUser);
         }
-        for(Friendship friendship:repoFriendships.findAll())
-        {
-            User user1=usersWithFriends.get(friendship.getId().getLeft());
-            User user2=usersWithFriends.get(friendship.getId().getRight());
+        for (Friendship friendship : repoFriendships.findAll()) {
+            User user1 = usersWithFriends.get(friendship.getId().getLeft());
+            User user2 = usersWithFriends.get(friendship.getId().getRight());
             user1.addFriend(user2);
             user2.addFriend(user1);
         }
@@ -99,8 +86,7 @@ public class Service {
      * @throws IllegalArgumentException if id is null.
      */
     public User findUser(Long id) {
-        User result = repoUsers.findOne(id);
-        return result;
+        return repoUsers.findOne(id);
     }
 
     /**
@@ -108,15 +94,14 @@ public class Service {
      * @param firstName String
      * @param lastName  String
      * @return true - if the entity is updated,
-     * otherwise  returns false  - (e.g id does not exist).
+     * otherwise  returns false  - (e.g. id does not exist).
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ValidationException      if the entity is not valid.
      */
     public boolean updateUser(Long id, String firstName, String lastName) {
         User updatedUser = new User(firstName, lastName);
         updatedUser.setId(id);
-        boolean result = repoUsers.update(updatedUser);
-        return result;
+        return repoUsers.update(updatedUser);
     }
 
     /**
@@ -127,18 +112,12 @@ public class Service {
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteUser(Long id) {
-        Map<Long,User> usersWithFriends=getAllUsers();
+        Map<Long, User> usersWithFriends = getAllUsers();
         boolean result = repoUsers.delete(id);
-        if (result == true) {
+        if (result) {
             // s-a sters userul, trebuie sa stergem si prieteniile
-            for(User user:usersWithFriends.get(id).getFriends())
+            for (User user : usersWithFriends.get(id).getFriends())
                 repoFriendships.delete(new Tuple<>(id, user.getId()));
-            /*for (User user : result.getFriends()) {
-                repoFriendships.delete(new Tuple<>(id, user.getId()));
-                // il sterg pe userul cu id-ul id din din listele de prietenie ale prietenilor
-                user.removeFriend(id);
-            }*/
-
         }
         return result;
     }
@@ -163,21 +142,13 @@ public class Service {
      */
     public boolean addFriendship(Long id1, Long id2) {
         //verifica daca exista userii
-
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
             Friendship friendship = new Friendship(id1, id2);
-            boolean result = repoFriendships.save(friendship);
-            // daca se salveaza prietenia, adaugam prietenii in lista de prieteni
-            /*if (result == null) {
-                user1.addFriend(user2);
-                user2.addFriend(user1);
-            }*/
-            return result;
+            return repoFriendships.save(friendship);
         } else
             throw new ServiceException("users not found!");
-
     }
 
     /**
@@ -189,14 +160,7 @@ public class Service {
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteFriendship(Long id1, Long id2) {
-        boolean result = repoFriendships.delete(new Tuple<>(id1, id2));
-        /*if (result != null) {
-            User user1 = repoUsers.findOne(id1);
-            user1.removeFriend(id2);
-            User user2 = repoUsers.findOne(id2);
-            user2.removeFriend(id1);
-        }*/
-        return result;
+        return repoFriendships.delete(new Tuple<>(id1, id2));
     }
 
     /**
@@ -207,7 +171,7 @@ public class Service {
      * @param community   the current community
      */
     private void dfsVisit(Map<Long, Boolean> nodes, Long currentNode, Community community) {
-        Map<Long,User> usersWithFriends=getAllUsers();
+        Map<Long, User> usersWithFriends = getAllUsers();
         nodes.put(currentNode, true);
         User currentUser = usersWithFriends.get(currentNode);
         for (User userFriend : currentUser.getFriends()) {
@@ -227,7 +191,7 @@ public class Service {
         // pastram toti userii si marcam daca i am vizitat sau nu
         Map<Long, Boolean> nodes = new HashMap<>();
 
-        Map<Long,User> usersWithFriends=getAllUsers();
+        Map<Long, User> usersWithFriends = getAllUsers();
         List<Community> allCommunities = new ArrayList<>();
         for (User user : usersWithFriends.values()) {
             nodes.put(user.getId(), false);
@@ -256,9 +220,9 @@ public class Service {
     public Community theMostSociableCommunity() {
         List<Community> allCommunities = findAllCommunities();
         Community sociableCommunity = new Community();
-        Integer longestPath = -1;
+        int longestPath = -1;
         for (Community community : allCommunities) {
-            Integer pathDimension = community.findLongestPath();
+            int pathDimension = community.findLongestPath();
             if (pathDimension > longestPath) {
                 longestPath = pathDimension;
                 sociableCommunity = community;
