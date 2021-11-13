@@ -1,9 +1,12 @@
 package socialnetwork.ui;
 
+import socialnetwork.utils.Constants;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +81,8 @@ public class UIFunction {
             return Integer.parseInt(arg);
         if (Long.class.equals(type))
             return Long.parseLong(arg);
+        if(LocalDate.class.equals(type))
+            return LocalDate.parse(arg, Constants.FORMATTER);
 
         throw new TypeNotFoundException(type, method);
     }
