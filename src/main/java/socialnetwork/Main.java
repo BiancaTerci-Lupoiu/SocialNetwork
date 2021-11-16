@@ -11,21 +11,34 @@ import socialnetwork.repository.file.UserFile;
 import socialnetwork.service.Service;
 import socialnetwork.ui.UIAdmin;
 
+//TODO: url, username si password citite din linia de comanda pentru conectarea la baza de date
+
+//TODO: adauga enum Status(pending,approved,rejected)
+//TODO: adauga clasa Friend, User in loc sa aibe o lista de User, sa aibe o lista de Friend.
+//      Friend sa contina: User user, LocalDateTime date, Status status
+//      SAU
+//      in service functia GetFriends(Long idUtilizator, Status status) care
+//      returneaza List<Friend> -> toate prieteniile care au acest status
+//TODO: Actualizare clasa Friendship incat sa contina si LocalDateTime data, Status status.
+//TODO: Schimbarea RepoFriendship din fisier si baza de date sa functioneze cu noile atribute adaugate
+//TODO: Cerinta 1 si 2
+
+//TODO: Adaugarea clasei Message si sa extinda Entity, varianta fara replyMessage
+//TODO: Adaugarea RepositoryMessage in baza de date
+//TODO: In service adaugam metoda getConversation(int idUser1, idUser2) -> List<Message> SAU Conversation.
+//            Conversation va implementa toString() pentru a afisa frumos in UI
+//            In ambele cazuri, trebuie ordonate descrescator dupa data
+//TODO: Cerinta 3. Fie din UIAdmin sa vedem conversatia, fie din UIUser, fie din ambele locuri
+//                 Poate o cale si de a vedea istoria conversatiilor a unui user
+
+//TODO: In UIUser, afisarea cererilor de prietenie
+//TODO: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
+//TODO: Cerinta 4
+
+//TODO: Optional. Mutarea acestui TODO list intr-un loc mai bun
+
 public class Main {
     public static void main(String[] args) throws Exception {
-        //TODO: adauga enum Status(pending,approved,rejected)
-        //TODO: adauga clasa Friend, User in loc sa aibe o lista de User, sa aibe o lista de Friend.
-        //      Friend sa contina: User user, LocalDateTime data, status prietenie
-        //TODO: Actualizare clasa Friendship incat sa contina si LocalDateTime data, Status status.
-        //TODO: Schimbarea RepoFriendship sa functioneze cu noile atribute adaugate
-        //TODO: Ui poate ar trebui redenumit la UIAdmin, si sa cream un nou UIUtilizator care primeste
-        //      un utilizator ca parametru si afiseaza acel UI specific pentru utilizator
-        //TODO: Adaugarea functiilor de login in UIAdmin si logout(exit) in UIUtilizator
-        //TODO: Adaugarea clasei Message si sa extinda Entity, varianta fara replyMessage
-        //TODO: Adaugarea RepositoryMessage in baza de date
-        //TODO: In UIUtilizator, afisarea cererilor de prietenie
-        //TODO: In UIUtilizator, posibilitatea de a accepta/respinge cereri de prietenie
-
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
 //        String username = "postgres";
