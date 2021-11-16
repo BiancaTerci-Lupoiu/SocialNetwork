@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class UIFunction {
         return methodSpecification.description();
     }
 
-    public void Call(Ui ui, String[] argsString) throws Throwable {
+    public void Call(UI ui, String[] argsString) throws Throwable {
         Object[] args = new Object[parameters.length];
         if (argsString.length == 0 && parameters.length > 0)
             argsString = readArguments(ui);
@@ -66,7 +67,7 @@ public class UIFunction {
         }
     }
 
-    private String[] readArguments(Ui ui) throws IOException {
+    private String[] readArguments(UI ui) throws IOException {
         String[] argsString = new String[parameters.length];
         for (int i = 0; i < parameters.length; i++)
             argsString[i] = ui.readString(parametersName.get(i) + "=");
@@ -81,9 +82,10 @@ public class UIFunction {
             return Integer.parseInt(arg);
         if (Long.class.equals(type))
             return Long.parseLong(arg);
+        if(LocalDateTime.class.equals(type))
+            return LocalDateTime.parse(arg, Constants.DATETIME_FORMATTER);
         if(LocalDate.class.equals(type))
-            return LocalDate.parse(arg, Constants.FORMATTER);
-
+            return LocalDate.parse(arg, Constants.DATE_FORMATTER);
         throw new TypeNotFoundException(type, method);
     }
 
