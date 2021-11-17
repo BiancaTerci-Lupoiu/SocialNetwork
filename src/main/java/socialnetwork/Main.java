@@ -30,6 +30,8 @@ import socialnetwork.ui.UIAdmin;
 //TODO: Terec & Bianca: Cerinta 3. Fie din UIAdmin sa vedem conversatia, fie din UIUser, fie din ambele locuri
 //                 Poate o cale si de a vedea istoria conversatiilor a unui user
 
+//TODO: Terec: UI poate ar trebui redenumit la UIAdmin, si sa cream un nou UIUtilizator care primeste
+//      un utilizator ca parametru si afiseaza acel UI specific pentru utilizator
 //TODO: Ce se intampla daca 1 da cerere de prietenie la 2 si 2 da cerere de prietenie la 1?
 //TODO: Terec: In UIUser, afisarea cererilor de prietenie
 //TODO: Terec: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
