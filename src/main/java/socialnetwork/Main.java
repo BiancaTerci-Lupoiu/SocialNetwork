@@ -11,29 +11,30 @@ import socialnetwork.repository.file.UserFile;
 import socialnetwork.service.Service;
 import socialnetwork.ui.UIAdmin;
 
-//TODO: url, username si password citite din linia de comanda pentru conectarea la baza de date
+//TODO: Terec: url, username si password citite din linia de comanda pentru conectarea la baza de date
 
-//TODO: adauga enum Status(pending,approved,rejected)
-//TODO: adauga clasa Friend, User in loc sa aibe o lista de User, sa aibe o lista de Friend.
-//      Friend sa contina: User user, LocalDateTime date, Status status
-//      SAU
+//TODO: Decea: adauga enum Status(pending,approved,rejected)
+//TODO: Decea: Friend sa contina: User user, LocalDateTime date, Status status
 //      in service functia GetFriends(Long idUtilizator, Status status) care
 //      returneaza List<Friend> -> toate prieteniile care au acest status
-//TODO: Actualizare clasa Friendship incat sa contina si LocalDateTime data, Status status.
-//TODO: Schimbarea RepoFriendship din fisier si baza de date sa functioneze cu noile atribute adaugate
-//TODO: Cerinta 1 si 2
+//TODO: Bianca: !!!Actualizare clasa Friendship incat sa contina si LocalDateTime data, Status status.
+//TODO: Bianca: !!!Schimbarea RepoFriendship din fisier si baza de date sa functioneze cu noile atribute adaugate
+//TODO: Decea: addFriendship(idUser1,idUser2,LocalDate date, Status status) va trebui sa primeasca si LocalDate si va seta statusul approved
+//TODO: Decea: Cerinta 1 si 2 in UI
 
-//TODO: Adaugarea clasei Message si sa extinda Entity, varianta fara replyMessage
-//TODO: Adaugarea RepositoryMessage in baza de date
-//TODO: In service adaugam metoda getConversation(int idUser1, idUser2) -> List<Message> SAU Conversation.
+//TODO: Bianca: Adaugarea clasei Message si sa extinda Entity, varianta fara replyMessage
+//TODO: Bianca: Adaugarea RepositoryMessage in baza de date
+//TODO: Bianca: In service adaugam metoda getConversation(int idUser1, idUser2) -> List<Message> SAU Conversation.
 //            Conversation va implementa toString() pentru a afisa frumos in UI
 //            In ambele cazuri, trebuie ordonate descrescator dupa data
-//TODO: Cerinta 3. Fie din UIAdmin sa vedem conversatia, fie din UIUser, fie din ambele locuri
+//TODO: Terec & Bianca: Cerinta 3. Fie din UIAdmin sa vedem conversatia, fie din UIUser, fie din ambele locuri
 //                 Poate o cale si de a vedea istoria conversatiilor a unui user
 
-//TODO: In UIUser, afisarea cererilor de prietenie
-//TODO: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
-//TODO: Cerinta 4
+//TODO: Ce se intampla daca 1 da cerere de prietenie la 2 si 2 da cerere de prietenie la 1?
+//TODO: Terec: In UIUser, afisarea cererilor de prietenie
+//TODO: Terec: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
+//TODO: Terec: In UIUser, "addFriendship" va adauga cu statusul pending si va avea posibilitatea de a accepta celalalt user
+//TODO: Terec: Cerinta 4
 
 //TODO: Optional. Mutarea acestui TODO list intr-un loc mai bun
 
