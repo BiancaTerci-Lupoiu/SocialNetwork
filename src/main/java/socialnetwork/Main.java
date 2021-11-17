@@ -6,12 +6,12 @@ import socialnetwork.domain.User;
 import socialnetwork.domain.validators.FriendshipValidator;
 import socialnetwork.domain.validators.UserValidator;
 import socialnetwork.repository.Repository;
-import socialnetwork.repository.file.FriendshipFile;
-import socialnetwork.repository.file.UserFile;
+import socialnetwork.repository.database.FriendshipDbRepository;
+import socialnetwork.repository.database.UserDbRepository;
 import socialnetwork.service.Service;
 import socialnetwork.ui.UIAdmin;
 
-//TODO: Terec: url, username si password citite din linia de comanda pentru conectarea la baza de date
+//TODO: Terec: url, username si password citite din linia de comanda pentru conectarea la baza de date. --DONE
 
 //TODO: Bianca: adauga enum Status(pending,approved,rejected)  --DONE
 //TODO: Decea: Friend sa contina: User user, LocalDate date, Status status
@@ -31,7 +31,7 @@ import socialnetwork.ui.UIAdmin;
 //                 Poate o cale si de a vedea istoria conversatiilor a unui user
 
 //TODO: Terec: UI poate ar trebui redenumit la UIAdmin, si sa cream un nou UIUtilizator care primeste
-//      un utilizator ca parametru si afiseaza acel UI specific pentru utilizator
+//      un utilizator ca parametru si afiseaza acel UI specific pentru utilizator --DONE
 //TODO: Ce se intampla daca 1 da cerere de prietenie la 2 si 2 da cerere de prietenie la 1?
 //TODO: Terec: In UIUser, afisarea cererilor de prietenie
 //TODO: Terec: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
@@ -41,18 +41,23 @@ import socialnetwork.ui.UIAdmin;
 //TODO: Optional. Mutarea acestui TODO list intr-un loc mai bun
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        if(args.length != 3)
+        {
+            System.out.println("Da ca si argumente url username password pentru conectarea la baza de date");
+            return;
+        }
+        String url = args[0];
+        String username = args[1];
+        String password = args[2];
+
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
-//        String username = "postgres";
-//        String password = "Bianca01*";
-//        String url = "jdbc:postgresql://localhost:5432/social_network";
-//        Repository<Long, User> userDbRepository = new UserDbRepository(url, username, password, userValidator);
-//        Repository<Tuple<Long, Long>, Friendship> friendshipDbRepository = new FriendshipDbRepository(url, username, password, friendshipValidator);
-//        Service service = new Service(userDbRepository, friendshipDbRepository);
-        Repository<Long, User> userFile = new UserFile("data/users.csv", userValidator);
-        Repository<Tuple<Long, Long>, Friendship> friendshipFile = new FriendshipFile("data/friendships.csv", friendshipValidator);
-        Service service = new Service(userFile, friendshipFile);
+
+        Repository<Long, User> userRepository = new UserDbRepository(url, username, password, userValidator);
+        Repository<Tuple<Long, Long>, Friendship> friendshipRepository = new FriendshipDbRepository(url, username, password, friendshipValidator);
+
+        Service service = new Service(userRepository, friendshipRepository);
 
         UIAdmin ui = new UIAdmin(service);
         ui.start();
