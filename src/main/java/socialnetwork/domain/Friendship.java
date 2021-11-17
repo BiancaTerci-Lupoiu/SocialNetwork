@@ -3,6 +3,8 @@ package socialnetwork.domain;
 // id-ul prieteniei este un tuplu format din <id_user1,id_user2>
 
 
+import java.time.LocalDate;
+
 public class Friendship extends Entity<Tuple<Long, Long>> {
     /**
      * constructor that sets the id of the entity
@@ -10,8 +12,12 @@ public class Friendship extends Entity<Tuple<Long, Long>> {
      * @param id1 the id of the first user from friendship
      * @param id2 the id of the second user from friendship
      */
-    public Friendship(Long id1, Long id2) {
+    private LocalDate date;
+    private Status status;
+    public Friendship(Long id1, Long id2, LocalDate date, Status status) {
         super.setId(new Tuple<Long, Long>(id1, id2));
+        this.status=status;
+        this.date=date;
     }
 
     /**
@@ -22,4 +28,19 @@ public class Friendship extends Entity<Tuple<Long, Long>> {
         return "Friendship{" + "idUser1=" + getId().getLeft() + " , " + "idUser2=" + getId().getRight() + "}";
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

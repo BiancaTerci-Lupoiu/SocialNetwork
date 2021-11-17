@@ -1,12 +1,15 @@
 package socialnetwork.repository.database;
 
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Status;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.Repository;
+import socialnetwork.utils.Constants;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +52,11 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
                 if (resultSet.next()) {
                     Long idUser1Found = resultSet.getLong("id_user1");
                     Long idUser2Found = resultSet.getLong("id_user2");
-                    Friendship friendship = new Friendship(idUser1Found, idUser2Found);
+                    LocalDate dateFound = resultSet.getDate("date").toLocalDate();
+                    Status statusFound = Status.valueOf(resultSet.getString("status"));
+
+
+                    Friendship friendship = new Friendship(idUser1Found, idUser2Found, dateFound, statusFound);
                     return friendship;
                 }
             }
@@ -72,7 +79,9 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             while (resultSet.next()) {
                 Long idUser1 = resultSet.getLong("id_user1");
                 Long idUser2 = resultSet.getLong("id_user2");
-                Friendship friendship = new Friendship(idUser1, idUser2);
+                LocalDate date=resultSet.getDate("date").toLocalDate();
+                Status status = Status.valueOf(resultSet.getString("status"));
+                Friendship friendship = new Friendship(idUser1, idUser2, date, status);
                 friendships.put(friendship.getId(), friendship);
             }
 
@@ -98,12 +107,15 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         // daca exista deja prietenia
         if (result != null)
             return false;
-        String sql = "insert into friendships (id_user1,id_user2) values (?,?)";
+        String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setLong(1, entity.getId().getLeft());
             statement.setLong(2, entity.getId().getRight());
+            statement.setDate(3, Date.valueOf(entity.getDate()));
+            statement.setString(4, entity.getStatus().toString());
+
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,25 +172,27 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         Friendship result = findOne(entity.getId());
         if (result == null)
             return false;
-        /*String sql="update friendships set id_user1=?,id_user2=? where (id_user1=? and id_user2=?) or (id_user1=? and id_user2=?)";
-        try(Connection connection=DriverManager.getConnection(url,username,password);
-            PreparedStatement statement= connection.prepareStatement(sql)
-        ){
-            Long idUser1=entity.getId().getLeft();
-            Long idUser2=entity.getId().getRight();
+        String sql = "update friendships set date=?,status=? where (id_user1=? and id_user2=?) or (id_user1=? and id_user2=?)";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            Long idUser1 = entity.getId().getLeft();
+            Long idUser2 = entity.getId().getRight();
+            Date date = Date.valueOf(entity.getDate());
+            String status = entity.getStatus().toString();
 
-            statement.setLong(1,idUser1);
-            statement.setLong(2,idUser2);
-            statement.setLong(3,idUser2);
-            statement.setLong(4,idUser1);
+            statement.setDate(1, date);
+            statement.setString(2, status);
+            statement.setLong(3, idUser2);
+            statement.setLong(4, idUser1);
 
-            Integer numberOfRowsAffected= statement.executeUpdate();
-            if(numberOfRowsAffected!=1)
+            Integer numberOfRowsAffected = statement.executeUpdate();
+            if (numberOfRowsAffected != 1)
                 return false;
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }*/
+        }
         return true;
     }
 }
