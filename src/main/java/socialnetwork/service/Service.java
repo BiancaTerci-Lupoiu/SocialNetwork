@@ -1,16 +1,12 @@
 package socialnetwork.service;
 
-import socialnetwork.domain.Community;
-import socialnetwork.domain.Friendship;
-import socialnetwork.domain.Tuple;
-import socialnetwork.domain.User;
+import socialnetwork.domain.*;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.Repository;
+import socialnetwork.domain.Status;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Service {
     private final Repository<Long, User> repoUsers;
@@ -140,15 +136,16 @@ public class Service {
      * @throws IllegalArgumentException if the given entity is null.
      * @throws ServiceException         if the users does not exist
      */
-    public boolean addFriendship(Long id1, Long id2) {
+    public boolean addFriendship(Long id1, Long id2, LocalDate date, Status status) {
         //verifica daca exista userii
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
-            Friendship friendship = new Friendship(id1, id2);
+            Friendship friendship = new Friendship(id1, id2,date,status);
             return repoFriendships.save(friendship);
         } else
             throw new ServiceException("users not found!");
+
     }
 
     /**
@@ -231,6 +228,25 @@ public class Service {
 
         return sociableCommunity;
 
+    }
+
+    /**
+     *
+     * @param idUser id of the user
+     * @param status the status of the friendship
+     * @returns a list of the friends of a specified user with the given status
+     */
+    public List<Friend> getFriends(Long idUser,Status status){
+        List<Friend> friends=new ArrayList<>();
+        for(Friendship friendship: getAllFriendships()) {
+            if (Objects.equals(idUser, friendship.getId().getLeft()) && status == friendship.getStatus()) {
+                friends.add(new Friend(findUser(friendship.getId().getRight()), friendship.getDate(), friendship.getStatus()));
+            }
+            if (Objects.equals(friendship.getId().getRight(), idUser) && status == friendship.getStatus()){
+                friends.add(new Friend(findUser(friendship.getId().getLeft()), friendship.getDate(), friendship.getStatus()));
+            }
+        }
+        return friends;
     }
 
 }

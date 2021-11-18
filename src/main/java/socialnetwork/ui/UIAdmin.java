@@ -2,6 +2,7 @@ package socialnetwork.ui;
 
 import socialnetwork.domain.Community;
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.service.Service;
@@ -81,7 +82,8 @@ public class UIAdmin extends UI {
     @UIMethod(name = "addFriend", description = "adds a friendship")
     public void addFriendshipUi(@UIParameter("id user") Long idUser,
                                 @UIParameter("id new friend") Long idNewFriend) {
-        boolean result = service.addFriendship(idUser, idNewFriend);
+        LocalDate now=LocalDate.now();
+        boolean result = service.addFriendship(idUser, idNewFriend,now, Status.APPROVED);
         if (!result)
             System.out.println("They are already friends!");
     }
