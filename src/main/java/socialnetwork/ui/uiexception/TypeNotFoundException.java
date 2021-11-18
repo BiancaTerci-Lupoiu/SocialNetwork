@@ -1,4 +1,4 @@
-package socialnetwork.ui;
+package socialnetwork.ui.uiexception;
 
 import java.lang.reflect.Method;
 
