@@ -1,7 +1,7 @@
 package socialnetwork.ui.uiexception;
 
 /**
- * Aceasta exceptie va fi aruncata pentru a inchide UI-ul
+ * Exception that will be thrown when the UI needs to be close
  */
 public class ExitException extends RuntimeException{
 }

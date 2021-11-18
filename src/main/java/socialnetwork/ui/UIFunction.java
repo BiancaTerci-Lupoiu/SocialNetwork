@@ -64,6 +64,13 @@ public class UIFunction {
         return methodSpecification.description();
     }
 
+    /**
+     * Calls this method on the specific UI
+     * @param ui the UI where this method belongs
+     * @param argsString the string of arguments that are given in line.
+     *                   If no argument is given, there are read in this function
+     * @throws Throwable throws the Exception of the underlying method
+     */
     public void Call(UI ui, String[] argsString) throws Throwable {
         Object[] args = new Object[parameters.length];
         if (argsString.length == 0 && parameters.length > 0)
@@ -97,6 +104,11 @@ public class UIFunction {
         }
     }
 
+    /**
+     * Reads the arguments necessary for the underlying method
+     * @param ui the UI where this method belongs
+     * @return the array of String read from the UI
+     */
     private String[] readArguments(UI ui) throws IOException {
         List<String> argsString = new ArrayList<>(parameters.length);
         int i;
@@ -118,6 +130,12 @@ public class UIFunction {
         return argsString.toArray(new String[0]);
     }
 
+    /**
+     * Converts the arg to the specified type
+     * @param arg The argument to convert
+     * @param type The resulting class of the conversion
+     * @return The converted Object
+     */
     private Object convertStringToType(String arg, Class<?> type) {
         if (String.class.equals(type))
             return arg;

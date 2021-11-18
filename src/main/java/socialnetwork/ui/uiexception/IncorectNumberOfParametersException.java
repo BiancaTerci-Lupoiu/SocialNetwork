@@ -1,5 +1,8 @@
 package socialnetwork.ui.uiexception;
 
+/**
+ * Exception that will be thrown when an incorrect number of parameters is given in the UI
+ */
 public class IncorectNumberOfParametersException extends RuntimeException{
     public  IncorectNumberOfParametersException(int expected, int actual)
     {
