@@ -33,10 +33,10 @@ import socialnetwork.ui.UIAdmin;
 //TODO: Terec: UI poate ar trebui redenumit la UIAdmin, si sa cream un nou UIUtilizator care primeste
 //      un utilizator ca parametru si afiseaza acel UI specific pentru utilizator
 //TODO: Ce se intampla daca 1 da cerere de prietenie la 2 si 2 da cerere de prietenie la 1?
-//TODO: Terec: In UIUser, afisarea cererilor de prietenie
-//TODO: Terec: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie
-//TODO: Terec: In UIUser, "addFriendship" va adauga cu statusul pending si va avea posibilitatea de a accepta celalalt user
-//TODO: Terec: Cerinta 4
+//TODO: Terec: In UIUser, afisarea cererilor de prietenie --DONE
+//TODO: Terec: In UIUser, posibilitatea de a accepta/respinge cereri de prietenie --DONE
+//TODO: Terec: In UIUser, "addFriendship" va adauga cu statusul pending si va avea posibilitatea de a accepta celalalt user --DONE
+//TODO: Terec: Cerinta 4 --DONE
 
 //TODO: Optional. Mutarea acestui TODO list intr-un loc mai bun
 

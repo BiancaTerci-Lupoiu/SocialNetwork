@@ -141,7 +141,7 @@ public class Service {
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
-            Friendship friendship = new Friendship(id1, id2,date,status);
+            Friendship friendship = new Friendship(id1, id2, date, status);
             return repoFriendships.save(friendship);
         } else
             throw new ServiceException("users not found!");
@@ -231,22 +231,38 @@ public class Service {
     }
 
     /**
-     *
      * @param idUser id of the user
      * @param status the status of the friendship
      * @returns a list of the friends of a specified user with the given status
      */
-    public List<Friend> getFriends(Long idUser,Status status){
-        List<Friend> friends=new ArrayList<>();
-        for(Friendship friendship: getAllFriendships()) {
+    public List<Friend> getFriends(Long idUser, Status status) {
+        List<Friend> friends = new ArrayList<>();
+        for (Friendship friendship : getAllFriendships()) {
             if (Objects.equals(idUser, friendship.getId().getLeft()) && status == friendship.getStatus()) {
                 friends.add(new Friend(findUser(friendship.getId().getRight()), friendship.getDate(), friendship.getStatus()));
             }
-            if (Objects.equals(friendship.getId().getRight(), idUser) && status == friendship.getStatus()){
+            if (Objects.equals(friendship.getId().getRight(), idUser) && status == friendship.getStatus()) {
                 friends.add(new Friend(findUser(friendship.getId().getLeft()), friendship.getDate(), friendship.getStatus()));
             }
         }
         return friends;
+    }
+
+    /**
+     * Modifies the given friend request
+     *
+     * @param idSender   The id of the user who sended the invitation
+     * @param idReceiver The id of the user who received the invitation
+     * @param newStatus  the new status of this friend request
+     * @throws ServiceException if the operation could not be completed
+     */
+    public void modifyFriendRequestStatus(Long idSender, Long idReceiver, Status newStatus) {
+        var friendship = repoFriendships.findOne(new Tuple<>(idSender, idReceiver));
+        if (friendship == null)
+            throw new ServiceException("No request from user with id=" + idSender);
+        friendship.setStatus(newStatus);
+        if(!repoFriendships.update(friendship))
+            throw new ServiceException("The request could not be modified");
     }
 
 }

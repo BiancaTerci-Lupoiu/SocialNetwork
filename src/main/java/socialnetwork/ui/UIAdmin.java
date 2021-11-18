@@ -18,10 +18,8 @@ import java.util.*;
 
 
 public class UIAdmin extends UI {
-    private final Service service;
-
     public UIAdmin(Service service) {
-        this.service = service;
+        super(service);
     }
 
     /**
@@ -65,15 +63,6 @@ public class UIAdmin extends UI {
         User result = service.findUser(id);
         if (result == null)
             System.out.println("The user with id=" + id + " does not exist!");
-    }
-
-    /**
-     * ui function to print the users
-     */
-    @UIMethod(name = "showUsers", description = "shows all the users")
-    public void getAllUsersUI() {
-        for (User user : service.getAllUsers().values())
-            System.out.println(user);
     }
 
     /**
