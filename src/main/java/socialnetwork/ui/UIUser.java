@@ -2,6 +2,7 @@ package socialnetwork.ui;
 
 import socialnetwork.domain.User;
 import socialnetwork.service.Service;
+import socialnetwork.ui.uiexception.ExitException;
 
 public class UIUser extends UI{
     private final Service service;

@@ -3,18 +3,8 @@ package socialnetwork.ui;
 import socialnetwork.domain.Community;
 import socialnetwork.domain.Friendship;
 import socialnetwork.domain.User;
-import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.service.Service;
-import socialnetwork.service.ServiceException;
-import socialnetwork.utils.Constants;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.*;
-
+import socialnetwork.ui.uiexception.ExitException;
 
 public class UIAdmin extends UI {
     private final Service service;
