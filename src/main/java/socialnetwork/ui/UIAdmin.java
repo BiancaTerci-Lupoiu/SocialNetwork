@@ -4,27 +4,14 @@ import socialnetwork.domain.Community;
 import socialnetwork.domain.Friendship;
 import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
-import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.service.Service;
-import socialnetwork.service.ServiceException;
-import socialnetwork.utils.Constants;
+import socialnetwork.ui.uiexception.ExitException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.*;
-
 
 public class UIAdmin extends UI {
-    private final Service service;
-
     public UIAdmin(Service service) {
-        this.service = service;
+        super(service);
     }
 
     /**
@@ -71,22 +58,12 @@ public class UIAdmin extends UI {
     }
 
     /**
-     * ui function to print the users
-     */
-    @UIMethod(name = "showUsers", description = "shows all the users")
-    public void getAllUsersUI() {
-        for (User user : service.getAllUsers().values())
-            System.out.println(user);
-    }
-
-    /**
      * ui function to add a friendship
      */
     @UIMethod(name = "addFriend", description = "adds a friendship")
     public void addFriendshipUi(@UIParameter("id user") Long idUser,
                                 @UIParameter("id new friend") Long idNewFriend,
                                 @UIParameter("date") LocalDate date) {
-
         boolean result = service.addFriendship(idUser, idNewFriend,date, Status.APPROVED);
         if (!result)
             System.out.println("They are already friends!");

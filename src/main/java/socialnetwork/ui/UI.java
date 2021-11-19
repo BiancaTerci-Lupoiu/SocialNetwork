@@ -1,8 +1,11 @@
 package socialnetwork.ui;
 
+import socialnetwork.domain.User;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.service.Service;
 import socialnetwork.service.ServiceException;
+import socialnetwork.ui.uiexception.ExitException;
+import socialnetwork.ui.uiexception.IncorectNumberOfParametersException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +19,9 @@ public abstract class UI {
     private final Map<String, UIFunction> commands;
     private final Map<String, UIFunction> shortCommands;
     private final BufferedReader inputReader;
-    protected UI() {
+    protected final Service service;
+    protected UI(Service service) {
+        this.service = service;
         commands = new TreeMap<>();
         shortCommands = new TreeMap<>();
         inputReader = new BufferedReader(new InputStreamReader(System.in));
@@ -72,15 +77,13 @@ public abstract class UI {
                 function.Call(this, Arrays.copyOfRange(args, 1, args.length));
             } catch (NumberFormatException ex) {
                 System.out.println("Wrong input for number");
-            }catch (DateTimeParseException | ServiceException | ValidationException ex)
-            {
+            } catch (DateTimeParseException | ServiceException | ValidationException | IncorectNumberOfParametersException ex) {
                 System.out.println(ex.getMessage());
-            } catch (ExitException ex)
-            {
+            } catch (ExitException ex) {
                 break;
-            }
-            catch (Throwable throwable) {
+            } catch (Throwable throwable) {
                 throwable.printStackTrace();
+                break;
             }
         }
     }
@@ -90,5 +93,14 @@ public abstract class UI {
         for (var command : commands.values()) {
             System.out.println(command.getShortName() + ") " + command.getName() + " " + String.join(" ", command.getParametersName().stream().map(x -> "<" + x + ">").toList()) + " -> " + command.getDescription());
         }
+    }
+
+    /**
+     * ui function to print the users
+     */
+    @UIMethod(name = "showUsers", description = "shows all the users")
+    public void getAllUsersUI() {
+        for (User user : service.getAllUsers().values())
+            System.out.println(user);
     }
 }
