@@ -1,6 +1,7 @@
 package socialnetwork;
 
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Status;
 import socialnetwork.domain.Tuple;
 import socialnetwork.domain.User;
 import socialnetwork.domain.validators.FriendshipValidator;
@@ -61,5 +62,6 @@ public class Main {
 
         UIAdmin ui = new UIAdmin(service);
         ui.start();
+
     }
 }
