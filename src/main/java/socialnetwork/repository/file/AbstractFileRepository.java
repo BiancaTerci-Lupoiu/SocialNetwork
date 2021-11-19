@@ -129,7 +129,7 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
     @Override
     public boolean delete(ID id) {
         boolean result = super.delete(id);
-        if (result == true)
+        if (result)
             storeData();
         return result;
     }
@@ -144,7 +144,7 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
     @Override
     public boolean update(E entity) {
         boolean result = super.update(entity);
-        if (result == true)
+        if (result)
             storeData();
         return result;
 

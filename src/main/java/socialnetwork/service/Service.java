@@ -109,13 +109,9 @@ public class Service {
      */
     public boolean deleteUser(Long id) {
         Map<Long, User> usersWithFriends = getAllUsers();
-        boolean result = repoUsers.delete(id);
-        if (result) {
-            // s-a sters userul, trebuie sa stergem si prieteniile
-            for (User user : usersWithFriends.get(id).getFriends())
-                repoFriendships.delete(new Tuple<>(id, user.getId()));
-        }
-        return result;
+        for (User user : usersWithFriends.get(id).getFriends())
+            repoFriendships.delete(new Tuple<>(id, user.getId()));
+        return repoUsers.delete(id);
     }
 
     /**
@@ -233,7 +229,7 @@ public class Service {
     /**
      * @param idUser id of the user
      * @param status the status of the friendship
-     * @returns a list of the friends of a specified user with the given status
+     * @return a list of the friends of a specified user with the given status
      */
     public List<Friend> getFriends(Long idUser, Status status) {
         List<Friend> friends = new ArrayList<>();
@@ -257,6 +253,13 @@ public class Service {
      * @throws ServiceException if the operation could not be completed
      */
     public void modifyFriendRequestStatus(Long idSender, Long idReceiver, Status newStatus) {
+        if(newStatus == Status.REJECTED) //if the new status is rejected, we will delete the friend request
+        {
+            if(!deleteFriendship(idSender, idReceiver))
+                throw new ServiceException("No request from user with id=" + idSender);
+            return;
+        }
+
         var friendship = repoFriendships.findOne(new Tuple<>(idSender, idReceiver));
         if (friendship == null)
             throw new ServiceException("No request from user with id=" + idSender);
