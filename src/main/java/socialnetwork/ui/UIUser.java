@@ -3,6 +3,7 @@ package socialnetwork.ui;
 import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
 import socialnetwork.service.Service;
+import socialnetwork.ui.uiexception.ExitException;
 
 import java.time.LocalDate;
 

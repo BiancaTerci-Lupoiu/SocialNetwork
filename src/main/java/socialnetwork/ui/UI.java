@@ -4,6 +4,8 @@ import socialnetwork.domain.User;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.service.Service;
 import socialnetwork.service.ServiceException;
+import socialnetwork.ui.uiexception.ExitException;
+import socialnetwork.ui.uiexception.IncorectNumberOfParametersException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,15 +77,13 @@ public abstract class UI {
                 function.Call(this, Arrays.copyOfRange(args, 1, args.length));
             } catch (NumberFormatException ex) {
                 System.out.println("Wrong input for number");
-            }catch (DateTimeParseException | ServiceException | ValidationException ex)
-            {
+            } catch (DateTimeParseException | ServiceException | ValidationException | IncorectNumberOfParametersException ex) {
                 System.out.println(ex.getMessage());
-            } catch (ExitException ex)
-            {
+            } catch (ExitException ex) {
                 break;
-            }
-            catch (Throwable throwable) {
+            } catch (Throwable throwable) {
                 throwable.printStackTrace();
+                break;
             }
         }
     }
