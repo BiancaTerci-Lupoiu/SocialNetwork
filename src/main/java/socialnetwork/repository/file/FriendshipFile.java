@@ -34,6 +34,6 @@ public class FriendshipFile extends AbstractFileRepository<Tuple<Long, Long>, Fr
      */
     @Override
     protected String createEntityAsString(Friendship entity) {
-        return entity.getId().getLeft() + ";" + entity.getId().getRight()+";"+entity.getDate()+";"+entity.getStatus();
+        return entity.getId().getLeft() + ";" + entity.getId().getRight()+";"+entity.getDate().format(Constants.DATE_FORMATTER)+";"+entity.getStatus();
     }
 }

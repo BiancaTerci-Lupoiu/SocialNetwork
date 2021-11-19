@@ -6,18 +6,17 @@ import socialnetwork.domain.Tuple;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.Repository;
-import socialnetwork.utils.Constants;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Friendship> {
-    private String url;
-    private String username;
-    private String password;
-    private Validator<Friendship> validator;
+    private final String url;
+    private final String username;
+    private final String password;
+    private final Validator<Friendship> validator;
 
     public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
         this.url = url;
@@ -53,11 +52,8 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
                     Long idUser1Found = resultSet.getLong("id_user1");
                     Long idUser2Found = resultSet.getLong("id_user2");
                     LocalDate dateFound = resultSet.getDate("date").toLocalDate();
-                    Status statusFound = Status.valueOf(resultSet.getString("status"));
-
-
-                    Friendship friendship = new Friendship(idUser1Found, idUser2Found, dateFound, statusFound);
-                    return friendship;
+                    Status status = Status.getStatus(resultSet.getInt("status"));
+                    return new Friendship(idUser1Found, idUser2Found, dateFound, status);
                 }
             }
         } catch (SQLException e) {
@@ -71,7 +67,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
      */
     @Override
     public Iterable<Friendship> findAll() {
-        Map<Tuple<Long, Long>, Friendship> friendships = new HashMap<>();
+        List<Friendship> friendships = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("select * from friendships");
              ResultSet resultSet = statement.executeQuery()
@@ -79,16 +75,15 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             while (resultSet.next()) {
                 Long idUser1 = resultSet.getLong("id_user1");
                 Long idUser2 = resultSet.getLong("id_user2");
-                LocalDate date=resultSet.getDate("date").toLocalDate();
-                Status status = Status.valueOf(resultSet.getString("status"));
+                LocalDate date = resultSet.getDate("date").toLocalDate();
+                Status status = Status.getStatus(resultSet.getInt("status"));
                 Friendship friendship = new Friendship(idUser1, idUser2, date, status);
-                friendships.put(friendship.getId(), friendship);
+                friendships.add(friendship);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return friendships.values();
+        return friendships;
     }
 
     /**
@@ -103,10 +98,6 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
-        Friendship result = findOne(entity.getId());
-        // daca exista deja prietenia
-        if (result != null)
-            return false;
         String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
@@ -114,14 +105,14 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             statement.setLong(1, entity.getId().getLeft());
             statement.setLong(2, entity.getId().getRight());
             statement.setDate(3, Date.valueOf(entity.getDate()));
-            statement.setString(4, entity.getStatus().toString());
+            statement.setInt(4, entity.getStatus().toInt());
 
-            statement.executeUpdate();
+            if (statement.executeUpdate() == 1)
+                return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return true;
+        return false;
     }
 
     /**
@@ -135,24 +126,22 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
     public boolean delete(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
-        Friendship result = findOne(id);
-        if (result != null) {
-            String sql = "delete from friendships where id_user1=? and id_user2=?";
-            try (Connection connection = DriverManager.getConnection(url, username, password);
-                 PreparedStatement statement = connection.prepareStatement(sql);
-            ) {
-                Long idUser1 = result.getId().getLeft();
-                Long idUser2 = result.getId().getRight();
-                // nu mai avem nevoie sa verificam si pe id2,id1, pt ca in result avem deja entitatea care trebuie stearsa
-                statement.setLong(1, idUser1);
-                statement.setLong(2, idUser2);
+        String sql = "delete from friendships where (id_user1=? and id_user2=?) or (id_user2=? and id_user1=?)";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql);
+        ) {
+            Long idUser1 = id.getLeft();
+            Long idUser2 = id.getRight();
 
-                statement.executeUpdate();
+            statement.setLong(1, idUser1);
+            statement.setLong(2, idUser2);
+            statement.setLong(3, idUser1);
+            statement.setLong(4, idUser2);
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return true;
+            if (statement.executeUpdate() == 1)
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -169,30 +158,29 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
-        Friendship result = findOne(entity.getId());
-        if (result == null)
-            return false;
-        String sql = "update friendships set date=?,status=? where (id_user1=? and id_user2=?) or (id_user1=? and id_user2=?)";
+        String sql = "update friendships set date=?,status=? where (id_user1=? and id_user2=?) or (id_user2=? and id_user1=?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             Long idUser1 = entity.getId().getLeft();
             Long idUser2 = entity.getId().getRight();
             Date date = Date.valueOf(entity.getDate());
-            String status = entity.getStatus().toString();
+            Status status = entity.getStatus();
 
             statement.setDate(1, date);
-            statement.setString(2, status);
-            statement.setLong(3, idUser2);
-            statement.setLong(4, idUser1);
+            statement.setInt(2, status.toInt());
+            statement.setLong(3, idUser1);
+            statement.setLong(4, idUser2);
+            statement.setLong(5, idUser1);
+            statement.setLong(6, idUser2);
 
-            Integer numberOfRowsAffected = statement.executeUpdate();
-            if (numberOfRowsAffected != 1)
-                return false;
+            int rowsAffected = statement.executeUpdate();
 
+            if (rowsAffected == 1)
+                return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 }
