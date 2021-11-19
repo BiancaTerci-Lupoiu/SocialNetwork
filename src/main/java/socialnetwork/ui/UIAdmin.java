@@ -2,15 +2,14 @@ package socialnetwork.ui;
 
 import socialnetwork.domain.Community;
 import socialnetwork.domain.Friendship;
+import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
 import socialnetwork.service.Service;
 import socialnetwork.ui.uiexception.ExitException;
 
 public class UIAdmin extends UI {
-    private final Service service;
-
     public UIAdmin(Service service) {
-        this.service = service;
+        super(service);
     }
 
     /**
@@ -57,21 +56,13 @@ public class UIAdmin extends UI {
     }
 
     /**
-     * ui function to print the users
-     */
-    @UIMethod(name = "showUsers", description = "shows all the users")
-    public void getAllUsersUI() {
-        for (User user : service.getAllUsers().values())
-            System.out.println(user);
-    }
-
-    /**
      * ui function to add a friendship
      */
     @UIMethod(name = "addFriend", description = "adds a friendship")
     public void addFriendshipUi(@UIParameter("id user") Long idUser,
                                 @UIParameter("id new friend") Long idNewFriend) {
-        boolean result = service.addFriendship(idUser, idNewFriend);
+        LocalDate now=LocalDate.now();
+        boolean result = service.addFriendship(idUser, idNewFriend,now, Status.APPROVED);
         if (!result)
             System.out.println("They are already friends!");
     }
