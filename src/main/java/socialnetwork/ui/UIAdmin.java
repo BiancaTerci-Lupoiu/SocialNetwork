@@ -62,9 +62,9 @@ public class UIAdmin extends UI {
      */
     @UIMethod(name = "addFriend", description = "adds a friendship")
     public void addFriendshipUi(@UIParameter("id user") Long idUser,
-                                @UIParameter("id new friend") Long idNewFriend) {
-        LocalDate now = LocalDate.now();
-        boolean result = service.addFriendship(idUser, idNewFriend, now, Status.APPROVED);
+                                @UIParameter("id new friend") Long idNewFriend,
+                                @UIParameter("date") LocalDate date) {
+        boolean result = service.addFriendship(idUser, idNewFriend,date, Status.APPROVED);
         if (!result)
             System.out.println("They are already friends!");
     }
