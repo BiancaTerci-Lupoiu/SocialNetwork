@@ -7,6 +7,8 @@ import socialnetwork.domain.Status;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Service {
     private final Repository<Long, User> repoUsers;
@@ -238,15 +240,20 @@ public class Service {
      */
     public List<Friend> getFriends(Long idUser,Status status){
         List<Friend> friends=new ArrayList<>();
-        for(Friendship friendship: getAllFriendships()) {
-            if (Objects.equals(idUser, friendship.getId().getLeft()) && status == friendship.getStatus()) {
-                friends.add(new Friend(findUser(friendship.getId().getRight()), friendship.getDate(), friendship.getStatus()));
-            }
-            if (Objects.equals(friendship.getId().getRight(), idUser) && status == friendship.getStatus()){
-                friends.add(new Friend(findUser(friendship.getId().getLeft()), friendship.getDate(), friendship.getStatus()));
-            }
-        }
-        return friends;
+        List<Friend> friends2=new ArrayList<>();
+        List<Friendship> friendships=new ArrayList<>();
+        for(Friendship friendship: getAllFriendships())
+            friendships.add(friendship);
+        friends=friendships.stream().filter(x-> Objects.equals(x.getId().getRight(), idUser)&&status==x.getStatus())
+                .map(x->new Friend(findUser(x.getId().getLeft()),x.getDate(),x.getStatus()))
+                .collect(Collectors.toList());
+        friends2=friendships.stream().filter(x-> Objects.equals(x.getId().getLeft(), idUser)&&status==x.getStatus()&&status==Status.APPROVED)
+                .map(x->new Friend(findUser(x.getId().getRight()),x.getDate(),x.getStatus()))
+                .collect(Collectors.toList());
+        return Stream.of(friends,friends2)
+                .flatMap(x -> x.stream())
+                .collect(Collectors.toList());
+
     }
 
 }

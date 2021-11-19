@@ -73,8 +73,8 @@ public class Friend{
     @Override
     public String toString() {
         return "Friend{" +
-                "user" + user+
-                ", date" + date+
+                user+
+                ", date: " + date+
                 ", status=" + status +
                 '}';
     }
