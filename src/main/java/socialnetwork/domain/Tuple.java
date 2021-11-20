@@ -47,19 +47,15 @@ public class Tuple<E1, E2> {
 
     @Override
     public boolean equals(Object o) {
+        //Am modificat incat sa conteze ordinea
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tuple<?, ?> tuple = (Tuple<?, ?>) o;
-        if (Objects.equals(e1, tuple.e1) && Objects.equals(e2, tuple.e2))
-            return true;
-        if (Objects.equals(e2, tuple.e1) && Objects.equals(e1, tuple.e2))
-            return true;
-        return false;
+        return e1.equals(tuple.e1) && e2.equals(tuple.e2);
     }
 
     @Override
     public int hashCode() {
-        // facem XOR pe hash-ul lui e1 si e2 pt a ne asigura ca hashcode(e1,e2)=hashcode(e2,e1)
-        return Objects.hash(e1) ^ Objects.hash(e2);
+        return Objects.hash(e1, e2);
     }
 }

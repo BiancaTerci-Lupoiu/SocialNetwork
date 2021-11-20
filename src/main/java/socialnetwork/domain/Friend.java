@@ -8,7 +8,7 @@ import socialnetwork.domain.User;
 public class Friend{
     private User user;
     private LocalDate date;
-    private Status status;
+    private DirectedStatus status;
 
     /**
      *
@@ -16,15 +16,14 @@ public class Friend{
      * @param date the date when the friendship started
      * @param status the status of the friendship request
      */
-    public Friend(User user,LocalDate date, Status status){
+    public Friend(User user,LocalDate date, DirectedStatus status){
         this.user=user;
         this.date=date;
         this.status=status;
-
     }
     /**
      *
-     * @returns the date of the friendship
+     * @return the date of the friendship
      */
     public LocalDate getDate() {
         return date;
@@ -42,15 +41,15 @@ public class Friend{
      *
      * @param status sets the status of the friendship
      * */
-    public void setStatus(Status status) {
+    public void setStatus(DirectedStatus status) {
         this.status = status;
     }
 
     /**
      *
-     * @returns the status of the friendship
+     * @return the status of the friendship
      */
-    public Status getStatus() {
+    public DirectedStatus getStatus() {
         return status;
     }
 
@@ -64,7 +63,7 @@ public class Friend{
 
     /**
      *
-     * @returns the friend
+     * @return the friend
      */
     public User getUser() {
         return user;
@@ -77,18 +76,5 @@ public class Friend{
                 ", date: " + date+
                 ", status=" + status +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Friend)) return false;
-        Friend friend = (Friend) o;
-        return Objects.equals(user, friend.getUser()) && Objects.equals(date, friend.getDate()) && status == friend.getStatus();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(user, date, status);
     }
 }

@@ -40,9 +40,9 @@ public class Community {
     private int findLongestPath(HashSet<Long> visited, User user) {
         int best = 0;
         visited.add(user.getId());
-        for (var friend : user.getFriends()) {
-            if (!visited.contains(friend.getId()))
-                best = Math.max(best, 1 + findLongestPath(visited, friend));
+        for (var friend : user.getFriends(DirectedStatus.APPROVED)) {
+            if (!visited.contains(friend.getUser().getId()))
+                best = Math.max(best, 1 + findLongestPath(visited, friend.getUser()));
         }
         visited.remove(user.getId());
         return best;

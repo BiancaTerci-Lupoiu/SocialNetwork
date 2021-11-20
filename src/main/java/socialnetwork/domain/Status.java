@@ -25,4 +25,22 @@ public enum Status {
                     default -> throw new IllegalStateException("Unexpected value: " + statusCode);
                 };
     }
+
+    public DirectedStatus toDirectedStatus(boolean send)
+    {
+        if(send)
+            return switch (this)
+                    {
+                        case PENDING -> DirectedStatus.PENDING_SEND;
+                        case REJECTED -> DirectedStatus.REJECTED_SEND;
+                        case APPROVED -> DirectedStatus.APPROVED;
+                    };
+        else
+            return switch (this)
+                    {
+                        case PENDING -> DirectedStatus.PENDING_RECEIVED;
+                        case REJECTED -> DirectedStatus.REJECTED_RECEIVED;
+                        case APPROVED -> DirectedStatus.APPROVED;
+                    };
+    }
 }

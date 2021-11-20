@@ -24,7 +24,6 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         this.password = password;
         this.validator = validator;
     }
-
     /**
      * @param id -the id of the friendship to be returned
      *           id must not be null
@@ -36,7 +35,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
     public Friendship findOne(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
-        String sql = "select * from friendships where (id_user1=? and id_user2=?) or (id_user1=? and id_user2=?)";
+        String sql = "select * from friendships where id_user1=? and id_user2=?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
@@ -45,8 +44,6 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
 
             statement.setLong(1, idUser1);
             statement.setLong(2, idUser2);
-            statement.setLong(3, idUser2);
-            statement.setLong(4, idUser1);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     Long idUser1Found = resultSet.getLong("id_user1");
@@ -97,6 +94,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
     public boolean save(Friendship entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
+
         validator.validate(entity);
         String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
@@ -126,7 +124,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
     public boolean delete(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
-        String sql = "delete from friendships where (id_user1=? and id_user2=?) or (id_user2=? and id_user1=?)";
+        String sql = "delete from friendships where id_user1=? and id_user2=?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql);
         ) {
@@ -135,8 +133,6 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
 
             statement.setLong(1, idUser1);
             statement.setLong(2, idUser2);
-            statement.setLong(3, idUser1);
-            statement.setLong(4, idUser2);
 
             if (statement.executeUpdate() == 1)
                 return true;
@@ -158,7 +154,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
-        String sql = "update friendships set date=?,status=? where (id_user1=? and id_user2=?) or (id_user2=? and id_user1=?)";
+        String sql = "update friendships set date=?,status=? where id_user1=? and id_user2=?";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
@@ -171,8 +167,6 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             statement.setInt(2, status.toInt());
             statement.setLong(3, idUser1);
             statement.setLong(4, idUser2);
-            statement.setLong(5, idUser1);
-            statement.setLong(6, idUser2);
 
             int rowsAffected = statement.executeUpdate();
 
