@@ -15,15 +15,17 @@ import java.util.stream.StreamSupport;
 public class Service {
     private final Repository<Long, User> repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
+    private final Repository<Long,Message> repoMessages;
     private Long idMax = 0L;
 
     /**
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
      */
-    public Service(Repository<Long, User> repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
+    public Service(Repository<Long, User> repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships,Repository<Long,Message> repoMessages) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
+        this.repoMessages=repoMessages;
         //connectFriends();
         setIdMax();
     }

@@ -27,10 +27,10 @@ public class MessageDbRepository implements Repository<Long, Message> {
 
 
     /**
-     * @param id -the id of the entity to be returned
+     * @param id -the id of the message to be returned
      *              id must not be null
-     * @return the entity with the specified id
-     * or null - if there is no entity with the given id
+     * @return the message with the specified id
+     * or null - if there is no message with the given id
      * @throws IllegalArgumentException if id is null.
      */
     @Override
@@ -72,7 +72,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
     }
 
     /**
-     * @return all entities
+     * @return all messages
      */
     @Override
     public Iterable<Message> findAll() {
@@ -166,10 +166,10 @@ public class MessageDbRepository implements Repository<Long, Message> {
     }
 
     /**
-     * removes the entity with the specified id
+     * removes the message with the specified id
      *
      * @param id id must be not null
-     * @return true if the entity is deleted or false if there is no entity with the given id
+     * @return true if the message is deleted or false if there is no message with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     @Override

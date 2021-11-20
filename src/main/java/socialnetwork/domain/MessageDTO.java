@@ -3,17 +3,16 @@ package socialnetwork.domain;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class MessageDto extends Entity<Long>{
+public class MessageDTO extends Entity<Long>{
 
     private String text;
     private LocalDateTime date;
     private User userFrom;
-    private MessageDto replyMessage;
+    private MessageDTO replyMessage;
     private Map<Long,User> usersTo;
 
-    public MessageDto(String text, LocalDateTime date, User userFrom) {
+    public MessageDTO(String text, LocalDateTime date, User userFrom) {
         this.text = text;
         this.date = date;
         this.userFrom = userFrom;
@@ -49,11 +48,11 @@ public class MessageDto extends Entity<Long>{
         this.userFrom = userFrom;
     }
 
-    public MessageDto getReplyMessage() {
+    public MessageDTO getReplyMessage() {
         return replyMessage;
     }
 
-    public void setReplyMessage(MessageDto replyMessage) {
+    public void setReplyMessage(MessageDTO replyMessage) {
         this.replyMessage = replyMessage;
     }
 

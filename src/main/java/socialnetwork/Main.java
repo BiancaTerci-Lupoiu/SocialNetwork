@@ -56,11 +56,13 @@ public class Main {
 
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
+        MessageValidator messageValidator=new MessageValidator();
 
         Repository<Long, User> userRepository = new UserDbRepository(url, username, password, userValidator);
         Repository<Tuple<Long, Long>, Friendship> friendshipRepository = new FriendshipDbRepository(url, username, password, friendshipValidator);
+        Repository<Long,Message> messageRepository=new MessageDbRepository(url,username,password,messageValidator);
 
-        Service service = new Service(userRepository, friendshipRepository);
+        Service service = new Service(userRepository, friendshipRepository,messageRepository);
 
         UIAdmin ui = new UIAdmin(service);
         ui.start();
