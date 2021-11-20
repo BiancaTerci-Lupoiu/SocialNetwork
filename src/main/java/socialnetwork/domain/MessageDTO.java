@@ -56,11 +56,21 @@ public class MessageDTO extends Entity<Long>{
         this.replyMessage = replyMessage;
     }
 
-    public Map<Long, User> getUsersTo() {
-        return usersTo;
+    public Iterable<User> getUsersTo() {
+        return usersTo.values();
     }
 
     public void setUsersTo(Map<Long, User> usersTo) {
         this.usersTo = usersTo;
+    }
+
+    /**
+     *
+     * @param idUser
+     * @return the user with id=idUser from the usersTo list, or null if there is no user with the
+     *          specified id
+     */
+    public User getUserToById(Long idUser){
+        return usersTo.get(idUser);
     }
 }
