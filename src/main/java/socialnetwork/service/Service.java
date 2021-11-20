@@ -4,11 +4,13 @@ import socialnetwork.domain.*;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.Repository;
 import socialnetwork.domain.Status;
+import socialnetwork.repository.database.FriendshipDbRepository;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class Service {
     private final Repository<Long, User> repoUsers;
@@ -34,7 +36,6 @@ public class Service {
         for (User user : repoUsers.findAll())
             if (user.getId() > idMax)
                 idMax = user.getId();
-
     }
 
     /**
@@ -71,8 +72,8 @@ public class Service {
         for (Friendship friendship : repoFriendships.findAll()) {
             User user1 = usersWithFriends.get(friendship.getId().getLeft());
             User user2 = usersWithFriends.get(friendship.getId().getRight());
-            user1.addFriend(user2);
-            user2.addFriend(user1);
+            user1.addFriend(new Friend(user2, friendship.getDate(), friendship.getStatus().toDirectedStatus(false)));
+            user2.addFriend(new Friend(user1, friendship.getDate(), friendship.getStatus().toDirectedStatus(true)));
         }
         return usersWithFriends;
     }
@@ -84,7 +85,27 @@ public class Service {
      * @throws IllegalArgumentException if id is null.
      */
     public User findUser(Long id) {
-        return repoUsers.findOne(id);
+        User user = repoUsers.findOne(id);
+        if (user == null)
+            throw new ServiceException("No user with id=" + id);
+        StreamSupport.stream(repoFriendships.findAll().spliterator(), false)
+                .filter(x -> x.getId().getLeft().equals(user.getId()))
+                .map(x -> new Friend(repoUsers.findOne(x.getId().getRight()),
+                        x.getDate(),
+                        x.getStatus().toDirectedStatus(true)))
+                .forEach(user::addFriend);
+
+        StreamSupport.stream(repoFriendships.findAll().spliterator(), false)
+                .filter(x -> x.getId().getRight().equals(user.getId()))
+                .map(x -> new Friend(repoUsers.findOne(x.getId().getLeft()),
+                        x.getDate(),
+                        x.getStatus().toDirectedStatus(false)))
+                .forEach(user::addFriend);
+        return user;
+    }
+
+    public Collection<Friend> getFriends(Long idUser) {
+        return findUser(idUser).getFriends(DirectedStatus.APPROVED);
     }
 
     /**
@@ -110,9 +131,10 @@ public class Service {
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteUser(Long id) {
-        Map<Long, User> usersWithFriends = getAllUsers();
-        for (User user : usersWithFriends.get(id).getFriends())
-            repoFriendships.delete(new Tuple<>(id, user.getId()));
+        for (Friend friend : findUser(id).getFriends()) {
+            repoFriendships.delete(new Tuple<>(id, friend.getUser().getId()));
+            repoFriendships.delete(new Tuple<>(friend.getUser().getId(), id));
+        }
         return repoUsers.delete(id);
     }
 
@@ -136,6 +158,8 @@ public class Service {
      */
     public boolean addFriendship(Long id1, Long id2, LocalDate date, Status status) {
         //verifica daca exista userii
+        if (repoFriendships.findOne(new Tuple<>(id2, id1)) != null)
+            throw new ServiceException("The other user already send you a invite");
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
@@ -143,7 +167,6 @@ public class Service {
             return repoFriendships.save(friendship);
         } else
             throw new ServiceException("users not found!");
-
     }
 
     /**
@@ -155,7 +178,7 @@ public class Service {
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteFriendship(Long id1, Long id2) {
-        return repoFriendships.delete(new Tuple<>(id1, id2));
+        return repoFriendships.delete(new Tuple<>(id1, id2)) || repoFriendships.delete(new Tuple<>(id2, id1));
     }
 
     /**
@@ -169,7 +192,8 @@ public class Service {
         Map<Long, User> usersWithFriends = getAllUsers();
         nodes.put(currentNode, true);
         User currentUser = usersWithFriends.get(currentNode);
-        for (User userFriend : currentUser.getFriends()) {
+        for (var friend : currentUser.getFriends(DirectedStatus.APPROVED)) {
+            var userFriend = friend.getUser();
             if (!nodes.get(userFriend.getId())) {
                 community.addUser(userFriend);
                 dfsVisit(nodes, userFriend.getId(), community);
@@ -234,22 +258,22 @@ public class Service {
      * @return a list of the friends of a specified user with the given status
      */
 
-    public List<Friend> getFriends(Long idUser,Status status){
-        List<Friend> friends=new ArrayList<>();
-        List<Friend> friends2=new ArrayList<>();
-        List<Friendship> friendships=new ArrayList<>();
-        for(Friendship friendship: getAllFriendships())
-            friendships.add(friendship);
-        friends=friendships.stream().filter(x-> Objects.equals(x.getId().getRight(), idUser)&&status==x.getStatus())
-                .map(x->new Friend(findUser(x.getId().getLeft()),x.getDate(),x.getStatus()))
-                .collect(Collectors.toList());
-        friends2=friendships.stream().filter(x-> Objects.equals(x.getId().getLeft(), idUser)&&status==x.getStatus()&&status==Status.APPROVED)
-                .map(x->new Friend(findUser(x.getId().getRight()),x.getDate(),x.getStatus()))
-                .collect(Collectors.toList());
-        return Stream.of(friends,friends2)
-                .flatMap(x -> x.stream())
-                .collect(Collectors.toList());
-    }
+//    public List<Friend> getFriends(Long idUser,Status status){
+//        List<Friend> friends=new ArrayList<>();
+//        List<Friend> friends2=new ArrayList<>();
+//        List<Friendship> friendships=new ArrayList<>();
+//        for(Friendship friendship: getAllFriendships())
+//            friendships.add(friendship);
+//        friends=friendships.stream().filter(x-> Objects.equals(x.getId().getRight(), idUser)&&status==x.getStatus())
+//                .map(x->new Friend(findUser(x.getId().getLeft()),x.getDate(),x.getStatus()))
+//                .collect(Collectors.toList());
+//        friends2=friendships.stream().filter(x-> Objects.equals(x.getId().getLeft(), idUser)&&status==x.getStatus()&&status==Status.APPROVED)
+//                .map(x->new Friend(findUser(x.getId().getRight()),x.getDate(),x.getStatus()))
+//                .collect(Collectors.toList());
+//        return Stream.of(friends,friends2)
+//                .flatMap(x -> x.stream())
+//                .collect(Collectors.toList());
+//    }
 
     /**
      * Modifies the given friend request
@@ -260,9 +284,9 @@ public class Service {
      * @throws ServiceException if the operation could not be completed
      */
     public void modifyFriendRequestStatus(Long idSender, Long idReceiver, Status newStatus) {
-        if(newStatus == Status.REJECTED) //if the new status is rejected, we will delete the friend request
+        if (newStatus == Status.REJECTED) //if the new status is rejected, we will delete the friend request
         {
-            if(!deleteFriendship(idSender, idReceiver))
+            if (!deleteFriendship(idSender, idReceiver))
                 throw new ServiceException("No request from user with id=" + idSender);
             return;
         }
@@ -271,7 +295,7 @@ public class Service {
         if (friendship == null)
             throw new ServiceException("No request from user with id=" + idSender);
         friendship.setStatus(newStatus);
-        if(!repoFriendships.update(friendship))
+        if (!repoFriendships.update(friendship))
             throw new ServiceException("The request could not be modified");
     }
 

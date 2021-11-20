@@ -5,7 +5,7 @@ import java.util.*;
 public class User extends Entity<Long> {
     private String firstName;
     private String lastName;
-    private Map<Long, User> friends;
+    private Map<Long, Friend> friends;
 
     /**
      * constructor
@@ -16,7 +16,7 @@ public class User extends Entity<Long> {
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        friends = new HashMap<Long, User>();
+        friends = new HashMap<>();
     }
 
     /**
@@ -44,21 +44,22 @@ public class User extends Entity<Long> {
     /**
      * @return users's friends
      */
-    public Iterable<User> getFriends() {
+    public Collection<Friend> getFriends() {
         return friends.values();
     }
 
-    public void setFriends(Map<Long, User> friends) {
-        this.friends = friends;
+    public Collection<Friend> getFriends(DirectedStatus status) {
+        return friends.values().stream()
+                .filter(x -> x.getStatus() == status).toList();
     }
 
     /**
      * add a friend for the user
      *
-     * @param user -the new friend to be added
+     * @param friend -the new friend to be added
      */
-    public void addFriend(User user) {
-        friends.put(user.getId(), user);
+    public void addFriend(Friend friend) {
+        friends.put(friend.getUser().getId(), friend);
     }
 
     /**
@@ -75,9 +76,11 @@ public class User extends Entity<Long> {
      */
     @Override
     public String toString() {
+        //TODO: Sa afisam de aici doar prieteniile cu statusul approved?
         String friendList = "[";
-        for (Map.Entry<Long, User> pair : friends.entrySet())
-            friendList += pair.getValue().getFirstName() + " , " + pair.getValue().getLastName() + " ; ";
+        for (var friend : friends.values())
+            if(friend.getStatus() == DirectedStatus.APPROVED)
+                friendList += friend.getUser().getFirstName() + " , " + friend.getUser().getLastName() + " ; ";
         friendList += "]";
         return "User{" +
                 "id='" + getId() + '\'' +

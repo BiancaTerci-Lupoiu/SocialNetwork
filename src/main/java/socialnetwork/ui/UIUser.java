@@ -1,5 +1,6 @@
 package socialnetwork.ui;
 
+import socialnetwork.domain.DirectedStatus;
 import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
 import socialnetwork.service.Service;
@@ -8,7 +9,12 @@ import socialnetwork.ui.uiexception.ExitException;
 import java.time.LocalDate;
 
 public class UIUser extends UI{
-    private final User user;
+    private User user;
+
+    private void updateUser()
+    {
+        user = service.findUser(user.getId());
+    }
 
     public UIUser(Service service, User user) {
         super(service);
@@ -18,7 +24,8 @@ public class UIUser extends UI{
     @UIMethod(name = "showRequests",description = "shows all friend requests")
     public void showRequests()
     {
-        var friendRequests = service.getFriends(user.getId(), Status.PENDING);
+        updateUser();
+        var friendRequests = user.getFriends(DirectedStatus.PENDING_RECEIVED);
         if(friendRequests.size()==0)
         {
             System.out.println("You have no friend requests :(");
@@ -57,12 +64,9 @@ public class UIUser extends UI{
             System.out.println("They are already friends!");
     }
 
-
     @UIMethod(name = "logout", description = "closes this active session")
     public void logout()
     {
         throw new ExitException();
     }
-
-
 }
