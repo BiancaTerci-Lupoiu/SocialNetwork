@@ -145,12 +145,33 @@ public class MessageDbRepository implements Repository<Long, Message> {
     /**
      * removes the entity with the specified id
      *
-     * @param aLong id must be not null
+     * @param id id must be not null
      * @return true if the entity is deleted or false if there is no entity with the given id
      * @throws IllegalArgumentException if the given id is null.
      */
     @Override
-    public boolean delete(Long aLong) {
+    public boolean delete(Long id) {
+        if(id==null)
+            throw new IllegalArgumentException("id must be not null!");
+
+        Message messageFound=findOne(id);
+        if(messageFound!=null){
+            String sqlMessageTo="delete from messages_to where id_message=?";
+            String sqlMessage="delete from messages where id=?";
+            try(Connection connection=DriverManager.getConnection(url,username,password);
+                PreparedStatement statementMessagesTo=connection.prepareStatement(sqlMessageTo);
+                PreparedStatement statementMessages=connection.prepareStatement(sqlMessage)
+            ){
+                statementMessagesTo.setLong(1,id);
+                statementMessagesTo.executeUpdate();
+                statementMessages.setLong(1,id);
+                statementMessages.executeUpdate();
+
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+            return true;
+        }
         return false;
     }
 
