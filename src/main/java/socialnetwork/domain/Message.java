@@ -68,4 +68,15 @@ public class Message extends Entity<Long>{
     public void setIdUsersTo(List<Long> idUsersTo) {
         this.idUsersTo = idUsersTo;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "text='" + text + '\'' +
+                ", date=" + date +
+                ", idUserFrom=" + idUserFrom +
+                ", idReplyMessage=" + idReplyMessage +
+                ", idUsersTo=" + idUsersTo +
+                '}';
+    }
 }

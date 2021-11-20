@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.sql.Types.INTEGER;
+
 public class MessageDbRepository implements Repository<Long, Message> {
 
     private String url;
@@ -47,12 +49,15 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 if(resultSet.next()){
                     String text=resultSet.getString("text");
                     Long idUserFrom = resultSet.getLong("id_user_from");
-                    Long idReplyMessage = resultSet.getLong("id_reply_message");
+                    Object idReplyMessage=resultSet.getObject("id_reply_message");
                     LocalDateTime date = resultSet.getTimestamp("date").toLocalDateTime();
                     Long idUserTo = resultSet.getLong("id_user_to");
                     Message message = new Message(text, date, idUserFrom);
                     message.setId(id);
-                    message.setIdReplyMessage(idReplyMessage);
+                    if(idReplyMessage==null)
+                        message.setIdReplyMessage(null);
+                    else
+                        message.setIdReplyMessage(Long.valueOf(idReplyMessage.toString()));
                     message.addIdUserTo(idUserTo);
                     while(resultSet.next())
                         message.addIdUserTo(resultSet.getLong("id_user_to"));
@@ -82,14 +87,17 @@ public class MessageDbRepository implements Repository<Long, Message> {
                 Long idMessage = resultSet.getLong("id");
                 String text = resultSet.getString("text");
                 Long idUserFrom = resultSet.getLong("id_user_from");
-                Long idReplyMessage = resultSet.getLong("id_reply_message");
+                Object idReplyMessage=resultSet.getObject("id_reply_message");
                 LocalDateTime date = resultSet.getTimestamp("date").toLocalDateTime();
                 Long idUserTo = resultSet.getLong("id_user_to");
 
                 if (allMessages.get(idMessage) == null) {
                     Message message = new Message(text, date, idUserFrom);
                     message.setId(idMessage);
-                    message.setIdReplyMessage(idReplyMessage);
+                    if(idReplyMessage==null)
+                        message.setIdReplyMessage(null);
+                    else
+                        message.setIdReplyMessage(Long.valueOf(idReplyMessage.toString()));
                     message.addIdUserTo(idUserTo);
                     allMessages.put(idMessage, message);
                 } else {
@@ -125,10 +133,25 @@ public class MessageDbRepository implements Repository<Long, Message> {
         ){
             statementMessages.setString(1, entity.getText());
             statementMessages.setLong(2,entity.getIdUserFrom());
-            statementMessages.setLong(3,entity.getIdReplyMessage());
+            if(entity.getIdReplyMessage()==null)
+                statementMessages.setNull(3,INTEGER);
+            else
+                statementMessages.setLong(3,entity.getIdReplyMessage());
             statementMessages.setTimestamp(4,Timestamp.valueOf(entity.getDate()));
 
             statementMessages.executeUpdate();
+            //trb sa fac rost de id-ul dat de bd pt acest message
+            String sqlGetId="select currval(pg_get_serial_sequence('messages','id'))";
+            Long idMessageInserted=null;
+            try(PreparedStatement statementGetLastMessageInsertedId=connection.prepareStatement(sqlGetId);
+                ResultSet resultSet=statementGetLastMessageInsertedId.executeQuery();
+            ){
+                if(resultSet.next())
+                    idMessageInserted= resultSet.getLong(1);
+            }
+            System.out.println(idMessageInserted);
+            entity.setId(idMessageInserted);
+
             for(Long idUserTo: entity.getIdUsersTo())
             {
                 statementMessagesTo.setLong(1,entity.getId());

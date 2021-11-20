@@ -1,16 +1,18 @@
 package socialnetwork;
 
-import socialnetwork.domain.Friendship;
-import socialnetwork.domain.Status;
-import socialnetwork.domain.Tuple;
-import socialnetwork.domain.User;
+import socialnetwork.domain.*;
 import socialnetwork.domain.validators.FriendshipValidator;
+import socialnetwork.domain.validators.MessageValidator;
 import socialnetwork.domain.validators.UserValidator;
+import socialnetwork.domain.validators.Validator;
 import socialnetwork.repository.Repository;
 import socialnetwork.repository.database.FriendshipDbRepository;
+import socialnetwork.repository.database.MessageDbRepository;
 import socialnetwork.repository.database.UserDbRepository;
 import socialnetwork.service.Service;
 import socialnetwork.ui.UIAdmin;
+
+import java.time.LocalDateTime;
 
 //TODO: Terec: url, username si password citite din linia de comanda pentru conectarea la baza de date. --DONE
 
