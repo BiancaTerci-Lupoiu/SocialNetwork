@@ -117,7 +117,7 @@ public class MessageDbRepository implements Repository<Long, Message> {
      * @return true- if the given entity is saved
      * otherwise returns false (id already exists)
      * @throws ValidationException      if the entity is not valid
-     * @throws IllegalArgumentException if the given entity is null.     *
+     * @throws IllegalArgumentException if the given entity is null.
      */
     @Override
     public boolean save(Message entity) {

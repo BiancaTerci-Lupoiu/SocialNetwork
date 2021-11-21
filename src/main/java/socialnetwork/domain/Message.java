@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Message extends Entity<Long>{
+public class Message extends Entity<Long> {
     private String text;
     private LocalDateTime date;
     private Long idUserFrom;
@@ -16,6 +16,7 @@ public class Message extends Entity<Long>{
 
     /**
      * constructor with the list of idUsersTo
+     *
      * @param text
      * @param date
      * @param idUserFrom
@@ -26,29 +27,30 @@ public class Message extends Entity<Long>{
         this.date = date;
         this.idUserFrom = idUserFrom;
         this.idUsersTo = idUsersTo;
-        idReplyMessage=null;
+        idReplyMessage = null;
     }
 
     /**
      * constructor with the list of idUsersTo= null
+     *
      * @param text
      * @param date
      * @param idUserFrom
      */
     public Message(String text, LocalDateTime date, Long idUserFrom) {
-        this(text,date,idUserFrom,new ArrayList<>());
+        this(text, date, idUserFrom, new ArrayList<>());
     }
 
     /**
      * adds an id of an user to the idUsersTo list
+     *
      * @param idUser
      */
-    public void addIdUserTo(Long idUser){
+    public void addIdUserTo(Long idUser) {
         idUsersTo.add(idUser);
     }
 
     /**
-     *
      * @return message's text
      */
     public String getText() {
@@ -56,7 +58,6 @@ public class Message extends Entity<Long>{
     }
 
     /**
-     *
      * @return message's date
      */
     public LocalDateTime getDate() {
@@ -64,7 +65,6 @@ public class Message extends Entity<Long>{
     }
 
     /**
-     *
      * @return message's idUserFrom
      */
     public Long getIdUserFrom() {
@@ -72,7 +72,6 @@ public class Message extends Entity<Long>{
     }
 
     /**
-     *
      * @return message's idReplyMessage
      */
     public Long getIdReplyMessage() {
@@ -80,7 +79,6 @@ public class Message extends Entity<Long>{
     }
 
     /**
-     *
      * @return message's list of idUsersTo (recipients)
      */
     public List<Long> getIdUsersTo() {
@@ -93,6 +91,7 @@ public class Message extends Entity<Long>{
 
     /**
      * sets the date of the message with the value date
+     *
      * @param date
      */
     public void setDate(LocalDateTime date) {
@@ -105,6 +104,7 @@ public class Message extends Entity<Long>{
 
     /**
      * sets the idReplyMessage of the message with the value idReplyMessage
+     *
      * @param idReplyMessage
      */
     public void setIdReplyMessage(Long idReplyMessage) {
@@ -116,7 +116,6 @@ public class Message extends Entity<Long>{
     }
 
     /**
-     *
      * @return the Message entity as a String
      */
     @Override

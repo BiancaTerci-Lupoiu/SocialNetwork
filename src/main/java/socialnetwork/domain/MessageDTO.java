@@ -7,23 +7,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class MessageDTO extends Entity<Long>{
+public class MessageDTO extends Entity<Long> {
 
     private String text;
     private LocalDateTime date;
     private User userFrom;
     private MessageDTO replyMessage;
-    private Map<Long,User> usersTo;
+    private Map<Long, User> usersTo;
 
-    public MessageDTO(String text, LocalDateTime date, User userFrom,MessageDTO replyMessage,Map<Long,User> usersTo) {
+    public MessageDTO(String text, LocalDateTime date, User userFrom, MessageDTO replyMessage, Map<Long, User> usersTo) {
         this.text = text;
         this.date = date;
         this.userFrom = userFrom;
-        this.replyMessage=replyMessage;
-        this.usersTo=usersTo;
+        this.replyMessage = replyMessage;
+        this.usersTo = usersTo;
     }
 
-    public void addUserTo(User user){
+    public void addUserTo(User user) {
         usersTo.put(user.getId(), user);
     }
 
@@ -68,22 +68,21 @@ public class MessageDTO extends Entity<Long>{
     }
 
     /**
-     *
      * @param idUser
      * @return the user with id=idUser from the usersTo list, or null if there is no user with the
-     *          specified id
+     * specified id
      */
-    public User getUserToById(Long idUser){
+    public User getUserToById(Long idUser) {
         return usersTo.get(idUser);
     }
 
     // (idMesaj) Nume Prenume:... mesaj:... (data+ora)
     @Override
     public String toString() {
-        String messageToString="("+getId()+") "+ userFrom.getLastName()+" "+userFrom.getFirstName()+" ";
-        if(replyMessage!=null)
-            messageToString+="Replied to "+"\""+replyMessage.getText()+"\""+"\n"+"\t\t";
-        messageToString+=getText()+" ("+getDate().format(Constants.DATETIME_FORMATTER)+") ";
+        String messageToString = "(" + getId() + ") " + userFrom.getLastName() + " " + userFrom.getFirstName() + " ";
+        if (replyMessage != null)
+            messageToString += "Replied to " + "\"" + replyMessage.getText() + "\"" + "\n" + "\t\t";
+        messageToString += getText() + " (" + getDate().format(Constants.DATETIME_FORMATTER) + ") ";
         return messageToString;
     }
 

@@ -45,8 +45,7 @@ import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
-        if(args.length != 3)
-        {
+        if (args.length != 3) {
             System.out.println("Da ca si argumente url username password pentru conectarea la baza de date");
             return;
         }
@@ -56,13 +55,13 @@ public class Main {
 
         UserValidator userValidator = new UserValidator();
         FriendshipValidator friendshipValidator = new FriendshipValidator();
-        MessageValidator messageValidator=new MessageValidator();
+        MessageValidator messageValidator = new MessageValidator();
 
         Repository<Long, User> userRepository = new UserDbRepository(url, username, password, userValidator);
         Repository<Tuple<Long, Long>, Friendship> friendshipRepository = new FriendshipDbRepository(url, username, password, friendshipValidator);
-        Repository<Long,Message> messageRepository=new MessageDbRepository(url,username,password,messageValidator);
+        Repository<Long, Message> messageRepository = new MessageDbRepository(url, username, password, messageValidator);
 
-        Service service = new Service(userRepository, friendshipRepository,messageRepository);
+        Service service = new Service(userRepository, friendshipRepository, messageRepository);
 
         UIAdmin ui = new UIAdmin(service);
         ui.start();
