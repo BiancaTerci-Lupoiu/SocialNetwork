@@ -440,7 +440,7 @@ public class Service {
     }
 
     /**
-     *
+     * Gets the conversation between the users with ids: idUser1,idUser2 in chronological order
      * @param idUser1
      * @param idUser2
      * @return the conversation between the users with ids: idUser1 and idUser2
@@ -464,7 +464,7 @@ public class Service {
     /**
      *
      * @param idUser
-     * @return the users that have open converations with the user with id=idUser
+     * @return the users that have open conversations with the user with id=idUser
      */
     public Collection<User> getUsersThatHaveMessagesWithSomeUser(Long idUser) {
         if (repoUsers.findOne(idUser) == null)

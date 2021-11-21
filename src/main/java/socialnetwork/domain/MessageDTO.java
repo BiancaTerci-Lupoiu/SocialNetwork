@@ -15,6 +15,15 @@ public class MessageDTO extends Entity<Long> {
     private MessageDTO replyMessage;
     private Map<Long, User> usersTo;
 
+    /**
+     * constructor
+     *
+     * @param text         the text of the message
+     * @param date         the date+time of the message
+     * @param userFrom     the user that sent the message
+     * @param replyMessage the message this message replies to
+     * @param usersTo      the list of users recipients
+     */
     public MessageDTO(String text, LocalDateTime date, User userFrom, MessageDTO replyMessage, Map<Long, User> usersTo) {
         this.text = text;
         this.date = date;
@@ -27,6 +36,9 @@ public class MessageDTO extends Entity<Long> {
         usersTo.put(user.getId(), user);
     }
 
+    /**
+     * @return the text of the message
+     */
     public String getText() {
         return text;
     }
@@ -35,14 +47,25 @@ public class MessageDTO extends Entity<Long> {
         this.text = text;
     }
 
+    /**
+     * @return the date of the message
+     */
     public LocalDateTime getDate() {
         return date;
     }
 
+    /**
+     * sets the date of the message to value: date
+     *
+     * @param date
+     */
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
+    /**
+     * @return the user that sent the message
+     */
     public User getUserFrom() {
         return userFrom;
     }
@@ -59,6 +82,9 @@ public class MessageDTO extends Entity<Long> {
         this.replyMessage = replyMessage;
     }
 
+    /**
+     * @return the list of users recipients
+     */
     public Iterable<User> getUsersTo() {
         return usersTo.values();
     }
@@ -76,7 +102,9 @@ public class MessageDTO extends Entity<Long> {
         return usersTo.get(idUser);
     }
 
-    // (idMesaj) Nume Prenume:... mesaj:... (data+ora)
+    /**
+     * @return a String with information about the message
+     */
     @Override
     public String toString() {
         String messageToString = "(" + getId() + ") " + userFrom.getLastName() + " " + userFrom.getFirstName() + " ";
