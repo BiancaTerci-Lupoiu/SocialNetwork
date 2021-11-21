@@ -99,8 +99,8 @@ public abstract class UI {
      * ui function to print the users
      */
     @UIMethod(name = "showUsers", description = "shows all the users")
-    public void getAllUsersUI() {
+    public void getAllUsers() {
         for (User user : service.getAllUsers().values())
-            System.out.println(user);
+            System.out.println(user.toStringWithFriends());
     }
 }

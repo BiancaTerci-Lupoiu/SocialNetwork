@@ -73,8 +73,8 @@ public class Service {
         for (Friendship friendship : repoFriendships.findAll()) {
             User user1 = usersWithFriends.get(friendship.getId().getLeft());
             User user2 = usersWithFriends.get(friendship.getId().getRight());
-            user1.addFriend(new Friend(user2, friendship.getDate(), friendship.getStatus().toDirectedStatus(false)));
-            user2.addFriend(new Friend(user1, friendship.getDate(), friendship.getStatus().toDirectedStatus(true)));
+            user1.addFriend(new Friend(user2, friendship.getDate(), friendship.getStatus().toDirectedStatus(true)));
+            user2.addFriend(new Friend(user1, friendship.getDate(), friendship.getStatus().toDirectedStatus(false)));
         }
         return usersWithFriends;
     }
@@ -185,13 +185,16 @@ public class Service {
      */
     public boolean addFriendship(Long id1, Long id2, LocalDate date, Status status) {
         //verifica daca exista userii
-        if (repoFriendships.findOne(new Tuple<>(id2, id1)) != null)
-            throw new ServiceException("The other user already send you a invite");
+        Friendship friendship = repoFriendships.findOne(new Tuple<>(id2, id1));
+        if (friendship != null)
+            if(friendship.getStatus() == Status.APPROVED)
+                throw new ServiceException("You are already friend with the other user");
+            else
+                throw new ServiceException("The other user already send you a invite");
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
-            Friendship friendship = new Friendship(id1, id2, date, status);
-            return repoFriendships.save(friendship);
+            return repoFriendships.save(new Friendship(id1, id2, date, status));
         } else
             throw new ServiceException("users not found!");
     }

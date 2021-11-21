@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import socialnetwork.domain.User;
+import socialnetwork.utils.Constants;
 
 public class Friend{
     private User user;
@@ -71,10 +72,8 @@ public class Friend{
 
     @Override
     public String toString() {
-        return "Friend{" +
-                user+
-                ", date: " + date+
-                ", status=" + status +
-                '}';
+        return user+
+                ", date: " + date.format(Constants.DATE_FORMATTER)+
+                ", status=" + status;
     }
 }
