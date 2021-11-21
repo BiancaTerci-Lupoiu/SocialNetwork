@@ -4,28 +4,27 @@ import socialnetwork.domain.*;
 import socialnetwork.domain.validators.ValidationException;
 import socialnetwork.repository.Repository;
 import socialnetwork.domain.Status;
-import socialnetwork.repository.database.FriendshipDbRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Service {
     private final Repository<Long, User> repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
-    private final Repository<Long,Message> repoMessages;
+    private final Repository<Long, Message> repoMessages;
     private Long idMax = 0L;
 
     /**
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
      */
-    public Service(Repository<Long, User> repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships,Repository<Long,Message> repoMessages) {
+    public Service(Repository<Long, User> repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships, Repository<Long, Message> repoMessages) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
-        this.repoMessages=repoMessages;
+        this.repoMessages = repoMessages;
         //connectFriends();
         setIdMax();
     }
@@ -300,5 +299,91 @@ public class Service {
         if (!repoFriendships.update(friendship))
             throw new ServiceException("The request could not be modified");
     }
+
+    public boolean sendMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo) {
+        return addMessage(text,date,idUserFrom,idUsersTo,null);
+    }
+
+
+    public boolean replyMessage(String text, LocalDateTime date, Long idUserFrom, Long idReplyMessage){
+        Message messageReply=repoMessages.findOne(idReplyMessage);
+        if(messageReply==null)
+            throw new ServiceException("The message you want to reply does not exist!\n");
+        Long idUserTo=messageReply.getIdUserFrom();
+        return addMessage(text,date,idUserFrom, List.of(idUserTo),idReplyMessage);
+
+    }
+
+    private boolean addMessage(String text,LocalDateTime date, Long idUserFrom,List<Long> idUsersTo,Long idReplyMessage){
+        if (repoUsers.findOne(idUserFrom) == null)
+            throw new ServiceException("The user that sends the message does not exist!\n");
+        for (Long idUserTo : idUsersTo)
+            if (repoUsers.findOne(idUserTo) == null)
+                throw new ServiceException("Some user from the recipients list does not exist!\n");
+        Message message = new Message(text, date, idUserFrom, idUsersTo);
+        message.setIdReplyMessage(idReplyMessage);
+        return repoMessages.save(message);
+    }
+
+    public boolean deleteMessage(Long idMessage){
+        return repoMessages.delete(idMessage);
+    }
+    private MessageDTO getMessageDTOFromMessage(Message message){
+        User userFrom =repoUsers.findOne(message.getIdUserFrom());
+        Map<Long, User> listUsersTo=new HashMap<>();
+        for(Long idUser: message.getIdUsersTo()){
+            User user=repoUsers.findOne(idUser);
+            listUsersTo.put(idUser,user);
+        }
+        MessageDTO replyMessage=null;
+        if(message.getIdReplyMessage()!=null)
+            replyMessage=getMessageDTOFromMessage(repoMessages.findOne(message.getIdReplyMessage()));
+
+        MessageDTO messageDTO=new MessageDTO(message.getText(), message.getDate(), userFrom,replyMessage,listUsersTo);
+        messageDTO.setId(message.getId());
+        return messageDTO;
+
+    }
+    public Iterable<MessageDTO> getAllMessages(){
+        Iterable<Message> messages=repoMessages.findAll();
+        List<MessageDTO> listMessagesDTO=new ArrayList<>();
+        for(Message message:messages){
+            MessageDTO messageDTO=getMessageDTOFromMessage(message);
+            listMessagesDTO.add(messageDTO);
+        }
+        return listMessagesDTO;
+    }
+
+    public Conversation getConversation(Long idUser1, Long idUser2){
+        List<MessageDTO> messagesList=new ArrayList<>();
+        for(MessageDTO message:getAllMessages())
+        {
+            if((message.getUserFrom().getId().equals(idUser1) && message.getUserToById(idUser2)!=null) ||(message.getUserFrom().getId().equals(idUser2) && message.getUserToById(idUser1)!=null) )
+                messagesList.add(message);
+        }
+        messagesList=messagesList.stream().sorted((message1,message2)->{
+            if(message1.getDate().isBefore(message2.getDate()))
+                return -1;
+            if(message1.getDate().equals(message2.getDate()))
+                return 0;
+            else return 1;
+        }).toList();
+        return new Conversation(messagesList);
+    }
+
+    public Collection<User> getUsersThatHaveMessagesWithSomeUser(Long idUser){
+        if(repoUsers.findOne(idUser)==null)
+            throw new ServiceException("The user with id="+idUser+" does not exist\n");
+        Map<Long,User> users=new HashMap<>();
+        for(MessageDTO message: getAllMessages())
+            if(message.getUserFrom().getId().equals(idUser)){
+                for(User user: message.getUsersTo())
+                    users.put(user.getId(),user);
+            }
+            else if(message.getUserToById(idUser)!=null)
+                users.put(message.getUserFrom().getId(), message.getUserFrom());
+        return users.values();
+    }
+
 
 }
