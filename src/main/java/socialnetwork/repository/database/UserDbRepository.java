@@ -26,8 +26,8 @@ public class UserDbRepository implements Repository<Long, User> {
     /**
      * @param aLong -the id of the user to be returned
      *              aLong must not be null
-     * @return the entity with the specified id (aLong)
-     * or null - if there is no entity with the given id
+     * @return the user with the specified id (aLong)
+     * or null - if there is no user with the given id
      * @throws IllegalArgumentException if id(aLong) is null.
      */
     @Override
@@ -120,7 +120,7 @@ public class UserDbRepository implements Repository<Long, User> {
      * removes the user with the specified id
      *
      * @param aLong aLong must be not null
-     * @return @return true if the entity is deleted or false if there is no entity with the given id (aLong)
+     * @return @return true if the user is deleted or false if there is no user with the given id (aLong)
      * @throws IllegalArgumentException if the given id(aLong) is null.
      */
     @Override

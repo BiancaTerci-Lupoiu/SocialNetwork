@@ -24,6 +24,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         this.password = password;
         this.validator = validator;
     }
+
     /**
      * @param id -the id of the friendship to be returned
      *           id must not be null
