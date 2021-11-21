@@ -96,6 +96,9 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             throw new IllegalArgumentException("entity must be not null!");
 
         validator.validate(entity);
+        if(findOne(entity.getId()) != null)
+            return false;
+
         String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)

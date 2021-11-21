@@ -81,7 +81,7 @@ public class User extends Entity<Long> {
 
     public String toStringWithFriends()
     {
-        return String.format("%s friends=%s",toString(), getFriends());
+        return String.format("%s, friends=%s",toString(), getFriends());
     }
 
     public boolean equals(Object o) {
