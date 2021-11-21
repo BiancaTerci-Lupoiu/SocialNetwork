@@ -72,8 +72,8 @@ public class Service {
         for (Friendship friendship : repoFriendships.findAll()) {
             User user1 = usersWithFriends.get(friendship.getId().getLeft());
             User user2 = usersWithFriends.get(friendship.getId().getRight());
-            user1.addFriend(new Friend(user2, friendship.getDate(), friendship.getStatus().toDirectedStatus(false)));
-            user2.addFriend(new Friend(user1, friendship.getDate(), friendship.getStatus().toDirectedStatus(true)));
+            user1.addFriend(new Friend(user2, friendship.getDate(), friendship.getStatus().toDirectedStatus(true)));
+            user2.addFriend(new Friend(user1, friendship.getDate(), friendship.getStatus().toDirectedStatus(false)));
         }
         return usersWithFriends;
     }

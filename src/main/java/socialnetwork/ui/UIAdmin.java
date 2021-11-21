@@ -18,7 +18,7 @@ public class UIAdmin extends UI {
      * ui function to add users
      */
     @UIMethod(name = "addUser", description = "adds a user")
-    public void addUserUi(@UIParameter("first name") String firstName,
+    public void addUser(@UIParameter("first name") String firstName,
                           @UIParameter("last name") String lastName) {
         boolean result = service.addUser(firstName, lastName);
         if (!result)
@@ -29,7 +29,7 @@ public class UIAdmin extends UI {
      * ui function to update users
      */
     @UIMethod(name = "updateUser", description = "updates a user")
-    public void updateUserUi(@UIParameter("id") Long id,
+    public void updateUser(@UIParameter("id") Long id,
                              @UIParameter("first name") String firstName,
                              @UIParameter("last name") String lastName) {
         boolean result = service.updateUser(id, firstName, lastName);
@@ -41,7 +41,7 @@ public class UIAdmin extends UI {
      * ui function to delete users
      */
     @UIMethod(name = "deleteUser", description = "deletes a user")
-    public void deleteUserUi(@UIParameter("id") Long id) {
+    public void deleteUser(@UIParameter("id") Long id) {
         boolean result = service.deleteUser(id);
         if (!result)
             System.out.println("The user with id=" + id + " does not exist!");
@@ -51,7 +51,7 @@ public class UIAdmin extends UI {
      * ui function to find users
      */
     @UIMethod(name = "findUser", description = "finds a user by their id")
-    public void findUserUi(@UIParameter("id") Long id) {
+    public void findUser(@UIParameter("id") Long id) {
         User result = service.findUser(id);
         if (result == null)
             System.out.println("The user with id=" + id + " does not exist!");
@@ -61,7 +61,7 @@ public class UIAdmin extends UI {
      * ui function to add a friendship
      */
     @UIMethod(name = "addFriend", description = "adds a friendship")
-    public void addFriendshipUi(@UIParameter("id user") Long idUser,
+    public void addFriendship(@UIParameter("id user") Long idUser,
                                 @UIParameter("id new friend") Long idNewFriend,
                                 @UIParameter("date") LocalDate date) {
         boolean result = service.addFriendship(idUser, idNewFriend,date, Status.APPROVED);
@@ -73,7 +73,7 @@ public class UIAdmin extends UI {
      * ui function to delete a friendship
      */
     @UIMethod(name = "deleteFriend", description = "deletes a friendship")
-    public void deleteFriendshipUi(@UIParameter("id user1") Long idUser,
+    public void deleteFriendship(@UIParameter("id user1") Long idUser,
                                    @UIParameter("id user2") Long idNewFriend) {
         boolean result = service.deleteFriendship(idUser, idNewFriend);
         if (!result)
@@ -84,7 +84,7 @@ public class UIAdmin extends UI {
      * ui function to print the number of communities
      */
     @UIMethod(name = "communities", description = "shows the number of communities")
-    public void numberOfCommunitiesUi() {
+    public void numberOfCommunities() {
         int numberOfCommunities = service.numberOfCommunities();
         System.out.println("Number of communities: " + numberOfCommunities);
     }
@@ -93,7 +93,7 @@ public class UIAdmin extends UI {
      * ui function to print the most sociable community
      */
     @UIMethod(name = "sociable", description = "shows the most sociable community")
-    public void theMostSociableCommunityUi() {
+    public void theMostSociableCommunity() {
         Community community = service.theMostSociableCommunity();
         System.out.println("The most sociable community is:");
         for (User user : community.getCommunityUsers()) {

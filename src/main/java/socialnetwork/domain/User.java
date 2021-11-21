@@ -76,18 +76,12 @@ public class User extends Entity<Long> {
      */
     @Override
     public String toString() {
-        //TODO: Sa afisam de aici doar prieteniile cu statusul approved?
-        String friendList = "[";
-        for (var friend : friends.values())
-            if(friend.getStatus() == DirectedStatus.APPROVED)
-                friendList += friend.getUser().getFirstName() + " , " + friend.getUser().getLastName() + " ; ";
-        friendList += "]";
-        return "User{" +
-                "id='" + getId() + '\'' +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", friends=" + friendList +
-                '}';
+        return String.format("(%s) %s %s",getId(),getFirstName(),getLastName());
+    }
+
+    public String toStringWithFriends()
+    {
+        return String.format("%s friends=%s",toString(), getFriends());
     }
 
     public boolean equals(Object o) {
