@@ -64,6 +64,5 @@ public class Main {
 
         UIAdmin ui = new UIAdmin(service);
         ui.start();
-
     }
 }

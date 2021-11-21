@@ -1,6 +1,7 @@
 package socialnetwork.ui;
 
 import socialnetwork.domain.DirectedStatus;
+import socialnetwork.domain.Friend;
 import socialnetwork.domain.Status;
 import socialnetwork.domain.User;
 import socialnetwork.service.Service;
@@ -68,5 +69,17 @@ public class UIUser extends UI{
     public void logout()
     {
         throw new ExitException();
+    }
+
+    @UIMethod(name="findMyFriends",description="shows all your friends")
+    public void getFriends(){
+        for(Friend friend: service.getFriends(user.getId()))
+            System.out.println(friend);
+    }
+
+    @UIMethod(name="findMyFriendsByMonth",description="shows all your friends for a specified month")
+    public void getFriendsByMonth(@UIParameter("month")Integer month){
+        for(Friend friend: service.getFriendsMonth(user.getId(),month))
+            System.out.println(friend);
     }
 }

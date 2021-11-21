@@ -1,13 +1,12 @@
 package socialnetwork.ui;
 
-import socialnetwork.domain.Community;
-import socialnetwork.domain.Friendship;
-import socialnetwork.domain.Status;
-import socialnetwork.domain.User;
+import socialnetwork.domain.*;
 import socialnetwork.service.Service;
 import socialnetwork.ui.uiexception.ExitException;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.Date;
 
 public class UIAdmin extends UI {
     public UIAdmin(Service service) {
@@ -123,6 +122,29 @@ public class UIAdmin extends UI {
     @UIMethod(name = "exit", description = "closes the application")
     public void exit() {
         throw new ExitException();
+    }
+
+    /**
+     * ui method for get friends
+     * @param id the id of a user
+     */
+    @UIMethod(name="getFriends",description ="finds all the friends of a user")
+    public void getFriendsUI(@UIParameter("id")Long id){
+        for(Friend friend: service.getFriends(id))
+            System.out.println(friend);
+
+    }
+
+    /**
+     *
+     * @param id
+     * @param month
+     */
+    @UIMethod(name="getFriendsByMonth",description ="finds the friends for a specific month")
+    public void getFriendsByMonthUI(@UIParameter("id")Long id,
+                                    @UIParameter("month") Integer month){
+        for(Friend friend: service.getFriendsMonth(id,month))
+            System.out.println(friend);
     }
 }
 

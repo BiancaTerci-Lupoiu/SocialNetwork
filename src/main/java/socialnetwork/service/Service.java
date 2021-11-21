@@ -7,6 +7,7 @@ import socialnetwork.domain.Status;
 import socialnetwork.repository.database.FriendshipDbRepository;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -104,8 +105,34 @@ public class Service {
         return user;
     }
 
+    /**
+     *
+     * @param idUser id of the user
+     * @returns a collection of the friends of the specified idUser
+     */
     public Collection<Friend> getFriends(Long idUser) {
+        User user = repoUsers.findOne(idUser);
+        if (user == null)
+            throw new ServiceException("No user with id=" + idUser);
         return findUser(idUser).getFriends(DirectedStatus.APPROVED);
+    }
+
+    /**
+     *
+     * @param idUser
+     * @param month
+     * @returns a list of friends of the given user for a specific month
+     */
+    public List<Friend> getFriendsMonth(Long idUser, Integer month){
+        User user = repoUsers.findOne(idUser);
+        if (user == null)
+            throw new ServiceException("No user with id=" + idUser);
+        if(month>12||month<1)
+            throw new ServiceException("The given month is incorrect");
+        return findUser(idUser).getFriends(DirectedStatus.APPROVED)
+                .stream()
+                .filter(x->x.getDate().getMonthValue()==month)
+                .collect(Collectors.toList());
     }
 
     /**
