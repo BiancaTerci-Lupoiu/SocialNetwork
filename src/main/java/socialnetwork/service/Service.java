@@ -108,7 +108,7 @@ public class Service {
     /**
      *
      * @param idUser id of the user
-     * @returns a collection of the friends of the specified idUser
+     * @return a collection of the friends of the specified idUser
      */
     public Collection<Friend> getFriends(Long idUser) {
         User user = repoUsers.findOne(idUser);
@@ -121,7 +121,7 @@ public class Service {
      *
      * @param idUser
      * @param month
-     * @returns a list of friends of the given user for a specific month
+     * @return a list of friends of the given user for a specific month
      */
     public List<Friend> getFriendsMonth(Long idUser, Integer month){
         User user = repoUsers.findOne(idUser);
