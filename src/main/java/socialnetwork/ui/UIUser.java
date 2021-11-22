@@ -25,12 +25,10 @@ public class UIUser extends UI {
         this.user = user;
     }
 
-
     @UIMethod(name = "profile", description = "shows this user profile")
     public void profile() {
         System.out.println("You are " + user);
     }
-
 
     @UIMethod(name = "showRequests", description = "shows all friend requests")
     public void showRequests() {
@@ -46,12 +44,6 @@ public class UIUser extends UI {
             System.out.println(request);
     }
 
-    @UIMethod(name = "sendRequest", description = "sends a friend request")
-    public void sendFriendRequest(@UIParameter("id user") Long idUser,
-                                  @UIParameter("date") LocalDate date) {
-        service.addFriendship(user.getId(), idUser, date, Status.PENDING);
-    }
-
     @UIMethod(name = "accept", description = "accepts the friend request from this user")
     public void acceptFriendRequest(@UIParameter("id user") Long idUser) {
         service.modifyFriendRequestStatus(idUser, user.getId(), Status.APPROVED);
@@ -63,8 +55,8 @@ public class UIUser extends UI {
     }
 
     @UIMethod(name = "add", description = "sends a friend request")
-    public void addFriend(@UIParameter("id user") Long idUser,
-                          @UIParameter("date") LocalDate date) {
+    public void sendFriendRequest(@UIParameter("id user") Long idUser,
+                                  @UIParameter("date") LocalDate date) {
         boolean result = service.addFriendship(user.getId(), idUser, date, Status.PENDING);
         if (!result)
             System.out.println("They are already friends!");
@@ -106,7 +98,6 @@ public class UIUser extends UI {
         else
             System.out.println(conversation);
     }
-
 
     @UIMethod(name = "logout", description = "closes this active session")
     public void logout() {

@@ -18,6 +18,7 @@ public abstract class UI {
     private final Map<String, UIFunction> shortCommands;
     private final BufferedReader inputReader;
     protected final Service service;
+
     protected UI(Service service) {
         this.service = service;
         commands = new TreeMap<>();
@@ -53,22 +54,22 @@ public abstract class UI {
         return inputReader.readLine();
     }
 
-    private String[] splitArguments(String line)
-    {
-        String[] quoteSeparated = line.split("\"",-1);
+    private String[] splitArguments(String line) {
+        String[] quoteSeparated = line.split("\"", -1);
         List<String> args = new ArrayList<>();
-        for(int i=0;i< quoteSeparated.length;i++)
-        {
-            if(quoteSeparated[i].trim().equals(""))
+        for (int i = 0; i < quoteSeparated.length; i++) {
+            if (quoteSeparated[i].trim().equals(""))
                 continue;
-            if(i%2==0)
+            if (i % 2 == 0)
                 args.addAll(Arrays.stream(quoteSeparated[i].split(" "))
                         .map(String::trim)
-                        .filter(x-> !x.equals(""))
+                        .filter(x -> !x.equals(""))
                         .toList());
             else
                 args.add(quoteSeparated[i]);
         }
+        if (args.size() == 0)
+            return new String[]{""};
         return args.toArray(String[]::new);
     }
 
