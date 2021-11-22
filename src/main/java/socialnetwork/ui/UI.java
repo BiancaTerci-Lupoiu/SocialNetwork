@@ -11,9 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class UI {
     private final Map<String, UIFunction> commands;
@@ -55,6 +53,25 @@ public abstract class UI {
         return inputReader.readLine();
     }
 
+    private String[] splitArguments(String line)
+    {
+        String[] quoteSeparated = line.split("\"",-1);
+        List<String> args = new ArrayList<>();
+        for(int i=0;i< quoteSeparated.length;i++)
+        {
+            if(quoteSeparated[i].trim().equals(""))
+                continue;
+            if(i%2==0)
+                args.addAll(Arrays.stream(quoteSeparated[i].split(" "))
+                        .map(String::trim)
+                        .filter(x-> !x.equals(""))
+                        .toList());
+            else
+                args.add(quoteSeparated[i]);
+        }
+        return args.toArray(String[]::new);
+    }
+
     /**
      * starts the application
      */
@@ -63,7 +80,8 @@ public abstract class UI {
             try {
                 System.out.print(">>>");
                 String commandLine = inputReader.readLine();
-                String[] args = commandLine.split(" ");
+
+                String[] args = splitArguments(commandLine);
                 String command = args[0];
                 var function = commands.get(command);
                 if (function == null)
