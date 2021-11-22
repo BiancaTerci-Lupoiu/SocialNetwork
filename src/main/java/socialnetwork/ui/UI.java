@@ -56,7 +56,6 @@ public abstract class UI {
     private String[] splitArguments(String line)
     {
         String[] quoteSeparated = line.split("\"",-1);
-        System.out.println(Arrays.toString(quoteSeparated));
         List<String> args = new ArrayList<>();
         for(int i=0;i< quoteSeparated.length;i++)
         {
@@ -70,7 +69,6 @@ public abstract class UI {
             else
                 args.add(quoteSeparated[i]);
         }
-        System.out.println(args);
         return args.toArray(String[]::new);
     }
 
