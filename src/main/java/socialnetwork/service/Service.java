@@ -391,11 +391,13 @@ public class Service {
                 invalidUsersIds += idUserTo + " ";
             else
                 validIdUsersTo.add(idUserTo);
+        if (validIdUsersTo.isEmpty())
+            throw new ServiceException("All the users from the recipients list do not exist!\n");
         Message message = new Message(text, date, idUserFrom, validIdUsersTo);
         message.setIdReplyMessage(idReplyMessage);
         boolean result = repoMessages.save(message);
         if (!invalidUsersIds.isEmpty())
-            throw new ServiceException("Some user from the recipients list does not exist: " + invalidUsersIds + "\n");
+            throw new ServiceException("Some users from the recipients list does not exist: " + invalidUsersIds + "\n");
         return result;
     }
 
