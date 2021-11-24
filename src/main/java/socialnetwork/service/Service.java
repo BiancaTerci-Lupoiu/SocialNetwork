@@ -108,7 +108,6 @@ public class Service {
     }
 
     /**
-     *
      * @param idUser id of the user
      * @return a collection of the friends of the specified idUser
      */
@@ -120,20 +119,19 @@ public class Service {
     }
 
     /**
-     *
      * @param idUser
      * @param month
      * @return a list of friends of the given user for a specific month
      */
-    public List<Friend> getFriendsMonth(Long idUser, Integer month){
+    public List<Friend> getFriendsMonth(Long idUser, Integer month) {
         User user = repoUsers.findOne(idUser);
         if (user == null)
             throw new ServiceException("No user with id=" + idUser);
-        if(month>12||month<1)
+        if (month > 12 || month < 1)
             throw new ServiceException("The given month is incorrect");
         return findUser(idUser).getFriends(DirectedStatus.APPROVED)
                 .stream()
-                .filter(x->x.getDate().getMonthValue()==month)
+                .filter(x -> x.getDate().getMonthValue() == month)
                 .collect(Collectors.toList());
     }
 
@@ -189,7 +187,7 @@ public class Service {
         //verifica daca exista userii
         Friendship friendship = repoFriendships.findOne(new Tuple<>(id2, id1));
         if (friendship != null)
-            if(friendship.getStatus() == Status.APPROVED)
+            if (friendship.getStatus() == Status.APPROVED)
                 throw new ServiceException("You are already friend with the other user");
             else
                 throw new ServiceException("The other user already send you a invite");
@@ -333,13 +331,14 @@ public class Service {
 
     /**
      * sends a message from the user with id=idUserFrom to the users with ids from the idUsersTo list
-     * @param text the text of the message
-     * @param date the date of the message
+     *
+     * @param text       the text of the message
+     * @param date       the date of the message
      * @param idUserFrom the id of the user who sent the message
-     * @param idUsersTo a list with ids of the recipients users
+     * @param idUsersTo  a list with ids of the recipients users
      * @return true if the message is sent, or false otherwise
-     * @throws ServiceException if the user with id=idUserFrom does not exist or,
-     *                      some user with id from the idUsersTo list does not exist
+     * @throws ServiceException         if the user with id=idUserFrom does not exist or,
+     *                                  some user with id from the idUsersTo list does not exist
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
@@ -349,14 +348,15 @@ public class Service {
 
     /**
      * replies to an existent message
-     * @param text the text of the message
-     * @param date the date of the message
-     * @param idUserFrom the id of the user who sent the message
+     *
+     * @param text           the text of the message
+     * @param date           the date of the message
+     * @param idUserFrom     the id of the user who sent the message
      * @param idReplyMessage the id of the message the user wants to reply
      * @return
-     * @throws ServiceException if the user with id=idUserFrom does not exist or,
-     *                  some user with id from the idUsersTo list does not exist or,
-     *                  the message with id=idReplyMessage does not exist
+     * @throws ServiceException         if the user with id=idUserFrom does not exist or,
+     *                                  some user with id from the idUsersTo list does not exist or,
+     *                                  the message with id=idReplyMessage does not exist
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
@@ -370,31 +370,38 @@ public class Service {
     }
 
     /**
-     *
-     * @param text the text of the message
-     * @param date the date of the message
-     * @param idUserFrom the id of the user who sent the message
-     * @param idUsersTo a list with ids of the recipients users
+     * @param text           the text of the message
+     * @param date           the date of the message
+     * @param idUserFrom     the id of the user who sent the message
+     * @param idUsersTo      a list with ids of the recipients users
      * @param idReplyMessage the id of the message the user wants to reply
      * @return true if the message is added, false otherwise
-     * @throws ServiceException if the user with id=idUserFrom does not exist or,
-     *                 some user with id from the idUsersTo list does not exist
+     * @throws ServiceException         if the user with id=idUserFrom does not exist or,
+     *                                  some user with id from the idUsersTo list does not exist
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
     private boolean addMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo, Long idReplyMessage) {
         if (repoUsers.findOne(idUserFrom) == null)
             throw new ServiceException("The user that sends the message does not exist!\n");
+        String invalidUsersIds = "";
+        List<Long> validIdUsersTo = new ArrayList<>();
         for (Long idUserTo : idUsersTo)
             if (repoUsers.findOne(idUserTo) == null)
-                throw new ServiceException("Some user from the recipients list does not exist!\n");
-        Message message = new Message(text, date, idUserFrom, idUsersTo);
+                invalidUsersIds += idUserTo + " ";
+            else
+                validIdUsersTo.add(idUserTo);
+        Message message = new Message(text, date, idUserFrom, validIdUsersTo);
         message.setIdReplyMessage(idReplyMessage);
-        return repoMessages.save(message);
+        boolean result = repoMessages.save(message);
+        if (!invalidUsersIds.isEmpty())
+            throw new ServiceException("Some user from the recipients list does not exist: " + invalidUsersIds + "\n");
+        return result;
     }
 
     /**
      * deletes the message with the specified id
+     *
      * @param idMessage the id of the message to be deleted
      * @return true is the message is deleted, false otherwise
      * @throws IllegalArgumentException if the given idMessage is null.
@@ -405,6 +412,7 @@ public class Service {
 
     /**
      * converts a Message object to a MessageDTO object
+     *
      * @param message the message to be converted
      * @return the MessageDTO with the attributes of message
      */
@@ -426,7 +434,6 @@ public class Service {
     }
 
     /**
-     *
      * @return all the messages (a list of MessageDTO objects)
      */
     public Iterable<MessageDTO> getAllMessages() {
@@ -441,6 +448,7 @@ public class Service {
 
     /**
      * Gets the conversation between the users with ids: idUser1,idUser2 in chronological order
+     *
      * @param idUser1
      * @param idUser2
      * @return the conversation between the users with ids: idUser1 and idUser2
@@ -462,9 +470,9 @@ public class Service {
     }
 
     /**
-     *
      * @param idUser
      * @return the users that have open conversations with the user with id=idUser
+     * @throws ServiceException if the user with id=idUser does not exist
      */
     public Collection<User> getUsersThatHaveMessagesWithSomeUser(Long idUser) {
         if (repoUsers.findOne(idUser) == null)
