@@ -87,7 +87,7 @@ public class Service {
      * or null - if there is no entity with the given id
      * @throws IllegalArgumentException if id is null.
      */
-    public User findUser(Long id) {
+    public User getUserWithFriends(Long id) {
         User user = repoUsers.findOne(id);
         if (user == null)
             throw new ServiceException("No user with id=" + id);
@@ -115,7 +115,7 @@ public class Service {
         User user = repoUsers.findOne(idUser);
         if (user == null)
             throw new ServiceException("No user with id=" + idUser);
-        return findUser(idUser).getFriends(DirectedStatus.APPROVED);
+        return getUserWithFriends(idUser).getFriends(DirectedStatus.APPROVED);
     }
 
     /**
@@ -129,7 +129,7 @@ public class Service {
             throw new ServiceException("No user with id=" + idUser);
         if (month > 12 || month < 1)
             throw new ServiceException("The given month is incorrect");
-        return findUser(idUser).getFriends(DirectedStatus.APPROVED)
+        return getUserWithFriends(idUser).getFriends(DirectedStatus.APPROVED)
                 .stream()
                 .filter(x -> x.getDate().getMonthValue() == month)
                 .collect(Collectors.toList());
@@ -158,7 +158,7 @@ public class Service {
      * @throws IllegalArgumentException if the given id is null.
      */
     public boolean deleteUser(Long id) {
-        for (Friend friend : findUser(id).getFriends()) {
+        for (Friend friend : getUserWithFriends(id).getFriends()) {
             repoFriendships.delete(new Tuple<>(id, friend.getUser().getId()));
             repoFriendships.delete(new Tuple<>(friend.getUser().getId(), id));
         }
@@ -259,7 +259,6 @@ public class Service {
      * @return the number of communities (int)
      */
     public int numberOfCommunities() {
-
         return findAllCommunities().size();
     }
 
@@ -277,33 +276,8 @@ public class Service {
                 sociableCommunity = community;
             }
         }
-
         return sociableCommunity;
-
     }
-
-    /**
-     * @param idUser id of the user
-     * @param status the status of the friendship
-     * @return a list of the friends of a specified user with the given status
-     */
-
-//    public List<Friend> getFriends(Long idUser,Status status){
-//        List<Friend> friends=new ArrayList<>();
-//        List<Friend> friends2=new ArrayList<>();
-//        List<Friendship> friendships=new ArrayList<>();
-//        for(Friendship friendship: getAllFriendships())
-//            friendships.add(friendship);
-//        friends=friendships.stream().filter(x-> Objects.equals(x.getId().getRight(), idUser)&&status==x.getStatus())
-//                .map(x->new Friend(findUser(x.getId().getLeft()),x.getDate(),x.getStatus()))
-//                .collect(Collectors.toList());
-//        friends2=friendships.stream().filter(x-> Objects.equals(x.getId().getLeft(), idUser)&&status==x.getStatus()&&status==Status.APPROVED)
-//                .map(x->new Friend(findUser(x.getId().getRight()),x.getDate(),x.getStatus()))
-//                .collect(Collectors.toList());
-//        return Stream.of(friends,friends2)
-//                .flatMap(x -> x.stream())
-//                .collect(Collectors.toList());
-//    }
 
     /**
      * Modifies the given friend request

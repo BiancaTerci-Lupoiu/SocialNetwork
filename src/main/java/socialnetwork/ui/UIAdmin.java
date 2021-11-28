@@ -5,8 +5,6 @@ import socialnetwork.service.Service;
 import socialnetwork.ui.uiexception.ExitException;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.Date;
 
 public class UIAdmin extends UI {
     public UIAdmin(Service service) {
@@ -51,7 +49,7 @@ public class UIAdmin extends UI {
      */
     @UIMethod(name = "findUser", description = "finds a user by their id")
     public void findUser(@UIParameter("id") Long id) {
-        User result = service.findUser(id);
+        User result = service.getUserWithFriends(id);
         if (result == null)
             System.out.println("The user with id=" + id + " does not exist!");
     }
@@ -111,7 +109,7 @@ public class UIAdmin extends UI {
 
     @UIMethod(name = "login", description = "")
     public void login(@UIParameter("id") Long id) throws Exception {
-        var user = service.findUser(id);
+        var user = service.getUserWithFriends(id);
         if (user == null) {
             System.out.println("The user with id=" + id + " does not exist!");
         }

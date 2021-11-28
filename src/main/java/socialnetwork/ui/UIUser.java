@@ -17,7 +17,7 @@ public class UIUser extends UI {
     private User user;
 
     private void updateUser() {
-        user = service.findUser(user.getId());
+        user = service.getUserWithFriends(user.getId());
     }
 
     public UIUser(Service service, User user) {
