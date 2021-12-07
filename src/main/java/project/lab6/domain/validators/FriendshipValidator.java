@@ -1,4 +1,5 @@
 package project.lab6.domain.validators;
+
 import project.lab6.domain.Friendship;
 
 public class FriendshipValidator implements Validator<Friendship> {

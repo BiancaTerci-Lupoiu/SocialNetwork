@@ -13,6 +13,7 @@ public class UserValidator implements Validator<User> {
      */
     @Override
     public void validate(User entity) throws ValidationException {
+        //TODO: Decea. Valideaza emailul
         String errors = "";
         if (entity.getId() <= 0)
             errors += "invalid id!\n";

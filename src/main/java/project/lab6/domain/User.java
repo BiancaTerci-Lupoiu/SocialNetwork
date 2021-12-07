@@ -6,9 +6,13 @@ import java.util.Map;
 import java.util.Objects;
 
 public class User extends Entity<Long> {
+    private final String email;
     private String firstName;
     private String lastName;
-    private Map<Long, Friend> friends;
+    private final Map<Long, Friend> friends;
+
+    private final String hashPassword;
+    private final String salt;
 
     /**
      * constructor
@@ -16,9 +20,13 @@ public class User extends Entity<Long> {
      * @param firstName of the user
      * @param lastName  of the user
      */
-    public User(String firstName, String lastName) {
+    public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt) {
+        setId(id);
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.hashPassword = hashPassword;
+        this.salt = salt;
         friends = new HashMap<>();
     }
 
@@ -42,6 +50,18 @@ public class User extends Entity<Long> {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHashPassword() {
+        return hashPassword;
+    }
+
+    public String getSalt() {
+        return salt;
     }
 
     /**
@@ -79,12 +99,11 @@ public class User extends Entity<Long> {
      */
     @Override
     public String toString() {
-        return String.format("(%s) %s %s",getId(),getFirstName(),getLastName());
+        return String.format("(%s) %s %s", getId(), getFirstName(), getLastName());
     }
 
-    public String toStringWithFriends()
-    {
-        return String.format("%s, friends=%s",toString(), getFriends());
+    public String toStringWithFriends() {
+        return String.format("%s, friends=%s", toString(), getFriends());
     }
 
     public boolean equals(Object o) {
@@ -100,5 +119,4 @@ public class User extends Entity<Long> {
     public int hashCode() {
         return Objects.hash(getFirstName(), getLastName(), getFriends());
     }
-
 }

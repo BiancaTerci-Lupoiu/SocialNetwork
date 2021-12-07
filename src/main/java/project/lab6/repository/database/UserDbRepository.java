@@ -4,13 +4,16 @@ import project.lab6.domain.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.Repository;
+import project.lab6.repository.RepositoryUser;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-public class UserDbRepository implements Repository<Long, User> {
+public class UserDbRepository implements RepositoryUser {
     private String url;
     private String username;
     private String password;
@@ -43,12 +46,7 @@ public class UserDbRepository implements Repository<Long, User> {
             statement.setLong(1, aLong);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Long id = resultSet.getLong("id");
-                    String firstName = resultSet.getString("first_name");
-                    String lastName = resultSet.getString("last_name");
-                    User user = new User(firstName, lastName);
-                    user.setId(id);
-                    return user;
+                    return GetUser(resultSet);
                 }
             }
 
@@ -64,7 +62,7 @@ public class UserDbRepository implements Repository<Long, User> {
      */
     @Override
     public Iterable<User> findAll() {
-        Map<Long, User> users = new HashMap<>();
+        List<User> users = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM users");
              // un tabel din bd
@@ -72,20 +70,15 @@ public class UserDbRepository implements Repository<Long, User> {
         ) {
             // mutam cursorul in resultset. Initial e positionat inainte de prima linie
             while (resultSet.next()) {
-                Long id = resultSet.getLong("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-
-                User user = new User(firstName, lastName);
-                user.setId(id);
-                users.put(user.getId(), user);
+                User user = GetUser(resultSet);
+                users.add(user);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return users.values();
+        return users;
     }
 
     /**
@@ -101,15 +94,17 @@ public class UserDbRepository implements Repository<Long, User> {
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
 
-        String sql = "insert into users (first_name,last_name) values(?,?)";
+        String sql = "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setString(1, entity.getFirstName());
             statement.setString(2, entity.getLastName());
+            statement.setString(3, entity.getHashPassword());
+            statement.setString(4, entity.getEmail());
+            statement.setString(5, entity.getSalt());
 
             statement.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -169,7 +164,7 @@ public class UserDbRepository implements Repository<Long, User> {
             statement.setString(2, entity.getLastName());
             statement.setLong(3, entity.getId());
 
-            Integer numberOfRowsAffected = statement.executeUpdate();
+            int numberOfRowsAffected = statement.executeUpdate();
             if (numberOfRowsAffected != 1)
                 return false;
 
@@ -178,5 +173,36 @@ public class UserDbRepository implements Repository<Long, User> {
         }
 
         return true;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        String sql = "select * from users where email=?";
+        try (Connection connection = DriverManager.getConnection(url, username, password);
+             PreparedStatement statement = connection.prepareStatement(sql);
+
+        ) {
+            statement.setString(1, email);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return GetUser(resultSet);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private User GetUser(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getLong("id");
+        String email=resultSet.getString("email");
+        String firstName = resultSet.getString("first_name");
+        String lastName = resultSet.getString("last_name");
+        String hashPassword = resultSet.getString("hash_password");
+        String salt = resultSet.getString("salt");
+        return new User(id,email,firstName,lastName,hashPassword,salt);
     }
 }

@@ -3,7 +3,11 @@ package project.lab6.service;
 import project.lab6.domain.*;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.Repository;
+import project.lab6.repository.RepositoryUser;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -11,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class Service {
-    private final Repository<Long, User> repoUsers;
+    private final RepositoryUser repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
     private final Repository<Long, Message> repoMessages;
     private Long idMax = 0L;
@@ -20,12 +24,40 @@ public class Service {
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
      */
-    public Service(Repository<Long, User> repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships, Repository<Long, Message> repoMessages) {
+    public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships, Repository<Long, Message> repoMessages) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
         this.repoMessages = repoMessages;
-        //connectFriends();
         setIdMax();
+    }
+
+    private String generateHashPassword(String password, String salt)
+    {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.update(password.getBytes(StandardCharsets.UTF_8));
+            digest.update(salt.getBytes(StandardCharsets.UTF_8));
+            byte[] passwordBytes = digest.digest();
+            return HexFormat.of().formatHex(passwordBytes);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Eroare la numele algoritmului");
+        }
+    }
+
+    public User loginUser(String email, String password){
+        User user = repoUsers.findByEmail(email);
+        if(user == null)
+            return null;
+        if(generateHashPassword(password, user.getSalt()).equals(user.getHashPassword()))
+            return user;
+        return null;
+    }
+
+    public List<User> searchByName(String name, Long idUserToExcept)
+    {
+        //TODO: Bianca. implementeaza functia!!!
+        return new ArrayList<>();
     }
 
     /**
@@ -38,6 +70,12 @@ public class Service {
                 idMax = user.getId();
     }
 
+    private String generateSalt()
+    {
+        //TODO: Bianca. Genereaza un string de 32 de caractere. Orice caracter, nu doar hex
+        return "";
+    }
+
     /**
      * adds the user with the id,firstName,lastName
      *
@@ -48,9 +86,10 @@ public class Service {
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.
      */
-    public boolean addUser(String firstName, String lastName) {
-        User user = new User(firstName, lastName);
-        user.setId(idMax + 1);
+    public boolean addUser(String email, String firstName, String lastName, String password) {
+        String salt = generateSalt(); //generam un salt random pentru acest user
+        String hashPassword = generateHashPassword(password, salt);
+        User user = new User(idMax+1,email, firstName, lastName, hashPassword, salt);
         boolean result = repoUsers.save(user);
         if (result)
             idMax++;
@@ -65,8 +104,8 @@ public class Service {
         Map<Long, User> usersWithFriends = new HashMap<>();
         // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
         for (User user : repoUsers.findAll()) {
-            User newUser = new User(user.getFirstName(), user.getLastName());
-            newUser.setId(user.getId());
+            User newUser = new User(user.getId(),user.getEmail(), user.getFirstName(), user.getLastName(),
+                    user.getHashPassword(), user.getSalt());
             usersWithFriends.put(newUser.getId(), newUser);
         }
         for (Friendship friendship : repoFriendships.findAll()) {
@@ -142,8 +181,10 @@ public class Service {
      * @throws ValidationException      if the entity is not valid.
      */
     public boolean updateUser(Long id, String firstName, String lastName) {
-        User updatedUser = new User(firstName, lastName);
+        User updatedUser = repoUsers.findOne(id);
         updatedUser.setId(id);
+        updatedUser.setFirstName(firstName);
+        updatedUser.setLastName(lastName);
         return repoUsers.update(updatedUser);
     }
 
