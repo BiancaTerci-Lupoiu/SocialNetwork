@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Service {
@@ -23,6 +24,7 @@ public class Service {
     /**
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
+     * @param repoMessages    the repository with messages
      */
     public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships, Repository<Long, Message> repoMessages) {
         this.repoUsers = repoUsers;
@@ -31,8 +33,7 @@ public class Service {
         setIdMax();
     }
 
-    private String generateHashPassword(String password, String salt)
-    {
+    private String generateHashPassword(String password, String salt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.update(password.getBytes(StandardCharsets.UTF_8));
@@ -41,23 +42,38 @@ public class Service {
             return HexFormat.of().formatHex(passwordBytes);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            throw new RuntimeException("Eroare la numele algoritmului");
+            throw new RuntimeException("Error at algorithm name!");
         }
     }
 
-    public User loginUser(String email, String password){
+    public User loginUser(String email, String password) {
         User user = repoUsers.findByEmail(email);
-        if(user == null)
+        if (user == null)
             return null;
-        if(generateHashPassword(password, user.getSalt()).equals(user.getHashPassword()))
+        if (generateHashPassword(password, user.getSalt()).equals(user.getHashPassword()))
             return user;
         return null;
     }
 
-    public List<User> searchByName(String name, Long idUserToExcept)
-    {
-        //TODO: Bianca. implementeaza functia!!!
-        return new ArrayList<>();
+    /**
+     * @param name           string with a name
+     * @param idUserToExcept the id of the user to except adding at the list
+     *                       (the logged user)
+     * @return a list with users whose name(last name + first name) matches the string name
+     */
+    public List<User> searchUsersByName(String name, Long idUserToExcept) {
+        String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ");
+
+        List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
+                .filter(user -> {
+                    String lastNameFirstName = user.getLastName() + " " + user.getFirstName();
+                    String firstNameLastName = user.getFirstName() + " " + user.getLastName();
+                    return !user.getId().equals(idUserToExcept) &&
+                            (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
+                                    || firstNameLastName.startsWith(nameWithoutExtraSpaces));
+                })
+                .collect(Collectors.toList());
+        return usersWithName;
     }
 
     /**
@@ -70,10 +86,18 @@ public class Service {
                 idMax = user.getId();
     }
 
-    private String generateSalt()
-    {
-        //TODO: Bianca. Genereaza un string de 32 de caractere. Orice caracter, nu doar hex
-        return "";
+    /**
+     * generates a random 32 characters long string
+     *
+     * @return the random string (32 chars)
+     */
+    private String generateSalt() {
+        StringBuilder randomString = new StringBuilder(32);
+        for (int i = 0; i < 32; i++) {
+            int index = (int) (256 * Math.random());
+            randomString.append((char) index);
+        }
+        return randomString.toString();
     }
 
     /**
@@ -89,7 +113,7 @@ public class Service {
     public boolean addUser(String email, String firstName, String lastName, String password) {
         String salt = generateSalt(); //generam un salt random pentru acest user
         String hashPassword = generateHashPassword(password, salt);
-        User user = new User(idMax+1,email, firstName, lastName, hashPassword, salt);
+        User user = new User(idMax + 1, email, firstName, lastName, hashPassword, salt);
         boolean result = repoUsers.save(user);
         if (result)
             idMax++;
@@ -104,7 +128,7 @@ public class Service {
         Map<Long, User> usersWithFriends = new HashMap<>();
         // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
         for (User user : repoUsers.findAll()) {
-            User newUser = new User(user.getId(),user.getEmail(), user.getFirstName(), user.getLastName(),
+            User newUser = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
                     user.getHashPassword(), user.getSalt());
             usersWithFriends.put(newUser.getId(), newUser);
         }
