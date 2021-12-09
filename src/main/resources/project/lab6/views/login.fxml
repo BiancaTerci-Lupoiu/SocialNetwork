@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.LoginController">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -63,14 +62,19 @@
                   <TextField fx:id="emailTextField" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <Button fx:id="loginButton" layoutX="133.0" layoutY="273.0" mnemonicParsing="false" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: #5c0e63;" text="Login" textFill="WHITE">
+            <Button fx:id="loginButton" layoutX="133.0" layoutY="273.0" mnemonicParsing="false" onAction="#logInUser" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: #5c0e63;" text="Login" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="22.0" />
                </font>
             </Button>
-            <Button fx:id="newAccounButton" layoutX="46.0" layoutY="306.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="258.0" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: transparent; -fx-underline: true;" text="Create new account" textAlignment="CENTER" textFill="#5c0e63">
+            <Button fx:id="newAccountButton" layoutX="46.0" layoutY="306.0" mnemonicParsing="false" onAction="#createNewAccount" prefHeight="49.0" prefWidth="258.0" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: transparent; -fx-underline: true;" text="Create new account" textAlignment="CENTER" textFill="#5c0e63">
                <font>
                   <Font name="Cambria Bold" size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="closeLoginButton" layoutX="281.0" layoutY="364.0" mnemonicParsing="false" onAction="#closeLoginWindow" style="-fx-background-color: #5c0e63;" text="Close App" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Cambria Bold" size="14.0" />
                </font>
             </Button>
          </children>
