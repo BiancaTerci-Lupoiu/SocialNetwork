@@ -20,7 +20,7 @@
          <children>
             <ImageView fitHeight="561.0" fitWidth="229.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@images/floare.jpg" />
+                  <Image url="@../images/floare.jpg" />
                </image>
             </ImageView>
          </children>
@@ -36,7 +36,7 @@
             </Label>
             <ImageView fitHeight="62.0" fitWidth="67.0" layoutX="193.0" layoutY="59.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@images/login-icon.png" />
+                  <Image url="@../images/login-icon.png" />
                </image>
             </ImageView>
             <GridPane layoutX="37.0" layoutY="156.0" prefHeight="102.0" prefWidth="295.0">
