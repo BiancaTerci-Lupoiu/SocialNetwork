@@ -34,12 +34,12 @@ public class LoginController {
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws IOException {
-        /**FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("views/createNewAccount.fxml"));
+        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("views/createNewAccount.fxml"));
         Stage newAccountStage=new Stage();
         Scene scene=new Scene(loader.load(),630, 400);
 
         newAccountStage.setScene(scene);
-        newAccountStage.show();*/
+        newAccountStage.show();
+        closeLoginWindow(null);
     }
 }
