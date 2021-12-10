@@ -6,6 +6,7 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
 
-    private Validator<E> validator;
+    private final Validator<E> validator;
     Map<ID, E> entities;
 
     /**
@@ -47,8 +48,8 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
      * @return all entities
      */
     @Override
-    public Iterable<E> findAll() {
-        return entities.values();
+    public List<E> findAll() {
+        return entities.values().stream().toList();
     }
 
     /**

@@ -1,5 +1,7 @@
 package project.lab6.domain;
 
+import project.lab6.domain.dtos.MessageDTO;
+
 import java.util.List;
 
 public class Conversation {

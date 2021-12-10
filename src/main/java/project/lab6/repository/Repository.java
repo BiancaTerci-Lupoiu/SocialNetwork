@@ -3,6 +3,8 @@ package project.lab6.repository;
 import project.lab6.domain.Entity;
 import project.lab6.domain.validators.ValidationException;
 
+import java.util.List;
+
 /**
  * CRUD operations repository interface
  *
@@ -22,7 +24,7 @@ public interface Repository<ID, E extends Entity<ID>> {
     /**
      * @return all entities
      */
-    Iterable<E> findAll();
+    List<E> findAll();
 
     /**
      * @param entity entity must be not null
