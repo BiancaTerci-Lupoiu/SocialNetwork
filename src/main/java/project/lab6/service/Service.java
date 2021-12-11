@@ -18,18 +18,15 @@ import java.util.stream.StreamSupport;
 public class Service {
     private final RepositoryUser repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
-    private final Repository<Long, Message> repoMessages;
     private Long idMax = 0L;
 
     /**
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
-     * @param repoMessages    the repository with messages
      */
-    public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships, Repository<Long, Message> repoMessages) {
+    public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
-        this.repoMessages = repoMessages;
         setIdMax();
     }
 
@@ -378,9 +375,9 @@ public class Service {
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
-    public boolean sendMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo) {
-        return addMessage(text, date, idUserFrom, idUsersTo, null);
-    }
+//    public boolean sendMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo) {
+//        return addMessage(text, date, idUserFrom, idUsersTo, null);
+//    }
 
     /**
      * replies to an existent message
@@ -396,14 +393,13 @@ public class Service {
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
-    public boolean replyMessage(String text, LocalDateTime date, Long idUserFrom, Long idReplyMessage) {
-        Message messageReply = repoMessages.findOne(idReplyMessage);
-        if (messageReply == null)
-            throw new ServiceException("The message you want to reply does not exist!\n");
-        Long idUserTo = messageReply.getIdUserFrom();
-        return addMessage(text, date, idUserFrom, List.of(idUserTo), idReplyMessage);
-
-    }
+//    public boolean replyMessage(String text, LocalDateTime date, Long idUserFrom, Long idReplyMessage) {
+//        Message messageReply = repoMessages.findOne(idReplyMessage);
+//        if (messageReply == null)
+//            throw new ServiceException("The message you want to reply does not exist!\n");
+//        Long idUserTo = messageReply.getIdUserFrom();
+//        return addMessage(text, date, idUserFrom, List.of(idUserTo), idReplyMessage);
+//    }
 
     /**
      * @param text           the text of the message
@@ -417,25 +413,25 @@ public class Service {
      * @throws ValidationException      if the message is not valid
      * @throws IllegalArgumentException if the given message is null.
      */
-    private boolean addMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo, Long idReplyMessage) {
-        if (repoUsers.findOne(idUserFrom) == null)
-            throw new ServiceException("The user that sends the message does not exist!\n");
-        String invalidUsersIds = "";
-        List<Long> validIdUsersTo = new ArrayList<>();
-        for (Long idUserTo : idUsersTo)
-            if (repoUsers.findOne(idUserTo) == null)
-                invalidUsersIds += idUserTo + " ";
-            else
-                validIdUsersTo.add(idUserTo);
-        if (validIdUsersTo.isEmpty())
-            throw new ServiceException("All the users from the recipients list do not exist!\n");
-        Message message = new Message(text, date, idUserFrom, validIdUsersTo);
-        message.setIdReplyMessage(idReplyMessage);
-        boolean result = repoMessages.save(message);
-        if (!invalidUsersIds.isEmpty())
-            throw new ServiceException("Some users from the recipients list does not exist: " + invalidUsersIds + "\n");
-        return result;
-    }
+//    private boolean addMessage(String text, LocalDateTime date, Long idUserFrom, List<Long> idUsersTo, Long idReplyMessage) {
+//        if (repoUsers.findOne(idUserFrom) == null)
+//            throw new ServiceException("The user that sends the message does not exist!\n");
+//        String invalidUsersIds = "";
+//        List<Long> validIdUsersTo = new ArrayList<>();
+//        for (Long idUserTo : idUsersTo)
+//            if (repoUsers.findOne(idUserTo) == null)
+//                invalidUsersIds += idUserTo + " ";
+//            else
+//                validIdUsersTo.add(idUserTo);
+//        if (validIdUsersTo.isEmpty())
+//            throw new ServiceException("All the users from the recipients list do not exist!\n");
+//        Message message = new Message(text, date, idUserFrom, validIdUsersTo);
+//        message.setIdReplyMessage(idReplyMessage);
+//        boolean result = repoMessages.save(message);
+//        if (!invalidUsersIds.isEmpty())
+//            throw new ServiceException("Some users from the recipients list does not exist: " + invalidUsersIds + "\n");
+//        return result;
+//    }
 
     /**
      * deletes the message with the specified id
@@ -444,9 +440,9 @@ public class Service {
      * @return true is the message is deleted, false otherwise
      * @throws IllegalArgumentException if the given idMessage is null.
      */
-    public boolean deleteMessage(Long idMessage) {
-        return repoMessages.delete(idMessage);
-    }
+//    public boolean deleteMessage(Long idMessage) {
+//        return repoMessages.delete(idMessage);
+//    }
 
     /**
      * converts a Message object to a MessageDTO object
@@ -454,35 +450,35 @@ public class Service {
      * @param message the message to be converted
      * @return the MessageDTO with the attributes of message
      */
-    private MessageDTO getMessageDTOFromMessage(Message message) {
-        User userFrom = repoUsers.findOne(message.getIdUserFrom());
-        Map<Long, User> listUsersTo = new HashMap<>();
-        for (Long idUser : message.getIdUsersTo()) {
-            User user = repoUsers.findOne(idUser);
-            listUsersTo.put(idUser, user);
-        }
-        MessageDTO replyMessage = null;
-        if (message.getIdReplyMessage() != null)
-            replyMessage = getMessageDTOFromMessage(repoMessages.findOne(message.getIdReplyMessage()));
-
-        MessageDTO messageDTO = new MessageDTO(message.getText(), message.getDate(), userFrom, replyMessage, listUsersTo);
-        messageDTO.setId(message.getId());
-        return messageDTO;
-
-    }
+//    private MessageDTO getMessageDTOFromMessage(Message message) {
+//        User userFrom = repoUsers.findOne(message.getIdUserFrom());
+//        Map<Long, User> listUsersTo = new HashMap<>();
+//        for (Long idUser : message.getIdUsersTo()) {
+//            User user = repoUsers.findOne(idUser);
+//            listUsersTo.put(idUser, user);
+//        }
+//        MessageDTO replyMessage = null;
+//        if (message.getIdReplyMessage() != null)
+//            replyMessage = getMessageDTOFromMessage(repoMessages.findOne(message.getIdReplyMessage()));
+//
+//        MessageDTO messageDTO = new MessageDTO(message.getText(), message.getDate(), userFrom, replyMessage, listUsersTo);
+//        messageDTO.setId(message.getId());
+//        return messageDTO;
+//
+//    }
 
     /**
      * @return all the messages (a list of MessageDTO objects)
      */
-    public Iterable<MessageDTO> getAllMessages() {
-        Iterable<Message> messages = repoMessages.findAll();
-        List<MessageDTO> listMessagesDTO = new ArrayList<>();
-        for (Message message : messages) {
-            MessageDTO messageDTO = getMessageDTOFromMessage(message);
-            listMessagesDTO.add(messageDTO);
-        }
-        return listMessagesDTO;
-    }
+//    public Iterable<MessageDTO> getAllMessages() {
+//        Iterable<Message> messages = repoMessages.findAll();
+//        List<MessageDTO> listMessagesDTO = new ArrayList<>();
+//        for (Message message : messages) {
+//            MessageDTO messageDTO = getMessageDTOFromMessage(message);
+//            listMessagesDTO.add(messageDTO);
+//        }
+//        return listMessagesDTO;
+//    }
 
     /**
      * Gets the conversation between the users with ids: idUser1,idUser2 in chronological order
@@ -491,39 +487,39 @@ public class Service {
      * @param idUser2
      * @return the conversation between the users with ids: idUser1 and idUser2
      */
-    public Conversation getConversation(Long idUser1, Long idUser2) {
-        List<MessageDTO> messagesList = new ArrayList<>();
-        for (MessageDTO message : getAllMessages()) {
-            if ((message.getUserFrom().getId().equals(idUser1) && message.getUserToById(idUser2) != null) || (message.getUserFrom().getId().equals(idUser2) && message.getUserToById(idUser1) != null))
-                messagesList.add(message);
-        }
-        messagesList = messagesList.stream().sorted((message1, message2) -> {
-            if (message1.getDate().isBefore(message2.getDate()))
-                return -1;
-            if (message1.getDate().equals(message2.getDate()))
-                return 0;
-            else return 1;
-        }).toList();
-        return new Conversation(messagesList);
-    }
+//    public Conversation getConversation(Long idUser1, Long idUser2) {
+//        List<MessageDTO> messagesList = new ArrayList<>();
+//        for (MessageDTO message : getAllMessages()) {
+//            if ((message.getUserFrom().getId().equals(idUser1) && message.getUserToById(idUser2) != null) || (message.getUserFrom().getId().equals(idUser2) && message.getUserToById(idUser1) != null))
+//                messagesList.add(message);
+//        }
+//        messagesList = messagesList.stream().sorted((message1, message2) -> {
+//            if (message1.getDate().isBefore(message2.getDate()))
+//                return -1;
+//            if (message1.getDate().equals(message2.getDate()))
+//                return 0;
+//            else return 1;
+//        }).toList();
+//        return new Conversation(messagesList);
+//    }
 
     /**
      * @param idUser
      * @return the users that have open conversations with the user with id=idUser
      * @throws ServiceException if the user with id=idUser does not exist
      */
-    public Collection<User> getUsersThatHaveMessagesWithSomeUser(Long idUser) {
-        if (repoUsers.findOne(idUser) == null)
-            throw new ServiceException("The user with id=" + idUser + " does not exist\n");
-        Map<Long, User> users = new HashMap<>();
-        for (MessageDTO message : getAllMessages())
-            if (message.getUserFrom().getId().equals(idUser)) {
-                for (User user : message.getUsersTo())
-                    users.put(user.getId(), user);
-            } else if (message.getUserToById(idUser) != null)
-                users.put(message.getUserFrom().getId(), message.getUserFrom());
-        return users.values();
-    }
+//    public Collection<User> getUsersThatHaveMessagesWithSomeUser(Long idUser) {
+//        if (repoUsers.findOne(idUser) == null)
+//            throw new ServiceException("The user with id=" + idUser + " does not exist\n");
+//        Map<Long, User> users = new HashMap<>();
+//        for (MessageDTO message : getAllMessages())
+//            if (message.getUserFrom().getId().equals(idUser)) {
+//                for (User user : message.getUsersTo())
+//                    users.put(user.getId(), user);
+//            } else if (message.getUserToById(idUser) != null)
+//                users.put(message.getUserFrom().getId(), message.getUserFrom());
+//        return users.values();
+//    }
 
 
 }
