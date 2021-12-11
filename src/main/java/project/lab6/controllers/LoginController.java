@@ -34,6 +34,10 @@ public class LoginController {
         this.loginStage = loginStage;
     }
 
+    public void setService(Service service) {
+        this.service = service;
+    }
+
     public void closeLoginWindow(ActionEvent actionEvent) {
         Stage stage = (Stage) closeLoginButton.getScene().getWindow();
         stage.close();

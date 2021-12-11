@@ -27,7 +27,7 @@ public class Service {
     public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
-        setIdMax();
+        //setIdMax();
     }
 
     private String generateHashPassword(String password, String salt) {
