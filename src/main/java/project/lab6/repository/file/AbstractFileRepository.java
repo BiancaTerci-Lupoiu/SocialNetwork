@@ -1,6 +1,7 @@
 package project.lab6.repository.file;
 
 import project.lab6.domain.Entity;
+import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.memory.InMemoryRepository;
 

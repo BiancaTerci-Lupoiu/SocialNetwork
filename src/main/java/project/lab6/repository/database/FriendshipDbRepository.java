@@ -12,16 +12,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Friendship> {
-    private final String url;
-    private final String username;
-    private final String password;
+public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Long>, Friendship> {
     private final Validator<Friendship> validator;
 
     public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        super(url, username, password);
         this.validator = validator;
     }
 
@@ -37,7 +32,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
         String sql = "select * from friendships where id_user1=? and id_user2=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             Long idUser1 = id.getLeft();
@@ -47,41 +42,13 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             statement.setLong(2, idUser2);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Long idUser1Found = resultSet.getLong("id_user1");
-                    Long idUser2Found = resultSet.getLong("id_user2");
-                    LocalDate dateFound = resultSet.getDate("date").toLocalDate();
-                    Status status = Status.getStatus(resultSet.getInt("status"));
-                    return new Friendship(idUser1Found, idUser2Found, dateFound, status);
+                    return getEntityFromSet(resultSet);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * @return all friendships
-     */
-    @Override
-    public Iterable<Friendship> findAll() {
-        List<Friendship> friendships = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("select * from friendships");
-             ResultSet resultSet = statement.executeQuery()
-        ) {
-            while (resultSet.next()) {
-                Long idUser1 = resultSet.getLong("id_user1");
-                Long idUser2 = resultSet.getLong("id_user2");
-                LocalDate date = resultSet.getDate("date").toLocalDate();
-                Status status = Status.getStatus(resultSet.getInt("status"));
-                Friendship friendship = new Friendship(idUser1, idUser2, date, status);
-                friendships.add(friendship);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return friendships;
     }
 
     /**
@@ -97,11 +64,11 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             throw new IllegalArgumentException("entity must be not null!");
 
         validator.validate(entity);
-        if(findOne(entity.getId()) != null)
+        if (findOne(entity.getId()) != null)
             return false;
 
         String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setLong(1, entity.getId().getLeft());
@@ -129,7 +96,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
         String sql = "delete from friendships where id_user1=? and id_user2=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
         ) {
             Long idUser1 = id.getLeft();
@@ -159,7 +126,7 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         String sql = "update friendships set date=?,status=? where id_user1=? and id_user2=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             Long idUser1 = entity.getId().getLeft();
@@ -180,5 +147,19 @@ public class FriendshipDbRepository implements Repository<Tuple<Long, Long>, Fri
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    protected String getFindAllSqlStatement() {
+        return "select * from friendships";
+    }
+
+    @Override
+    protected Friendship getEntityFromSet(ResultSet set) throws SQLException {
+        Long idUser1Found = set.getLong("id_user1");
+        Long idUser2Found = set.getLong("id_user2");
+        LocalDate dateFound = set.getDate("date").toLocalDate();
+        Status status = Status.getStatus(set.getInt("status"));
+        return new Friendship(idUser1Found, idUser2Found, dateFound, status);
     }
 }

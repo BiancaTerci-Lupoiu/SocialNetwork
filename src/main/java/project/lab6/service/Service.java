@@ -1,6 +1,7 @@
 package project.lab6.service;
 
 import project.lab6.domain.*;
+import project.lab6.domain.chat.Message;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.Repository;
 import project.lab6.repository.RepositoryUser;
@@ -9,10 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Service {
@@ -363,6 +362,8 @@ public class Service {
     }
 
     /**
+     <<<<<<< HEAD
+     =======
      * sends a message from the user with id=idUserFrom to the users with ids from the idUsersTo list
      *
      * @param text       the text of the message
@@ -434,6 +435,7 @@ public class Service {
 //    }
 
     /**
+     >>>>>>> lab6
      * deletes the message with the specified id
      *
      * @param idMessage the id of the message to be deleted
@@ -520,6 +522,4 @@ public class Service {
 //                users.put(message.getUserFrom().getId(), message.getUserFrom());
 //        return users.values();
 //    }
-
-
 }
