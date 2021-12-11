@@ -58,7 +58,7 @@ public class AddFriendsController {
     }
 
     public void findUserByName(InputMethodEvent inputMethodEvent) {
-        List<User> usersList = service.searchUsersByName(userNameTextField.toString(), loggedUser.getId());
+        List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(loggedUser,userNameTextField.toString(), loggedUser.getId());
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton=createAddButton(user.getId());

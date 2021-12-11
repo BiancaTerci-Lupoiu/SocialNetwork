@@ -53,18 +53,23 @@ public class Service {
     }
 
     /**
+     * Returns a list with users whose name(last name + first name) matches the string name
+     * and they are not friends with the logged user
      * @param name           string with a name
      * @param idUserToExcept the id of the user to except adding at the list
      *                       (the logged user)
+     * @param loggedUser  the logged user
      * @return a list with users whose name(last name + first name) matches the string name
      */
-    public List<User> searchUsersByName(String name, Long idUserToExcept) {
+    public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name, Long idUserToExcept) {
         String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ");
-
+        Map<Long, Friend> friendsOfLoggedUser = loggedUser.getFriendsMap();
         List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
                 .filter(user -> {
                     String lastNameFirstName = user.getLastName() + " " + user.getFirstName();
                     String firstNameLastName = user.getFirstName() + " " + user.getLastName();
+                    if (friendsOfLoggedUser.get(user.getId()) != null)
+                        return false;
                     return !user.getId().equals(idUserToExcept) &&
                             (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
                                     || firstNameLastName.startsWith(nameWithoutExtraSpaces));

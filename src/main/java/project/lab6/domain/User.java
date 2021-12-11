@@ -71,6 +71,10 @@ public class User extends Entity<Long> {
         return friends.values();
     }
 
+    public Map<Long, Friend> getFriendsMap() {
+        return friends;
+    }
+
     public Collection<Friend> getFriends(DirectedStatus status) {
         return friends.values().stream()
                 .filter(x -> x.getStatus() == status).toList();
