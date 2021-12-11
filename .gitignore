@@ -4,3 +4,4 @@ out/
 data/
 .gradle/
 build/
+src/main/resources/project/lab6/config.properties
