@@ -14,10 +14,10 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/addFriends.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        LoginController loginController=fxmlLoader.getController();
-        loginController.setService(Factory.getInstance().getService());
+        //LoginController loginController=fxmlLoader.getController();
+        //loginController.setService(Factory.getInstance().getService());
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
