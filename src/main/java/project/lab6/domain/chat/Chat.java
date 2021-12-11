@@ -8,7 +8,11 @@ public class Chat extends Entity<Long> {
     private final Color color;
     private final boolean isPrivateChat;
     public Chat(Long id, String name, Color color, boolean isPrivateChat) {
+        this(name, color, isPrivateChat);
         setId(id);
+    }
+
+    public Chat(String name, Color color, boolean isPrivateChat) {
         this.name = name;
         this.color = color;
         this.isPrivateChat = isPrivateChat;

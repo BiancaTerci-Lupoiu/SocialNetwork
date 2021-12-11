@@ -12,32 +12,29 @@ import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.Repository;
+import project.lab6.repository.RepositoryChat;
 import project.lab6.repository.RepositoryUser;
+import project.lab6.utils.Constants;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
-    private final Validator<User> validatorUser;
-    private final Repository<Long, Chat> repoChats;
+    private final RepositoryChat repoChats;
     private final Validator<Chat> validatorChat;
     private final Repository<Long, Message> repoMessages;
     private final Validator<Message> validatorMessage;
     private final Repository<Tuple<Long, Long>, UserChatInfo> repoUserChatInfo;
     private final Validator<UserChatInfo> validatorUserChatInfo;
 
-    public ServiceMessages(RepositoryUser repoUsers, Validator<User> validatorUser,
-                           Repository<Long, Chat> repoChats, Validator<Chat> validatorChat,
+    public ServiceMessages(RepositoryUser repoUsers,
+                           RepositoryChat repoChats, Validator<Chat> validatorChat,
                            Repository<Long, Message> repoMessages, Validator<Message> validatorMessage,
                            Repository<Tuple<Long, Long>, UserChatInfo> repoUserChatInfo, Validator<UserChatInfo> validatorUserChatInfo) {
         this.repoUsers = repoUsers;
-        this.validatorUser = validatorUser;
         this.repoChats = repoChats;
         this.validatorChat = validatorChat;
         this.repoMessages = repoMessages;
@@ -47,7 +44,13 @@ public class ServiceMessages {
     }
 
     private Chat getOrCreatePrivateChatBetweenUsers(Long idUser1, Long idUser2) {
-        return new Chat(1L, "", Color.ALICEBLUE, true);
+        Chat chat = repoChats.getPrivateChatBetweenUsers(idUser1,idUser2);
+        if(chat == null)
+        {
+            chat = new Chat("", Constants.DEFAULT_CHAT_COLOR,true);
+            repoChats.save(chat);
+        }
+        return chat;
     }
 
 
@@ -98,18 +101,23 @@ public class ServiceMessages {
 
     private List<MessageDTO> getMessagesSortedForChat(Long idChat)
     {
-        //TODO: reply message nu e bine
         return repoMessages.findAll().stream()
                 .filter(message -> message.getIdChat().equals(idChat))
                 .map(message ->
                 {
-                    UserChatInfoDTO from = repoUserChatInfo.findOne(new Tuple<>(idChat,message.getIdUserFrom()))
+                    UserChatInfo from = repoUserChatInfo.findOne(new Tuple<>(idChat,message.getIdUserFrom()));
+                    User userFrom = repoUsers.findOne(from.getIdUser());
+                    UserChatInfoDTO fromDTO = new UserChatInfoDTO(userFrom,from.getNickname());
+                    Message repliedMessage = null;
+                    if(message.getIdReplyMessage() == null)
+                        repliedMessage = repoMessages.findOne(message.getIdReplyMessage());
                     return new MessageDTO(message.getId(),
                             message.getText(),
                             message.getDate(),
-                            from,
-                            null);
-                });
+                            fromDTO,
+                            repliedMessage);
+                }).sorted(Comparator.comparing(MessageDTO::getDate))
+                .toList();
     }
 
     public ChatDTO getChatDTO(Long idChat) {
@@ -120,38 +128,25 @@ public class ServiceMessages {
         getUserChatInfoDTOForChat(idChat)
                 .forEach(chatDTO::addUserInfo);
 
+        getMessagesSortedForChat(idChat)
+                .forEach(chatDTO::addMessage);
 
-        //TODO: add messages
+        return chatDTO;
+    }
 
+    public List<ChatDTO> getChatsDTO() {
+        return repoChats.findAll().stream()
+                .map(chat -> getChatDTO(chat.getId()))
+                .toList();
+    }
+
+    public ChatDTO createChatGroup(String name, List<User> users)
+    {
+        Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false);
+        validatorChat.validate(chat);
+        //TODO: Inca nu e implementat complet
         return null;
     }
 
-//    public List<ChatDTO> getChatsDTO() {
-//        ArrayList<ChatDTO> chats = new ArrayList<>();
-//
-//        var usersChatInfoMap = StreamSupport.stream(repoUserChatInfo.findAll().spliterator(), false)
-//                .map(userChatInfo ->
-//                {
-//                    User user = repoUsers.findOne(userChatInfo.getIdUser());
-//                    return new UserChatInfoDTO(user, userChatInfo.getNickname());
-//                })
-//                .collect(Collectors.groupingBy(UserChatInfoDTO::getIdChat));
-//
-//        var messagesMap = StreamSupport.stream(repoMessages.findAll().spliterator(), false)
-//                        .collect(Collectors.groupingBy(Message::getIdChat));
-//
-//        repoChats.findAll().forEach(chat ->
-//        {
-//            ChatDTO chatDTO = new ChatDTO(chat.getName(), chat.getColor(), chat.isPrivateChat());
-//            usersChatInfoMap.get(chat.getId()).forEach(userInfo ->
-//            {
-//                UserChatInfoDTO userInfoDTO =
-//                        new UserChatInfoDTO(repoUsers.findOne(userInfo.getIdUser()),
-//                                userInfo.getNickname());
-//                chatDTO.addUserInfo(userInfoDTO);
-//            });
-//        });
-//
-//        return new ArrayList<>();
-//    }
+
 }

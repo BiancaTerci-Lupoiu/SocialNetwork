@@ -1,7 +1,6 @@
 package project.lab6.domain.dtos;
 
-import project.lab6.domain.Entity;
-import project.lab6.domain.User;
+import project.lab6.domain.chat.Message;
 
 import java.time.LocalDateTime;
 
@@ -10,14 +9,14 @@ public class MessageDTO {
     private final String text;
     private final LocalDateTime date;
     private final UserChatInfoDTO userFrom;
-    private final MessageDTO replyMessage;
+    private final Message repliedMessage;
 
-    public MessageDTO(Long id, String text, LocalDateTime date, UserChatInfoDTO userFrom, MessageDTO replyMessage) {
+    public MessageDTO(Long id, String text, LocalDateTime date, UserChatInfoDTO userFrom, Message repliedMessage) {
         this.id = id;
         this.text = text;
         this.date = date;
         this.userFrom = userFrom;
-        this.replyMessage = replyMessage;
+        this.repliedMessage = repliedMessage;
     }
 
     public Long getId() {
@@ -36,7 +35,7 @@ public class MessageDTO {
         return userFrom;
     }
 
-    public MessageDTO getReplyMessage() {
-        return replyMessage;
+    public Message getRepliedMessage() {
+        return repliedMessage;
     }
 }
