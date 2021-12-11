@@ -26,7 +26,7 @@
          <graphic>
             <ImageView fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../../../Desktop/arrow-back.jpg" />
+                  <Image url="@../images/arrow-back.jpg" />
                </image>
             </ImageView>
          </graphic>
@@ -78,7 +78,7 @@
       </VBox>
       <ImageView fitHeight="96.0" fitWidth="99.0" layoutX="157.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../Desktop/newAcc-logo.png" />
+            <Image url="@../images/newAcc-logo.png" />
          </image>
       </ImageView>
    </children>

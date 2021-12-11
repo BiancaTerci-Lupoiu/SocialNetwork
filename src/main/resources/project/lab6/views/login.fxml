@@ -26,7 +26,7 @@
       </AnchorPane>
    </left>
    <center>
-      <AnchorPane prefHeight="400.0" prefWidth="377.0" style="-fx-background-color: #bb99ff;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="400.0" prefWidth="377.0" style="-fx-background-color: #bb99ff; -fx-background-radius: 0 30 30 0;" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="51.0" layoutY="57.0" prefHeight="62.0" prefWidth="142.0" text="Login" textFill="#5c0e63">
                <font>
@@ -58,8 +58,14 @@
                         <Font name="Cambria Bold" size="23.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="emailTextField" GridPane.columnIndex="1" />
+                  <PasswordField fx:id="passwordTextField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></PasswordField>
+                  <TextField fx:id="emailTextField" promptText="Email" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font></TextField>
                </children>
             </GridPane>
             <Button fx:id="loginButton" layoutX="133.0" layoutY="273.0" mnemonicParsing="false" onAction="#logInUser" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: #5c0e63;" text="Login" textFill="WHITE">
@@ -72,7 +78,7 @@
                   <Font name="Cambria Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="closeLoginButton" layoutX="281.0" layoutY="364.0" mnemonicParsing="false" onAction="#closeLoginWindow" style="-fx-background-color: #5c0e63;" text="Close App" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="closeLoginButton" layoutX="273.0" layoutY="358.0" mnemonicParsing="false" onAction="#closeLoginWindow" style="-fx-background-color: #5c0e63;" text="Close App" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="14.0" />
                </font>
