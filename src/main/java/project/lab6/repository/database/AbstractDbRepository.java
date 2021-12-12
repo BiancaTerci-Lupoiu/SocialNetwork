@@ -1,12 +1,9 @@
 package project.lab6.repository.database;
 
 import project.lab6.domain.Entity;
-import project.lab6.domain.Friendship;
-import project.lab6.domain.Status;
-import project.lab6.repository.Repository;
+import project.lab6.repository.repointerface.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

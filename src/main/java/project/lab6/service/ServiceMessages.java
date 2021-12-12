@@ -1,8 +1,7 @@
 package project.lab6.service;
 
 import javafx.scene.paint.Color;
-import project.lab6.domain.Entity;
-import project.lab6.domain.Tuple;
+import project.lab6.domain.TupleWithIdChatUser;
 import project.lab6.domain.User;
 import project.lab6.domain.chat.Chat;
 import project.lab6.domain.chat.Message;
@@ -11,15 +10,13 @@ import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.domain.validators.Validator;
-import project.lab6.repository.Repository;
-import project.lab6.repository.RepositoryChat;
-import project.lab6.repository.RepositoryUser;
+import project.lab6.repository.repointerface.Repository;
+import project.lab6.repository.repointerface.RepositoryChat;
+import project.lab6.repository.repointerface.RepositoryUser;
 import project.lab6.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
@@ -27,13 +24,13 @@ public class ServiceMessages {
     private final Validator<Chat> validatorChat;
     private final Repository<Long, Message> repoMessages;
     private final Validator<Message> validatorMessage;
-    private final Repository<Tuple<Long, Long>, UserChatInfo> repoUserChatInfo;
+    private final Repository<TupleWithIdChatUser, UserChatInfo> repoUserChatInfo;
     private final Validator<UserChatInfo> validatorUserChatInfo;
 
     public ServiceMessages(RepositoryUser repoUsers,
                            RepositoryChat repoChats, Validator<Chat> validatorChat,
                            Repository<Long, Message> repoMessages, Validator<Message> validatorMessage,
-                           Repository<Tuple<Long, Long>, UserChatInfo> repoUserChatInfo, Validator<UserChatInfo> validatorUserChatInfo) {
+                           Repository<TupleWithIdChatUser, UserChatInfo> repoUserChatInfo, Validator<UserChatInfo> validatorUserChatInfo) {
         this.repoUsers = repoUsers;
         this.repoChats = repoChats;
         this.validatorChat = validatorChat;
@@ -44,15 +41,13 @@ public class ServiceMessages {
     }
 
     private Chat getOrCreatePrivateChatBetweenUsers(Long idUser1, Long idUser2) {
-        Chat chat = repoChats.getPrivateChatBetweenUsers(idUser1,idUser2);
-        if(chat == null)
-        {
-            chat = new Chat("", Constants.DEFAULT_CHAT_COLOR,true);
+        Chat chat = repoChats.getPrivateChatBetweenUsers(idUser1, idUser2);
+        if (chat == null) {
+            chat = new Chat("", Constants.DEFAULT_CHAT_COLOR, true);
             repoChats.save(chat);
         }
         return chat;
     }
-
 
     private void saveMessage(Long idChat, Long idUserFrom, String text, LocalDateTime date, Long idMessageToReply) {
         Message message = new Message(text, date, idUserFrom, idChat, idMessageToReply);
@@ -99,17 +94,16 @@ public class ServiceMessages {
                         )).toList();
     }
 
-    private List<MessageDTO> getMessagesSortedForChat(Long idChat)
-    {
+    private List<MessageDTO> getMessagesSortedForChat(Long idChat) {
         return repoMessages.findAll().stream()
                 .filter(message -> message.getIdChat().equals(idChat))
                 .map(message ->
                 {
-                    UserChatInfo from = repoUserChatInfo.findOne(new Tuple<>(idChat,message.getIdUserFrom()));
+                    UserChatInfo from = repoUserChatInfo.findOne(new TupleWithIdChatUser(idChat, message.getIdUserFrom()));
                     User userFrom = repoUsers.findOne(from.getIdUser());
-                    UserChatInfoDTO fromDTO = new UserChatInfoDTO(userFrom,from.getNickname());
+                    UserChatInfoDTO fromDTO = new UserChatInfoDTO(userFrom, from.getNickname());
                     Message repliedMessage = null;
-                    if(message.getIdReplyMessage() == null)
+                    if (message.getIdReplyMessage() == null)
                         repliedMessage = repoMessages.findOne(message.getIdReplyMessage());
                     return new MessageDTO(message.getId(),
                             message.getText(),
@@ -122,8 +116,7 @@ public class ServiceMessages {
 
     public ChatDTO getChatDTO(Long idChat) {
         Chat chat = repoChats.findOne(idChat);
-
-        ChatDTO chatDTO = new ChatDTO(chat.getName(), chat.getColor(), chat.isPrivateChat());
+        ChatDTO chatDTO = ChatDTO.createChatDTO(chat.getName(), chat.getColor(), chat.isPrivateChat());
 
         getUserChatInfoDTOForChat(idChat)
                 .forEach(chatDTO::addUserInfo);
@@ -134,19 +127,69 @@ public class ServiceMessages {
         return chatDTO;
     }
 
-    public List<ChatDTO> getChatsDTO() {
+    public List<ChatDTO> getChatsDTO(Long idLoggedUser) {
         return repoChats.findAll().stream()
                 .map(chat -> getChatDTO(chat.getId()))
+                .filter(chatDTO -> chatDTO.getUsersInfo().stream()
+                        .anyMatch(userInfo -> userInfo.getUser().getId().equals(idLoggedUser)))
                 .toList();
     }
 
-    public ChatDTO createChatGroup(String name, List<User> users)
-    {
+    public ChatDTO createChatGroup(String name, List<User> users) {
         Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false);
         validatorChat.validate(chat);
-        //TODO: Inca nu e implementat complet
-        return null;
+        chat = repoChats.saveAndReturnChat(chat);
+
+        for (User user : users) {
+            repoUserChatInfo.save(new UserChatInfo(chat.getId(), user.getId(),
+                    createNickName(user)));
+        }
+
+        return getChatDTO(chat.getId());
     }
 
+    public void changeChatColor(Long idChat, Color newColor)
+    {
+        Chat chat = repoChats.findOne(idChat);
+        if(chat == null)
+            throw new ServiceException("No chat with the specified id exists!");
+        chat.setColor(newColor);
+        if(!repoChats.update(chat))
+            throw new ServiceException("Could not change the color of the chat!");
+    }
 
+    public void addUserToChat(Long idChat, Long idUser) {
+        Chat chat = repoChats.findOne(idChat);
+        if (chat == null)
+            throw new ServiceException("The chat doesn't exists");
+        if (chat.isPrivateChat())
+            throw new ServiceException("You can't add a user to a private chat");
+        User user = repoUsers.findOne(idUser);
+        if (user == null)
+            throw new ServiceException("The id doesn't belong to a user");
+        UserChatInfo userChatInfo = new UserChatInfo(idChat, idUser, createNickName(user));
+        validatorUserChatInfo.validate(userChatInfo);
+        if (!repoUserChatInfo.save(userChatInfo))
+            throw new ServiceException("The user could not by added to the chat");
+    }
+
+    public void removeUserFromChat(Long idChat, Long idUser) {
+        Chat chat = repoChats.findOne(idChat);
+        if (chat == null)
+            throw new ServiceException("The chat doesn't exists");
+        if (chat.isPrivateChat())
+            throw new ServiceException("You can't remove a user from a private chat");
+        if (!repoUserChatInfo.delete(new TupleWithIdChatUser(idChat, idUser)))
+            throw new ServiceException("The user cannot be deleted from the chat!");
+    }
+
+    public void changeNickname(Long idChat, Long idUser, String newNickname) {
+        UserChatInfo userChatInfo = new UserChatInfo(idChat, idUser, newNickname);
+        if (!repoUserChatInfo.update(userChatInfo))
+            throw new ServiceException("Could not update the user nickname!");
+    }
+
+    private String createNickName(User user) {
+        return user.getFirstName() + " " + user.getLastName();
+    }
 }

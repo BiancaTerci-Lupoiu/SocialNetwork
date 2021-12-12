@@ -5,12 +5,9 @@ import project.lab6.domain.Status;
 import project.lab6.domain.Tuple;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
-import project.lab6.repository.Repository;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Long>, Friendship> {
     private final Validator<Friendship> validator;
