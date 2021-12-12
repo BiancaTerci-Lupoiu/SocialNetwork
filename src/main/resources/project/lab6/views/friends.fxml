@@ -20,6 +20,7 @@
           <TableColumn fx:id="firstName" editable="false" prefWidth="126.66663110256195" style="-fx-background-color: #bb99ff;" text="First Name" />
           <TableColumn fx:id="lastName" editable="false" prefWidth="129.99998474121094" style="-fx-background-color: #bb99ff;" text="Last Name" />
             <TableColumn fx:id="date" editable="false" prefWidth="115.3333740234375" style="-fx-background-color: #bb99ff;" text="Date" />
+            <TableColumn fx:id="button" prefWidth="102.00006103515625" style="-fx-background-color: #bb99ff;" text="Button" />
         </columns>
       </TableView>
    </center>
