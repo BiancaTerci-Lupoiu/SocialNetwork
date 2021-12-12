@@ -3,14 +3,9 @@ package project.lab6.repository.database;
 import project.lab6.domain.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
-import project.lab6.repository.Repository;
-import project.lab6.repository.RepositoryUser;
+import project.lab6.repository.repointerface.RepositoryUser;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class UserDbRepository extends AbstractDbRepository<Long, User> implements RepositoryUser {
@@ -22,15 +17,15 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     }
 
     /**
-     * @param aLong -the id of the user to be returned
-     *              aLong must not be null
-     * @return the user with the specified id (aLong)
+     * @param id -the id of the user to be returned
+     *              id must not be null
+     * @return the user with the specified id (id)
      * or null - if there is no user with the given id
-     * @throws IllegalArgumentException if id(aLong) is null.
+     * @throws IllegalArgumentException if id(id) is null.
      */
     @Override
-    public User findOne(Long aLong) {
-        if (aLong == null)
+    public User findOne(Long id) {
+        if (id == null)
             throw new IllegalArgumentException("id must be not null!");
 
         String sql = "select * from users where id=?";
@@ -38,7 +33,7 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
              PreparedStatement statement = connection.prepareStatement(sql);
 
         ) {
-            statement.setLong(1, aLong);
+            statement.setLong(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return getEntityFromSet(resultSet);
@@ -58,27 +53,27 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     }
 
     /**
-     * @param entity entity must be not null
-     * @return true- if the given entity is saved
+     * @param user user must be not null
+     * @return true- if the given user is saved
      * otherwise returns false (id already exists)
-     * @throws ValidationException      if the entity is not valid
-     * @throws IllegalArgumentException if the given entity is null.     *
+     * @throws ValidationException      if the user is not valid
+     * @throws IllegalArgumentException if the given user is null.     *
      */
     @Override
-    public boolean save(User entity) {
-        if (entity == null)
-            throw new IllegalArgumentException("entity must be not null!");
-        validator.validate(entity);
+    public boolean save(User user) {
+        if (user == null)
+            throw new IllegalArgumentException("user must be not null!");
+        validator.validate(user);
 
         String sql = "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
-            statement.setString(1, entity.getFirstName());
-            statement.setString(2, entity.getLastName());
-            statement.setString(3, entity.getHashPassword());
-            statement.setString(4, entity.getEmail());
-            statement.setString(5, entity.getSalt());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getHashPassword());
+            statement.setString(4, user.getEmail());
+            statement.setString(5, user.getSalt());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -90,23 +85,23 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     /**
      * removes the user with the specified id
      *
-     * @param aLong aLong must be not null
-     * @return @return true if the user is deleted or false if there is no user with the given id (aLong)
-     * @throws IllegalArgumentException if the given id(aLong) is null.
+     * @param id id must be not null
+     * @return @return true if the user is deleted or false if there is no user with the given id (id)
+     * @throws IllegalArgumentException if the given id(id) is null.
      */
     @Override
-    public boolean delete(Long aLong) {
-        if (aLong == null)
+    public boolean delete(Long id) {
+        if (id == null)
             throw new IllegalArgumentException("id must be not null!");
 
-        User result = findOne(aLong);
+        User result = findOne(id);
         if (result != null) {
             String sql = "delete from users where id=?";
 
             try (Connection connection = getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)
             ) {
-                statement.setLong(1, aLong);
+                statement.setLong(1, id);
 
                 statement.executeUpdate();
 

@@ -11,10 +11,12 @@ public class Constants {
 
     public static class View
     {
+        public static String ADD_FRIENDS="views/addFriends.fxml";
         public static String CREATE_NEW_ACCOUNT="views/createNewAccount.fxml";
         public static String FRIENDS = "views/friends.fxml";
         public static String LOGIN = "views/login.fxml";
         public static String MAIN_VIEW="views/main-view.fxml";
         public static String REQUESTS="views/requests.fxml";
+        public static String PROFILE="views/profile.fxml";
     }
 }
