@@ -30,7 +30,7 @@ public class ProfileController implements Initializable, SetterService, SetterId
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         User user = service.getUserWithFriends(idLoggeduser);
-        labelHello.setText(String.format("Hello %s! Welcome back!",user.getLastName()));
+        labelHello.setText(String.format("Hello %s! Welcome back!",user.getFirstName()));
         labelFirstName.setText(String.format("First name: %s",user.getFirstName()));
         labelLastName.setText(String.format("Last name: %s",user.getLastName()));
         labelEmail.setText(String.format("Email: %s",user.getEmail()));
