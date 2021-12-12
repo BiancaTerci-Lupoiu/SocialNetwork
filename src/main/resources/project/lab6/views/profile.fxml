@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ProfileController"
+      style="-fx-background-color: #bb99ff;">
+
+   <Label fx:id="labelHello" text="Hello" textAlignment="CENTER">
+       <font>
+           <Font size="30"/>
+       </font>
+   </Label>
+   <Label prefWidth="Infinity" text="Profile" underline="true">
+      <font>
+         <Font name="System Bold" size="22.0" />
+      </font>
+   </Label>
+    <Label fx:id="labelFirstName" text="First name:" prefWidth="Infinity">
+        <font>
+            <Font size="20.0" />
+        </font>
+    </Label>
+    <Label fx:id="labelLastName" text="Last name:" prefWidth="Infinity">
+        <font>
+            <Font size="20.0" />
+        </font>
+    </Label>
+    <Label fx:id="labelEmail" text="Email:" prefWidth="Infinity">
+        <font>
+            <Font size="20.0" />
+        </font>
+    </Label>
+</VBox>

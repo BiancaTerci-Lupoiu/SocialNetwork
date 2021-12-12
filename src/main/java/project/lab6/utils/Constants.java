@@ -16,5 +16,6 @@ public class Constants {
         public static String LOGIN = "views/login.fxml";
         public static String MAIN_VIEW="views/main-view.fxml";
         public static String REQUESTS="views/requests.fxml";
+        public static String PROFILE="views/profile.fxml";
     }
 }

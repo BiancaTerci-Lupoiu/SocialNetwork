@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <HBox fx:id="horizontalBox" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.MainViewController">
-    <VBox maxHeight="Infinity">
-        <Button VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" />
-        <Button VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" onAction="#openAddFriendsView" text="Add User" />
-        <Button VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" onAction="#openFriendsView" text="Friends" />
-        <Button VBox.vgrow="ALWAYS" maxHeight="Infinity" maxWidth="Infinity" onAction="#openRequestsView" text="Requests" />
+    <VBox maxHeight="Infinity" minWidth="100">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+            <graphic>
+                <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
+                    <Image url="@../images/person-icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openAddFriendsView" text="Add friends" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+            <graphic>
+                <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
+                    <Image url="@../images/plus-symbol.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openFriendsView" text="Friends" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+            <graphic>
+                <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
+                    <Image url="@../images/friends-icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openRequestsView" text="Requests" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT"/>
     </VBox>
-
 </HBox>

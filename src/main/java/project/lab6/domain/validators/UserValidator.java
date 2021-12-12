@@ -13,7 +13,6 @@ public class UserValidator implements Validator<User> {
      */
     @Override
     public void validate(User entity) throws ValidationException {
-        //TODO: Decea. Valideaza emailul--DONE
         String errors = "";
         if (entity.getId() <= 0)
             errors += "invalid id!\n";
@@ -25,7 +24,7 @@ public class UserValidator implements Validator<User> {
             errors += "invalid lastName!\n";
         String email= entity.getEmail().trim();
         String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        Boolean b = email.matches(EMAIL_REGEX);
+        boolean b = email.matches(EMAIL_REGEX);
         if(!b)
             errors+="invalid email!\n";
         if (!errors.isEmpty())
