@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <HBox fx:id="horizontalBox" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.MainViewController">
-    <VBox maxHeight="Infinity" minWidth="100">
+    <VBox maxHeight="Infinity" minWidth="150">
         <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">

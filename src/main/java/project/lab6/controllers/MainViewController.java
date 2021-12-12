@@ -42,7 +42,7 @@ public class MainViewController implements Initializable {
     }
 
     public void openAddFriendsView(ActionEvent actionEvent) {
-
+        setView(Constants.View.ADD_FRIENDS);
     }
 
     public void openFriendsView(ActionEvent actionEvent) {

@@ -11,6 +11,7 @@ public class Constants {
 
     public static class View
     {
+        public static String ADD_FRIENDS="views/addFriends.fxml";
         public static String CREATE_NEW_ACCOUNT="views/createNewAccount.fxml";
         public static String FRIENDS = "views/friends.fxml";
         public static String LOGIN = "views/login.fxml";
