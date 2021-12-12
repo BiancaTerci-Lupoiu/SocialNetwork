@@ -52,7 +52,7 @@ public class NewAccountController implements SetterService {
         boolean result=service.addUser(emailTextField.getText(),firstNameTextField.getText(),lastNameTextField.getText(),passwordTextField.getText());
         if(result==true)
         {
-            User loggedUser=service.loginUser(emailTextField.getText(),passwordTextField.getText());
+            User loggedUser=service.findUserByEmail(emailTextField.getText());
             Factory.getInstance().setIdLoggedUser(loggedUser.getId());
             FXMLLoader loader=Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
             Stage mainStage=new Stage();

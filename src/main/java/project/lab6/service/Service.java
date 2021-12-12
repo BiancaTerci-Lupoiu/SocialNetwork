@@ -42,6 +42,14 @@ public class Service {
         }
     }
 
+    /**
+     *
+     * @param email
+     * @return the user with the email =email, or null otherwise
+     */
+    public User findUserByEmail(String email){
+        return repoUsers.findByEmail(email);
+    }
     public User loginUser(String email, String password) {
         User user = repoUsers.findByEmail(email);
         if (user == null)
