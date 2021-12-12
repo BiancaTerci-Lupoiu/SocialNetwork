@@ -10,13 +10,11 @@
 .table-view .cell{
     -fx-text-fill: #ffffff;
     -fx-background-color: #8b49cb;
-    -fx-font: Cambria Bold;
+    -fx-font-family: Cambria Bold;
     -fx-font-size: 14;
 }
 .table-view .button{
     -fx-background-color: #5c0e63;
     -fx-text-fill: #ffffff;
-    -fx-font: Cambria Bold;
+    -fx-font-family: Cambria Bold;
 }
-
-
