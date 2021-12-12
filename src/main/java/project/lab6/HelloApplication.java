@@ -7,7 +7,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import javafx.stage.StageStyle;
+import project.lab6.controllers.AddFriendsController;
 import project.lab6.controllers.LoginController;
+import project.lab6.domain.User;
 import project.lab6.factory.Factory;
 
 import project.lab6.service.Service;
