@@ -11,11 +11,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.Status;
 import project.lab6.domain.User;
 import project.lab6.service.Service;
+import project.lab6.setter_interface.SetterIdLoggedUser;
+import project.lab6.setter_interface.SetterService;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class AddFriendsController {
+public class AddFriendsController implements SetterService, SetterIdLoggedUser {
 
     @FXML
     private TextField userNameTextField;
@@ -29,10 +31,12 @@ public class AddFriendsController {
     private Long idLoggedUser;
     private Service service;
 
-    public void setLoggedUser(Long idLoggedUser) {
+    @Override
+    public void setIdLoggedUser(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
     }
 
+    @Override
     public void setService(Service service) {
         this.service = service;
     }
