@@ -1,10 +1,6 @@
 package project.lab6.domain.validators;
 
-import project.lab6.domain.Message;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import project.lab6.domain.chat.Message;
 
 public class MessageValidator implements Validator<Message> {
     /**
@@ -25,15 +21,9 @@ public class MessageValidator implements Validator<Message> {
             errors += "invalid date!\n";
         if (entity.getIdUserFrom() == null)
             errors += "invalid idUserFrom!\n";
-        List<Long> listUsersTo = entity.getIdUsersTo();
-        if (listUsersTo.isEmpty())
-            errors += "no recipient provided!\n";
-        Set<Long> listUsersToWithoutDuplicates = new HashSet<>(listUsersTo);
-        if (listUsersTo.size() != listUsersToWithoutDuplicates.size())
-            errors += "duplicates are not allowed in the recipients list!\n";
+        if(entity.getIdChat() == null)
+            errors += "invalid idChat!\n";
         if (!errors.isEmpty())
             throw new ValidationException(errors);
-
-
     }
 }

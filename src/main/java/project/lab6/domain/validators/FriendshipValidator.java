@@ -16,7 +16,7 @@ public class FriendshipValidator implements Validator<Friendship> {
         String errors = "";
         if (entity.getId().getLeft() == null || entity.getId().getRight() == null || entity.getId().getLeft() <= 0 || entity.getId().getRight() <= 0)
             errors += "invalid ids at friendship!\n";
-        if (entity.getId().getLeft() == entity.getId().getRight())
+        if (entity.getId().getLeft().equals(entity.getId().getRight()))
             errors += "ids are equal!\n";
         if (!errors.isEmpty())
             throw new ValidationException(errors);

@@ -13,16 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 
-public class UserDbRepository implements RepositoryUser {
-    private String url;
-    private String username;
-    private String password;
-    private Validator<User> validator;
+public class UserDbRepository extends AbstractDbRepository<Long, User> implements RepositoryUser {
+    private final Validator<User> validator;
 
     public UserDbRepository(String url, String username, String password, Validator<User> validator) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        super(url, username, password);
         this.validator = validator;
     }
 
@@ -39,14 +34,14 @@ public class UserDbRepository implements RepositoryUser {
             throw new IllegalArgumentException("id must be not null!");
 
         String sql = "select * from users where id=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
 
         ) {
             statement.setLong(1, aLong);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return GetUser(resultSet);
+                    return getEntityFromSet(resultSet);
                 }
             }
 
@@ -57,28 +52,9 @@ public class UserDbRepository implements RepositoryUser {
         return null;
     }
 
-    /**
-     * @return all users
-     */
     @Override
-    public Iterable<User> findAll() {
-        List<User> users = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users");
-             // un tabel din bd
-             ResultSet resultSet = statement.executeQuery()
-        ) {
-            // mutam cursorul in resultset. Initial e positionat inainte de prima linie
-            while (resultSet.next()) {
-                User user = GetUser(resultSet);
-                users.add(user);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return users;
+    protected String getFindAllSqlStatement() {
+        return "SELECT * FROM users";
     }
 
     /**
@@ -95,7 +71,7 @@ public class UserDbRepository implements RepositoryUser {
         validator.validate(entity);
 
         String sql = "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setString(1, entity.getFirstName());
@@ -127,7 +103,7 @@ public class UserDbRepository implements RepositoryUser {
         if (result != null) {
             String sql = "delete from users where id=?";
 
-            try (Connection connection = DriverManager.getConnection(url, username, password);
+            try (Connection connection = getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql)
             ) {
                 statement.setLong(1, aLong);
@@ -156,7 +132,7 @@ public class UserDbRepository implements RepositoryUser {
         validator.validate(entity);
 
         String sql = "update users set first_name=?, last_name=? where id=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
 
         ) {
@@ -178,14 +154,14 @@ public class UserDbRepository implements RepositoryUser {
     @Override
     public User findByEmail(String email) {
         String sql = "select * from users where email=?";
-        try (Connection connection = DriverManager.getConnection(url, username, password);
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
 
         ) {
             statement.setString(1, email);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return GetUser(resultSet);
+                    return getEntityFromSet(resultSet);
                 }
             }
 
@@ -196,13 +172,14 @@ public class UserDbRepository implements RepositoryUser {
         return null;
     }
 
-    private User GetUser(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong("id");
-        String email=resultSet.getString("email");
-        String firstName = resultSet.getString("first_name");
-        String lastName = resultSet.getString("last_name");
-        String hashPassword = resultSet.getString("hash_password");
-        String salt = resultSet.getString("salt");
-        return new User(id,email,firstName,lastName,hashPassword,salt);
+    @Override
+    protected User getEntityFromSet(ResultSet set) throws SQLException {
+        Long id = set.getLong("id");
+        String email = set.getString("email");
+        String firstName = set.getString("first_name");
+        String lastName = set.getString("last_name");
+        String hashPassword = set.getString("hash_password");
+        String salt = set.getString("salt");
+        return new User(id, email, firstName, lastName, hashPassword, salt);
     }
 }
