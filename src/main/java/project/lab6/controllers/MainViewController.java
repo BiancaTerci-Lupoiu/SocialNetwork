@@ -5,7 +5,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import project.lab6.factory.Factory;
 import project.lab6.setter_interface.SetterIdLoggedUser;
 import project.lab6.utils.Constants;
@@ -51,5 +53,13 @@ public class MainViewController implements Initializable {
 
     public void openRequestsView(ActionEvent actionEvent) {
         setView(Constants.View.REQUESTS);
+    }
+
+    public void logout(ActionEvent actionEvent) throws IOException {
+        Factory.getInstance().setIdLoggedUser(null);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Stage stage = (Stage) horizontalBox.getScene().getWindow();
+        stage.setScene(scene);
     }
 }
