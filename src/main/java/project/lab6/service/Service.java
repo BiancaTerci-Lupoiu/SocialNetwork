@@ -42,6 +42,14 @@ public class Service {
         }
     }
 
+    /**
+     *
+     * @param email
+     * @return the user with the email =email, or null otherwise
+     */
+    public User findUserByEmail(String email){
+        return repoUsers.findByEmail(email);
+    }
     public User loginUser(String email, String password) {
         User user = repoUsers.findByEmail(email);
         if (user == null)
@@ -52,19 +60,21 @@ public class Service {
     }
 
     /**
+     * Returns a list with users whose name(last name + first name) matches the string name,
+     * except the loggedUser, and they are not friends with the logged user
+     * @param loggedUser     the logged user
      * @param name           string with a name
-     * @param idUserToExcept the id of the user to except adding at the list
-     *                       (the logged user)
+     *
      * @return a list with users whose name(last name + first name) matches the string name
      */
-    public List<User> searchUsersByName(String name, Long idUserToExcept) {
-        String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ");
-
+    public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
+        String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
         List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
                 .filter(user -> {
-                    String lastNameFirstName = user.getLastName() + " " + user.getFirstName();
-                    String firstNameLastName = user.getFirstName() + " " + user.getLastName();
-                    return !user.getId().equals(idUserToExcept) &&
+                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+                    return !user.getId().equals(loggedUser.getId()) &&
+                            !loggedUser.findFriend(user.getId()) &&
                             (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
                                     || firstNameLastName.startsWith(nameWithoutExtraSpaces));
                 })

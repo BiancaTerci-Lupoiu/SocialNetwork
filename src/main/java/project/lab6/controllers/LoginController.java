@@ -11,11 +11,14 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.lab6.HelloApplication;
 import project.lab6.domain.User;
+import project.lab6.factory.Factory;
 import project.lab6.service.Service;
+import project.lab6.setter_interface.SetterService;
+import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController implements SetterService {
     @FXML
     private Button loginButton;
     @FXML
@@ -28,12 +31,8 @@ public class LoginController {
     private PasswordField passwordTextField;
 
     private Service service;
-    private Stage loginStage;
 
-    public void setLoginStage(Stage loginStage) {
-        this.loginStage = loginStage;
-    }
-
+    @Override
     public void setService(Service service) {
         this.service = service;
     }
@@ -43,22 +42,28 @@ public class LoginController {
         stage.close();
     }
 
-    public void logInUser(ActionEvent actionEvent) {
+    public void logInUser(ActionEvent actionEvent) throws IOException {
         //daca result=null->mesaj email/password incorrect, daca nu result=useru conectat
-        User result=service.loginUser(emailTextField.toString(),passwordTextField.toString());
+        User loggedUser = service.loginUser(emailTextField.getText(), passwordTextField.getText());
+        if (loggedUser != null) {
+            Factory.getInstance().setIdLoggedUser(loggedUser.getId());
+            FXMLLoader loader=Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
+            Stage mainStage=new Stage();
+            Scene scene=new Scene(loader.load(),600,500);
+            mainStage.setScene(scene);
+            mainStage.initStyle(StageStyle.TRANSPARENT);
+            mainStage.show();
+            closeLoginWindow(null);
+        }
 
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("views/createNewAccount.fxml"));
-        Stage newAccountStage=new Stage();
-        Scene scene=new Scene(loader.load(),400, 570);
-
-        NewAccountController newAccountController=loader.getController();
-        newAccountController.setNewAccountStage(newAccountStage);
+        FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.CREATE_NEW_ACCOUNT);
+        Stage newAccountStage = new Stage();
+        Scene scene = new Scene(loader.load(), 400, 570);
         newAccountStage.setScene(scene);
         newAccountStage.initStyle(StageStyle.TRANSPARENT);
-
         newAccountStage.show();
         closeLoginWindow(null);
     }
