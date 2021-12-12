@@ -61,11 +61,11 @@ public class Service {
      * @return a list with users whose name(last name + first name) matches the string name
      */
     public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
-        String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ");
+        String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
         List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
                 .filter(user -> {
-                    String lastNameFirstName = user.getLastName() + " " + user.getFirstName();
-                    String firstNameLastName = user.getFirstName() + " " + user.getLastName();
+                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
                     return !user.getId().equals(loggedUser.getId()) &&
                             !loggedUser.findFriend(user.getId()) &&
                             (lastNameFirstName.startsWith(nameWithoutExtraSpaces)

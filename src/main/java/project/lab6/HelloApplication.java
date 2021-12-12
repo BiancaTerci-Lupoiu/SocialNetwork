@@ -16,16 +16,10 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/addFriends.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        //LoginController loginController=fxmlLoader.getController();
-        //loginController.setService(Factory.getInstance().getService());
-        AddFriendsController addFriendsController=fxmlLoader.getController();
-        addFriendsController.setService(Factory.getInstance().getService());
-        User loggedUser=Factory.getInstance().getService().getUserWithFriends(1L);
-        addFriendsController.setLoggedUser(loggedUser);
-        System.out.println(loggedUser.getId());
-
+        LoginController loginController=fxmlLoader.getController();
+        loginController.setService(Factory.getInstance().getService());
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();

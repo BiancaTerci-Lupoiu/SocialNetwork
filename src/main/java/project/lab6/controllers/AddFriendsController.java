@@ -8,12 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.control.skin.TableViewSkinBase;
-import javafx.scene.input.InputMethodEvent;
 import project.lab6.domain.Status;
 import project.lab6.domain.User;
-import project.lab6.domain.UserRecord;
 import project.lab6.service.Service;
 
 import java.time.LocalDate;
@@ -30,14 +26,15 @@ public class AddFriendsController {
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
 
-    private User loggedUser;
+    private Long idLoggedUser;
     private Service service;
 
-    public void setLoggedUser(User loggedUser) {
-        this.loggedUser = loggedUser;
+    public void setLoggedUser(Long idLoggedUser) {
+        this.idLoggedUser = idLoggedUser;
     }
-    public void setService(Service service){
-        this.service=service;
+
+    public void setService(Service service) {
+        this.service = service;
     }
 
     @FXML
@@ -45,35 +42,33 @@ public class AddFriendsController {
         //addFriendsTableView.setVisible(false);
         nameColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
         addFriendColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<UserRecord,String>("name"));
-        addFriendColumn.setCellValueFactory(new PropertyValueFactory<UserRecord,Button>("addButton"));
-        userNameTextField.textProperty().addListener((obs, oldText, newText) ->findUserByName());
+        nameColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, String>("name"));
+        addFriendColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, Button>("addButton"));
+        userNameTextField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
 
     }
 
-    private Button createAddButton(Long idUserTo){
-        Button addFriendButton=new Button();
+    private Button createAddButton(Long idUserTo) {
+        Button addFriendButton = new Button();
         addFriendButton.setText("+");
-        addFriendButton.setPrefWidth(20);
-        addFriendButton.setPrefHeight(20);
-        addFriendButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                service.addFriendship(loggedUser.getId(),idUserTo, LocalDate.now(), Status.PENDING);
-            }
+        addFriendButton.setPrefWidth(30);
+        addFriendButton.setPrefHeight(30);
+        addFriendButton.setOnAction(event -> {
+            service.addFriendship(idLoggedUser, idUserTo, LocalDate.now(), Status.PENDING);
+            findUserByName();
+
         });
 
         return addFriendButton;
     }
 
     public void findUserByName() {
-        //List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(loggedUser,userNameTextField.toString());
-        List<User> usersList=service.getAllUsers().values().stream().toList();
-        System.out.println(usersList.size());
+        addFriendsTableView.getItems().clear();
+        List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(service.getUserWithFriends(idLoggedUser), userNameTextField.getText());
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
-            Button addFriendButton=createAddButton(user.getId());
-            UserRecord userRecord=new UserRecord(user.getId(),name,addFriendButton);
+            Button addFriendButton = createAddButton(user.getId());
+            UserRecord userRecord = new UserRecord(user.getId(), name, addFriendButton);
 
             addFriendsTableView.getItems().add(userRecord);
         }
