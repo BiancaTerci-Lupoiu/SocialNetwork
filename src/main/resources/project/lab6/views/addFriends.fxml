@@ -32,7 +32,7 @@
             <children>
                 <HBox prefHeight="48.0" prefWidth="308.0">
                <children>
-                  <TextField fx:id="userNameTextField" onInputMethodTextChanged="#findUserByName" prefHeight="42.0" prefWidth="282.0" promptText="Search...">
+                  <TextField fx:id="userNameTextField"  prefHeight="42.0" prefWidth="282.0" promptText="Search...">
                      <font>
                         <Font name="Cambria" size="14.0" />
                      </font>

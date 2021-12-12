@@ -33,6 +33,13 @@ public class AddFriendsController {
     private User loggedUser;
     private Service service;
 
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
+    }
+    public void setService(Service service){
+        this.service=service;
+    }
+
     @FXML
     public void initialize() {
         //addFriendsTableView.setVisible(false);
@@ -40,6 +47,8 @@ public class AddFriendsController {
         addFriendColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
         nameColumn.setCellValueFactory(new PropertyValueFactory<UserRecord,String>("name"));
         addFriendColumn.setCellValueFactory(new PropertyValueFactory<UserRecord,Button>("addButton"));
+        userNameTextField.textProperty().addListener((obs, oldText, newText) ->findUserByName());
+
     }
 
     private Button createAddButton(Long idUserTo){
@@ -57,8 +66,10 @@ public class AddFriendsController {
         return addFriendButton;
     }
 
-    public void findUserByName(InputMethodEvent inputMethodEvent) {
-        List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(loggedUser,userNameTextField.toString());
+    public void findUserByName() {
+        //List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(loggedUser,userNameTextField.toString());
+        List<User> usersList=service.getAllUsers().values().stream().toList();
+        System.out.println(usersList.size());
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton=createAddButton(user.getId());
