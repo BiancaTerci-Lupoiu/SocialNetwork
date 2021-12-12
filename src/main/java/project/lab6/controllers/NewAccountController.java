@@ -26,7 +26,7 @@ public class NewAccountController {
 
     private Service service;
 
-    private Stage newAccountStage;
+
 
     private void closeWindow(){
         //newAccountStage.close();
@@ -36,10 +36,6 @@ public class NewAccountController {
 
     public void setService(Service service) {
         this.service = service;
-    }
-
-    public void setNewAccountStage(Stage newAccountStage) {
-        this.newAccountStage = newAccountStage;
     }
 
     public void registerUser(ActionEvent actionEvent) {

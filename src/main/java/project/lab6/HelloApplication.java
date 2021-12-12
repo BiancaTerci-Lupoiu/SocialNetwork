@@ -13,16 +13,15 @@ import project.lab6.domain.User;
 import project.lab6.factory.Factory;
 
 import project.lab6.service.Service;
+import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("views/login.fxml"));
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        LoginController loginController=fxmlLoader.getController();
-        loginController.setService(Factory.getInstance().getService());
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
