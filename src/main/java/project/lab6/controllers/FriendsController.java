@@ -10,19 +10,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.service.Service;
+import project.lab6.setter_interface.SetterIdLoggedUser;
+import project.lab6.setter_interface.SetterService;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class FriendsController{
+public class FriendsController implements SetterIdLoggedUser, SetterService {
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
     private Service service;
     private Long id;
-
-    public FriendsController() {
-
-    }
 
     @FXML
     TableColumn<UserFriend, String> firstName;
@@ -40,14 +38,14 @@ public class FriendsController{
         firstName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("firstName")));
         lastName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("lastName")));
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
-        button.setCellValueFactory((new PropertyValueFactory<UserFriend, Button>("unfriendButton")));
-
+        button.setCellValueFactory((new PropertyValueFactory<UserFriend, Button>("button1")));
 
         tableViewFriends.setItems(modelFriends);
+        modelFriends.setAll(getFriendsList());
     }
 
     private List<UserFriend> getFriendsList() {
-        return service.getFriends(1L)
+        return service.getFriends(this.id)
                 .stream()
                 .map(n -> new UserFriend(n.getUser().getId(),
                         n.getUser().getFirstName(),
@@ -60,18 +58,23 @@ public class FriendsController{
     private Button createUnfriendButton(Long idFriend) {
         Button addUnfriendButton = new Button();
         addUnfriendButton.setText("Unfriend");
-        addUnfriendButton.setPrefWidth(30);
-        addUnfriendButton.setPrefHeight(20);
+        /*addUnfriendButton.setPrefWidth(70);
+        addUnfriendButton.setPrefHeight(30);*/
         addUnfriendButton.setOnAction(event -> {
-                    service.deleteFriendship(1L, idFriend);
+                    service.deleteFriendship(this.id, idFriend);
                     modelFriends.setAll(getFriendsList());
                 }
         );
         return addUnfriendButton;
     }
 
+    @Override
     public void setService(Service service) {
         this.service = service;
-        modelFriends.setAll(getFriendsList());
+    }
+
+    @Override
+    public void setIdLoggedUser(Long idLoggedUser) {
+        this.id=idLoggedUser;
     }
 }

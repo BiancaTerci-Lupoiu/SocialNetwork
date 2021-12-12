@@ -10,14 +10,24 @@ public class UserFriend {
     private String lastName;
     private LocalDate date;
     private Long id;
-    private Button unfriendButton;
+    private Button button1;
+    private Button button2;
 
     public UserFriend(Long id, String firstName, String lastName, LocalDate date, Button button) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.date = date;
-        this.unfriendButton = button;
+        this.button1 = button;
+    }
+
+    public UserFriend(Long id, String firstName, String lastName, LocalDate date, Button button, Button button2) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.date = date;
+        this.button1 = button;
+        this.button2 = button2;
     }
 
 
@@ -53,11 +63,19 @@ public class UserFriend {
         this.id = id;
     }
 
-    public Button getUnfriendButton() {
-        return unfriendButton;
+    public Button getButton1() {
+        return button1;
     }
 
-    public void setUnfriendButton(Button unfriendButton) {
-        this.unfriendButton = unfriendButton;
+    public void setButton1(Button unfriendButton) {
+        this.button1 = unfriendButton;
+    }
+
+    public Button getButton2() {
+        return button2;
+    }
+
+    public void setButton2(Button button2) {
+        this.button2 = button2;
     }
 }
