@@ -71,6 +71,13 @@ public class User extends Entity<Long> {
         return friends.values();
     }
 
+    public boolean findFriend(Long idUser)
+    {
+        if(friends.get(idUser)==null)
+            return false;
+        return true;
+    }
+
     public Collection<Friend> getFriends(DirectedStatus status) {
         return friends.values().stream()
                 .filter(x -> x.getStatus() == status).toList();

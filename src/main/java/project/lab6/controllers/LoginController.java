@@ -50,12 +50,12 @@ public class LoginController {
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws IOException {
+        //cu factory
         FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("views/createNewAccount.fxml"));
         Stage newAccountStage=new Stage();
         Scene scene=new Scene(loader.load(),400, 570);
 
-        NewAccountController newAccountController=loader.getController();
-        newAccountController.setNewAccountStage(newAccountStage);
+
         newAccountStage.setScene(scene);
         newAccountStage.initStyle(StageStyle.TRANSPARENT);
 

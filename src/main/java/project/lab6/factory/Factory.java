@@ -1,5 +1,7 @@
 package project.lab6.factory;
 
+import javafx.fxml.FXMLLoader;
+import project.lab6.HelloApplication;
 import project.lab6.config.ApplicationContext;
 import project.lab6.domain.Friendship;
 import project.lab6.domain.Tuple;
@@ -12,6 +14,10 @@ import project.lab6.repository.RepositoryUser;
 import project.lab6.repository.database.FriendshipDbRepository;
 import project.lab6.repository.database.UserDbRepository;
 import project.lab6.service.Service;
+import project.lab6.setter_interface.SetterIdLoggedUser;
+import project.lab6.setter_interface.SetterService;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class Factory {
     private static Factory instance = null;
@@ -28,6 +34,8 @@ public class Factory {
 
     private Service service = null;
 
+    private Long idLoggedUser = null;
+
     private Factory() {
         url = ApplicationContext.getPROPERTIES().getProperty("database.url");
         username = ApplicationContext.getPROPERTIES().getProperty("database.username");
@@ -38,6 +46,11 @@ public class Factory {
         if (instance == null)
             instance = new Factory();
         return instance;
+    }
+
+    public void setIdLoggedUser(Long idLoggedUser)
+    {
+        this.idLoggedUser = idLoggedUser;
     }
 
     public Validator<User> getUserValidator() {
@@ -72,6 +85,32 @@ public class Factory {
             service = new Service(getUserRepository(),
                     getFriendshipRepository());
         return service;
+    }
+
+    public FXMLLoader getLoader(String viewPath)
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(viewPath));
+        fxmlLoader.setControllerFactory(controllerClass ->
+        {
+            Object object = null;
+            try {
+                object = controllerClass.getDeclaredConstructor().newInstance();
+            } catch (Exception ex)
+            {
+                throw new RuntimeException(ex);
+            }
+            if(object instanceof SetterService serviceSetter)
+                serviceSetter.setService(getService());
+            if(object instanceof SetterIdLoggedUser loggedUserSetter)
+            {
+                if(idLoggedUser == null)
+                    throw new RuntimeException("Nu a fost setat id-ul userului");
+                loggedUserSetter.setIdLoggedUser(idLoggedUser);
+            }
+            return object;
+        });
+
+        return fxmlLoader;
     }
 
 }

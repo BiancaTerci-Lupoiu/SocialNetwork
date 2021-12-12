@@ -4,14 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.HBox;
+import project.lab6.setter_interface.SetterIdLoggedUser;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainViewController implements Initializable {
+public class MainViewController implements Initializable, SetterIdLoggedUser {
     @FXML
     private HBox horizontalBox;
-
+    private Long idLoggedUser;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -36,5 +37,11 @@ public class MainViewController implements Initializable {
     }
 
     public void openRequestsView(ActionEvent actionEvent) {
+    }
+
+
+    @Override
+    public void setIdLoggedUser(Long idLoggedUser) {
+        this.idLoggedUser = idLoggedUser;
     }
 }
