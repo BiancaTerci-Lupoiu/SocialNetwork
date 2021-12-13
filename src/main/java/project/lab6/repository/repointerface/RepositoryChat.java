@@ -2,6 +2,8 @@ package project.lab6.repository.repointerface;
 
 import project.lab6.domain.chat.Chat;
 
+import java.sql.SQLException;
+
 public interface RepositoryChat extends Repository<Long, Chat> {
     /**
      * Gets the private chat between 2 users

@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import project.lab6.factory.Factory;
 import project.lab6.utils.Constants;
 import java.io.IOException;

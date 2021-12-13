@@ -53,8 +53,10 @@ public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
             statement.setLong(2, message.getIdChat());
             statement.setString(3, message.getText());
             statement.setTimestamp(4, Timestamp.valueOf(message.getDate()));
-            statement.setLong(5, message.getIdReplyMessage());
-
+            if(message.getIdReplyMessage() != null)
+                statement.setLong(5, message.getIdReplyMessage());
+            else
+                statement.setNull(5, Types.BIGINT);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,7 +120,7 @@ public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
         LocalDateTime date = set.getTimestamp("date").toLocalDateTime();
         Long idUserFrom = set.getLong("id_user_from");
         Long idChat = set.getLong("id_chat");
-        Long idReplyMessage = set.getLong("id_reply_message");
+        Long idReplyMessage = set.getLong("id_message_replied");
         return new Message(id,text,date,idUserFrom,idChat,idReplyMessage);
     }
 }
