@@ -8,5 +8,7 @@ public class ChatValidator implements Validator<Chat>{
         String erori="";
         if(!chat.isPrivateChat() && (chat.getName() == null || chat.getName().trim().equals("")))
             erori="The name of the chat cannot be empty!\n";
+        if(!erori.equals(""))
+            throw new ValidationException(erori);
     }
 }

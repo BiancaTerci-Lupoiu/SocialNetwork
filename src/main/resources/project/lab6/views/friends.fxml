@@ -6,21 +6,29 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="397.0" prefWidth="478.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.FriendsController">
-   <top>
-      <Label prefHeight="59.0" prefWidth="166.0" text="Friends" textAlignment="CENTER" textFill="#5c0e63" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="Cambria Bold" size="46.0" />
-         </font>
-      </Label>
-   </top>
-   <center>
-      <TableView fx:id="tableViewFriends" style="-fx-background-color: #bb99ff;" BorderPane.alignment="CENTER">
-        <columns>
-          <TableColumn fx:id="firstName" editable="false" prefWidth="126.66663110256195" style="-fx-background-color: #bb99ff;" text="First Name" />
-          <TableColumn fx:id="lastName" editable="false" prefWidth="129.99998474121094" style="-fx-background-color: #bb99ff;" text="Last Name" />
-            <TableColumn fx:id="date" editable="false" prefWidth="115.3333740234375" style="-fx-background-color: #bb99ff;" text="Date" />
-        </columns>
-      </TableView>
-   </center>
+<BorderPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="397.0"
+            prefWidth="478.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.FriendsController">
+    <top>
+        <Label prefHeight="59.0" prefWidth="166.0" text="Friends" textAlignment="CENTER" textFill="#5c0e63"
+               BorderPane.alignment="CENTER">
+            <font>
+                <Font name="Cambria Bold" size="46.0"/>
+            </font>
+        </Label>
+    </top>
+    <center>
+        <TableView fx:id="tableViewFriends" style="-fx-background-color: #bb99ff;" BorderPane.alignment="CENTER" maxHeight="Infinity">
+            <columns>
+                <TableColumn fx:id="firstName" editable="false" prefWidth="126.66663110256195"
+                             style="-fx-background-color: #bb99ff;" text="First Name"/>
+                <TableColumn fx:id="lastName" editable="false" prefWidth="129.99998474121094"
+                             style="-fx-background-color: #bb99ff;" text="Last Name"/>
+                <TableColumn fx:id="date" editable="false" prefWidth="115.3333740234375"
+                             style="-fx-background-color: #bb99ff;" text="Date"/>
+                <TableColumn fx:id="button" prefWidth="102.00006103515625" style="-fx-background-color: #bb99ff;"
+                             text="Button"/>
+            </columns>
+        </TableView>
+    </center>
 </BorderPane>

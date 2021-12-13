@@ -1,7 +1,5 @@
 package project.lab6.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -10,14 +8,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.Status;
 import project.lab6.domain.User;
-import project.lab6.service.Service;
+import project.lab6.service.ServiceFriends;
 import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterService;
+import project.lab6.setter_interface.SetterServiceFriends;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class AddFriendsController implements SetterService, SetterIdLoggedUser {
+public class AddFriendsController implements SetterServiceFriends, SetterIdLoggedUser {
 
     @FXML
     private TextField userNameTextField;
@@ -29,7 +27,7 @@ public class AddFriendsController implements SetterService, SetterIdLoggedUser {
     private TableColumn<UserRecord, Button> addFriendColumn;
 
     private Long idLoggedUser;
-    private Service service;
+    private ServiceFriends serviceFriends;
 
     @Override
     public void setIdLoggedUser(Long idLoggedUser) {
@@ -37,19 +35,19 @@ public class AddFriendsController implements SetterService, SetterIdLoggedUser {
     }
 
     @Override
-    public void setService(Service service) {
-        this.service = service;
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 
     @FXML
     public void initialize() {
-        //addFriendsTableView.setVisible(false);
+        addFriendsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
         addFriendColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
         nameColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, String>("name"));
         addFriendColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, Button>("addButton"));
         userNameTextField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
-
+        updateTableWithUsers("");
     }
 
     private Button createAddButton(Long idUserTo) {
@@ -58,17 +56,16 @@ public class AddFriendsController implements SetterService, SetterIdLoggedUser {
         addFriendButton.setPrefWidth(30);
         addFriendButton.setPrefHeight(30);
         addFriendButton.setOnAction(event -> {
-            service.addFriendship(idLoggedUser, idUserTo, LocalDate.now(), Status.PENDING);
+            serviceFriends.addFriendship(idLoggedUser, idUserTo, LocalDate.now(), Status.PENDING);
             findUserByName();
-
         });
 
         return addFriendButton;
     }
 
-    public void findUserByName() {
+    private void updateTableWithUsers(String searchName) {
         addFriendsTableView.getItems().clear();
-        List<User> usersList = service.searchUsersByNameNotFriendsWithLoggedUser(service.getUserWithFriends(idLoggedUser), userNameTextField.getText());
+        List<User> usersList = serviceFriends.searchUsersByNameNotFriendsWithLoggedUser(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton = createAddButton(user.getId());
@@ -76,5 +73,9 @@ public class AddFriendsController implements SetterService, SetterIdLoggedUser {
 
             addFriendsTableView.getItems().add(userRecord);
         }
+    }
+
+    public void findUserByName() {
+        updateTableWithUsers(userNameTextField.getText());
     }
 }
