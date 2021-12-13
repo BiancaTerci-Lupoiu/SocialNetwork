@@ -1,20 +1,28 @@
 package project.lab6.controllers;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.DialogPane;
 import javafx.stage.StageStyle;
+import project.lab6.SocialNetworkApplication;
 
 public class AlertMessage {
     //TODO: sa stilizam aceste ferestre
     public static void showInfoMessage(String text){
         Alert infoAlert=new Alert(Alert.AlertType.INFORMATION);
         infoAlert.setContentText(text);
-        infoAlert.initStyle(StageStyle.TRANSPARENT);
-
+        infoAlert.initStyle(StageStyle.DECORATED);
+        infoAlert.show();
     }
     public static void showErrorMessage(String errorText)
     {
-        Alert infoAlert=new Alert(Alert.AlertType.ERROR);
-        infoAlert.setContentText(errorText);
-        infoAlert.initStyle(StageStyle.TRANSPARENT);
+        Alert errorAlert =new Alert(Alert.AlertType.ERROR);
+        errorAlert.setContentText(errorText);
+        errorAlert.setHeaderText("Error");
+        errorAlert.initStyle(StageStyle.DECORATED);
+        DialogPane dialogPane=errorAlert.getDialogPane();
+        dialogPane.getStylesheets().add(AlertMessage.class.getClassLoader().getResource("project/lab6/css/errorAlert.css").toExternalForm());
+
+        errorAlert.show();
+
     }
 }
