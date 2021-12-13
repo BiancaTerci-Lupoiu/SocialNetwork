@@ -50,7 +50,7 @@ public class LoginController implements SetterServiceFriends {
             Stage mainStage=new Stage();
             Scene scene=new Scene(loader.load(),600,500);
             mainStage.setScene(scene);
-            mainStage.setResizable(true);
+            mainStage.setResizable(false);
             mainStage.show();
             closeLoginWindow(null);
         }
