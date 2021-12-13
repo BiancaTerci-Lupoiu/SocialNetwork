@@ -4,41 +4,47 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox fx:id="horizontalBox" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.MainViewController">
+<HBox fx:id="horizontalBox" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.MainViewController">
     <VBox maxHeight="Infinity" minWidth="150" stylesheets="@../css/main-view.css">
-        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" VBox.vgrow="ALWAYS"
+                alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
-                    <Image url="@../images/person-icon.png" />
+                    <Image url="@../images/person-icon.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openAddFriendsView" text="Add friends" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openAddFriendsView" text="Add friends"
+                VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
-                    <Image url="@../images/plus-symbol.png" />
+                    <Image url="@../images/plus-symbol.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openFriendsView" text="Friends" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openFriendsView" text="Friends" VBox.vgrow="ALWAYS"
+                alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
-                    <Image url="@../images/friends-icon.png" />
+                    <Image url="@../images/friends-icon.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openRequestsView" text="Requests" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openRequestsView" text="Requests"
+                VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
-                    <Image url="@../images/two-people.png" />
+                    <Image url="@../images/two-people.png"/>
                 </ImageView>
             </graphic>
         </Button>
 
-        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#logout" text="Logout" VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#logout" text="Logout" VBox.vgrow="ALWAYS"
+                alignment="CENTER_LEFT">
             <graphic>
                 <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
-                    <Image url="@../images/logout.png" />
+                    <Image url="@../images/logout.png"/>
                 </ImageView>
             </graphic>
         </Button>
