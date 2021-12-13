@@ -146,11 +146,19 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
         return false;
     }
 
+    /**
+     * @return a String with a sql statement that returns all the users from database
+     */
     @Override
     protected String getFindAllSqlStatement() {
         return "select * from friendships";
     }
 
+    /**
+     * @param set the ResultSet of a query
+     * @return the friendship created based on the ResultSet
+     * @throws SQLException if the friendship could not be converted
+     */
     @Override
     protected Friendship getEntityFromSet(ResultSet set) throws SQLException {
         Long idUser1Found = set.getLong("id_user1");

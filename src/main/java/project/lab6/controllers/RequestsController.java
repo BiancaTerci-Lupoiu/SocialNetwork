@@ -52,16 +52,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
         firstName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("firstName")));
         lastName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("lastName")));
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
-        /*if (Objects.equals(selected, "Sent")) {
-            buttonCancel.setCellValueFactory(new PropertyValueFactory<UserFriend, Button>("button1"));
-            modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_SEND));
-        }
-        if(Objects.equals(selected, "Received")){
-            buttonCancel.setCellValueFactory(new PropertyValueFactory<>("button1"));
-            buttonAccept.setCellValueFactory(new PropertyValueFactory<>("button2"));
-            modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
-        }
-        tableViewRequests.setItems(modelFriends);*/
+
         comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
                 (x,y,z)->initializeCombo(z.toString())
         );
@@ -106,8 +97,6 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
     private Button createDenyButton(Long idFriend) {
         Button addDenyButton = new Button();
         addDenyButton.setText("Deny");
-        /*addUnfriendButton.setPrefWidth(70);
-        addUnfriendButton.setPrefHeight(30);*/
         addDenyButton.setOnAction(event -> {
                     serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
