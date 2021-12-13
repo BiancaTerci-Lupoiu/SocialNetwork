@@ -121,29 +121,49 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         Long id = set.getLong("id");
         String name = set.getString("name");
         Color color = Color.valueOf(set.getString("color"));
-        boolean isPrivateChat = set.getBoolean("is_private_chat");
+        boolean isPrivateChat = set.getBoolean("is_private");
         return new Chat(id,name,color,isPrivateChat);
     }
 
     @Override
     public Chat getPrivateChatBetweenUsers(Long idUser1, Long idUser2) {
-        String sql = "select (chat.id,chat.color,chat.name,chat.is_private,user_info.id_user) " +
-                "from chat inner join " +
-                "user_info on chat.id=user_info.id_chat " +
-                "where chat.is_private=true";
-
+        String sql = "select c.id,c.color,c.name,c.is_private" +
+                "                from chat c inner join" +
+                "                user_info u1 on c.id=u1.id_chat" +
+                "                inner join user_info u2 on c.id = u2.id_chat" +
+                "                where c.is_private=true and u1.id_user=? and u2.id_user=?";
+        try(Connection connection = getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql))
+        {
+            statement.setLong(1, idUser1);
+            statement.setLong(1, idUser2);
+            try(ResultSet set = statement.executeQuery())
+            {
+                if(set.next())
+                    return getEntityFromSet(set);
+            }
+        }catch (SQLException ex)
+        {
+            ex.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Chat saveAndReturnChat(Chat chat) {
-        if(!save(chat))
-            return null;
+        String sql = "insert into chat(name, color, is_private) VALUES (?,?,?)";
         String sqlGetId = "select currval(pg_get_serial_sequence('chat','id'))";
-        try(Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(sqlGetId))
-        {
-            try(var result = statement.executeQuery())
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             PreparedStatement statementGetId = connection.prepareStatement(sqlGetId)
+        ) {
+            statement.setString(1, chat.getName());
+            statement.setString(2, chat.getColor().toString());
+            statement.setBoolean(3, chat.isPrivateChat());
+
+            statement.executeUpdate();
+
+            try(var result = statementGetId.executeQuery())
             {
                 result.next();
                 Long id = result.getLong(1);
@@ -153,6 +173,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }

@@ -17,6 +17,7 @@ import project.lab6.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
@@ -40,11 +41,11 @@ public class ServiceMessages {
         this.validatorUserChatInfo = validatorUserChatInfo;
     }
 
-    private Chat getOrCreatePrivateChatBetweenUsers(Long idUser1, Long idUser2) {
+    public Chat getOrCreatePrivateChatBetweenUsers(Long idUser1, Long idUser2) {
         Chat chat = repoChats.getPrivateChatBetweenUsers(idUser1, idUser2);
         if (chat == null) {
             chat = new Chat("", Constants.DEFAULT_CHAT_COLOR, true);
-            repoChats.save(chat);
+            chat = repoChats.saveAndReturnChat(chat);
         }
         return chat;
     }
@@ -135,15 +136,16 @@ public class ServiceMessages {
                 .toList();
     }
 
-    public ChatDTO createChatGroup(String name, List<User> users) {
+    public ChatDTO createChatGroup(String name, List<Long> idUsers) {
         Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false);
         validatorChat.validate(chat);
         chat = repoChats.saveAndReturnChat(chat);
-
-        for (User user : users) {
-            repoUserChatInfo.save(new UserChatInfo(chat.getId(), user.getId(),
+        Chat finalChat = chat;
+        idUsers.stream().map(repoUsers::findOne).forEach(user ->
+        {
+            repoUserChatInfo.save(new UserChatInfo(finalChat.getId(), user.getId(),
                     createNickName(user)));
-        }
+        });
 
         return getChatDTO(chat.getId());
     }
