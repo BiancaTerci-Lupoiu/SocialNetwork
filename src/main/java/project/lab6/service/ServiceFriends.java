@@ -28,6 +28,12 @@ public class ServiceFriends {
         //setIdMax();
     }
 
+    /**
+     * Based on a password and a salt creates a hashed password (for better security)
+     * @param password a Sting introduced by the user
+     * @param salt a 32 random char String
+     * @return the hashed password
+     */
     private String generateHashPassword(String password, String salt) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -42,13 +48,20 @@ public class ServiceFriends {
     }
 
     /**
-     *
+     * finds a user based on his email
      * @param email
      * @return the user with the email =email, or null otherwise
      */
     public User findUserByEmail(String email){
         return repoUsers.findByEmail(email);
     }
+
+    /**
+     * Checks if the user with email=email exists and if his password is correct. (log in the user)
+     * @param email
+     * @param password
+     * @return the user, if the user is logged in successfully, or null otherwise
+     */
     public User loginUser(String email, String password) {
         User user = repoUsers.findByEmail(email);
         if (user == null)

@@ -37,6 +37,10 @@ public class User extends Entity<Long> {
         return firstName;
     }
 
+    /**
+     * sets the firstName of the user to firstName
+     * @param firstName
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -48,18 +52,31 @@ public class User extends Entity<Long> {
         return lastName;
     }
 
+    /**
+     * sets the lastName of the user to lastName
+     * @param lastName
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     * @return user's email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @return user's hashPassword
+     */
     public String getHashPassword() {
         return hashPassword;
     }
 
+    /**
+     * @return user's salt
+     */
     public String getSalt() {
         return salt;
     }
@@ -71,6 +88,11 @@ public class User extends Entity<Long> {
         return friends.values();
     }
 
+    /**
+     *
+     * @param idUser
+     * @return true if the user has the friend with id=idUser, false otherwise
+     */
     public boolean findFriend(Long idUser)
     {
         if(friends.get(idUser)==null)
@@ -78,6 +100,11 @@ public class User extends Entity<Long> {
         return true;
     }
 
+    /**
+     *
+     * @param status
+     * @return the friends of the user with some status=status
+     */
     public Collection<Friend> getFriends(DirectedStatus status) {
         return friends.values().stream()
                 .filter(x -> x.getStatus() == status).toList();

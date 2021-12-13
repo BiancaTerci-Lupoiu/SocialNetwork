@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * class for declared constants
+ */
 public class Constants {
     public static DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     public static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");

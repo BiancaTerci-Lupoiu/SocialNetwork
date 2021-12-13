@@ -48,7 +48,6 @@ public class NewAccountController implements SetterServiceFriends {
      * @throws IOException
      */
     public void registerUser(ActionEvent actionEvent) throws IOException {
-        //verifica daca returneaza false- exista deja useru + exceptiile de validare
         try {
             boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
             if (result) {
@@ -61,12 +60,10 @@ public class NewAccountController implements SetterServiceFriends {
                 mainStage.setResizable(false);
                 mainStage.show();
                 closeWindow();
+            } else {
+                AlertMessage.showErrorMessage("You already have an account with this email address!");
             }
-            else{
-                AlertMessage.showErrorMessage("You already have an account with this email address");
-            }
-        }
-        catch(ValidationException validationException){
+        } catch (ValidationException validationException) {
             AlertMessage.showErrorMessage(validationException.getMessage());
         }
     }

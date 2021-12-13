@@ -19,6 +19,9 @@
     </top>
     <center>
         <TableView fx:id="tableViewFriends" style="-fx-background-color: #bb99ff;" BorderPane.alignment="CENTER" maxHeight="Infinity">
+            <placeholder>
+                <Label text="" />
+            </placeholder>
             <columns>
                 <TableColumn fx:id="firstName" editable="false" prefWidth="126.66663110256195"
                              style="-fx-background-color: #bb99ff;" text="First Name"/>
