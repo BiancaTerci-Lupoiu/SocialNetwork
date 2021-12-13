@@ -7,22 +7,35 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="401.0" prefWidth="407.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.RequestsController">
-   <children>
-      <Label layoutX="40.0" layoutY="28.0" prefHeight="26.0" prefWidth="157.0" text="Request status:" textFill="#5c0e63">
-         <font>
-            <Font name="Cambria Bold" size="21.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="comboBoxStatus" layoutX="228.0" layoutY="28.0" prefWidth="150.0" />
-      <TableView fx:id="tableViewRequests" layoutX="-1.0" layoutY="76.0" prefHeight="325.0" prefWidth="417.0" style="-fx-background-color: #bb99ff;" AnchorPane.topAnchor="76.0">
-        <columns>
-          <TableColumn fx:id="firstName" prefWidth="102.66662406921387" style="-fx-background-color: #bb99ff;" text="FirstName" />
-          <TableColumn fx:id="lastName" prefWidth="93.99999237060547" style="-fx-background-color: #bb99ff;" text="LastName" />
-            <TableColumn fx:id="date" prefWidth="82.66664123535156" style="-fx-background-color: #bb99ff;" text="Date" />
-            <TableColumn fx:id="buttonCancel" prefWidth="75.0" style="-fx-background-color: #bb99ff;" />
-            <TableColumn fx:id="buttonAccept" prefWidth="61.333333333333314" style="-fx-background-color: #bb99ff;" />
-        </columns>
-      </TableView>
-   </children>
+<AnchorPane prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="project.lab6.controllers.RequestsController"
+            maxHeight="Infinity" maxWidth="Infinity">
+    <children>
+        <Label layoutX="40.0" layoutY="28.0" prefHeight="26.0" prefWidth="157.0" text="Request status:"
+               textFill="#5c0e63">
+            <font>
+                <Font name="Cambria Bold" size="21.0"/>
+            </font>
+        </Label>
+        <ComboBox fx:id="comboBoxStatus" layoutX="228.0" layoutY="28.0" prefWidth="150.0"/>
+        <TableView fx:id="tableViewRequests" layoutX="1.0" layoutY="76.0"
+                   style="-fx-background-color: #bb99ff;" AnchorPane.topAnchor="76.0"
+                   maxHeight="Infinity" maxWidth="Infinity">
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <columns>
+                <TableColumn fx:id="firstName" prefWidth="102.66662406921387" style="-fx-background-color: #bb99ff;"
+                             text="FirstName"/>
+                <TableColumn fx:id="lastName" prefWidth="93.99999237060547" style="-fx-background-color: #bb99ff;"
+                             text="LastName"/>
+                <TableColumn fx:id="date" prefWidth="82.66664123535156" style="-fx-background-color: #bb99ff;"
+                             text="Date"/>
+                <TableColumn fx:id="buttonCancel" prefWidth="60.0" style="-fx-background-color: #bb99ff;"/>
+                <TableColumn fx:id="buttonAccept" prefWidth="60.0"
+                             style="-fx-background-color: #bb99ff;"/>
+            </columns>
+        </TableView>
+    </children>
 </AnchorPane>

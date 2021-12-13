@@ -7,6 +7,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.lab6.factory.Factory;
 import project.lab6.setter_interface.SetterIdLoggedUser;
@@ -27,16 +30,17 @@ public class MainViewController implements Initializable {
 
     private void setView(String viewName) {
         FXMLLoader loader = Factory.getInstance().getLoader(viewName);
-        Node node = null;
+        Region region = null;
         try {
-            node = loader.load();
+            region = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (horizontalBox.getChildren().size() > 1)
-            horizontalBox.getChildren().set(1, node);
+            horizontalBox.getChildren().set(1, region);
         else
-            horizontalBox.getChildren().add(node);
+            horizontalBox.getChildren().add(region);
+        HBox.setHgrow(region, Priority.ALWAYS);
     }
 
     public void openProfileView(ActionEvent actionEvent) {
