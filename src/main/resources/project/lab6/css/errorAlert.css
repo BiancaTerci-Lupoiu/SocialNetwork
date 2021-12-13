@@ -1,0 +1,33 @@
+.dialog-pane{
+    -fx-border-color: black;
+    -fx-border-width:2.0px;
+    -fx-background-color:#390671 ;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: #430d7f;
+
+}
+
+.dialog-pane .header-panel .label{
+    -fx-font-family: Cambria Bold;
+    -fx-text-fill: white;
+    -fx-font-size: 20;
+}
+
+.dialog-pane .label{
+    -fx-font-family: Cambria ;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+}
+
+.dialog-pane .button{
+    -fx-background-color: #bb99ff;
+    -fx-font-family: Cambria Bold;
+    -fx-font-size: 14;
+    -fx-border-width: 2px;
+    -fx-border-color: #9878d8;
+}
+
+.dialog-pane .button:hover{
+    -fx-background-color: #8260c6;
+}
