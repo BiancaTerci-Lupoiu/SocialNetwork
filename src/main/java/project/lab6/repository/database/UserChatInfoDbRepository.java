@@ -22,10 +22,9 @@ public class UserChatInfoDbRepository extends AbstractDbRepository<TupleWithIdCh
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
 
-        String sql = "select * from users where id_chat=? and id_user=?";
+        String sql = "select * from user_info where id_chat=? and id_user=?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
-
         ) {
             statement.setLong(1, id.getIdChat());
             statement.setLong(2, id.getIdUser());

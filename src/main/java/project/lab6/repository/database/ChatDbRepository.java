@@ -136,7 +136,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
             PreparedStatement statement = connection.prepareStatement(sql))
         {
             statement.setLong(1, idUser1);
-            statement.setLong(1, idUser2);
+            statement.setLong(2, idUser2);
             try(ResultSet set = statement.executeQuery())
             {
                 if(set.next())

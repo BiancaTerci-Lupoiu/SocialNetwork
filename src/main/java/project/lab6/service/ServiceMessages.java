@@ -43,11 +43,23 @@ public class ServiceMessages {
 
     public Chat getOrCreatePrivateChatBetweenUsers(Long idUser1, Long idUser2) {
         Chat chat = repoChats.getPrivateChatBetweenUsers(idUser1, idUser2);
-        if (chat == null) {
-            chat = new Chat("", Constants.DEFAULT_CHAT_COLOR, true);
-            chat = repoChats.saveAndReturnChat(chat);
+        if (chat != null)
+            return chat;
+        chat = new Chat(null, Constants.DEFAULT_CHAT_COLOR, true);
+        chat = repoChats.saveAndReturnChat(chat);
+        User user1 = repoUsers.findOne(idUser1);
+        User user2 = repoUsers.findOne(idUser2);
+        if (user1 == null || user2 == null)
+            throw new ServiceException("Users not found");
+        UserChatInfo info1 = new UserChatInfo(chat.getId(), idUser1, createNickName(user1));
+        UserChatInfo info2 = new UserChatInfo(chat.getId(), idUser2, createNickName(user2));
+        if (repoUserChatInfo.save(info1) && repoUserChatInfo.save(info2))
+            return chat;
+        else {
+            repoUserChatInfo.delete(info1.getId());
+            repoUserChatInfo.delete(info2.getId());
+            return null;
         }
-        return chat;
     }
 
     private void saveMessage(Long idChat, Long idUserFrom, String text, LocalDateTime date, Long idMessageToReply) {
@@ -100,11 +112,12 @@ public class ServiceMessages {
                 .filter(message -> message.getIdChat().equals(idChat))
                 .map(message ->
                 {
+                    System.out.println(message);
                     UserChatInfo from = repoUserChatInfo.findOne(new TupleWithIdChatUser(idChat, message.getIdUserFrom()));
                     User userFrom = repoUsers.findOne(from.getIdUser());
                     UserChatInfoDTO fromDTO = new UserChatInfoDTO(userFrom, from.getNickname());
                     Message repliedMessage = null;
-                    if (message.getIdReplyMessage() == null)
+                    if (message.getIdReplyMessage() != null)
                         repliedMessage = repoMessages.findOne(message.getIdReplyMessage());
                     return new MessageDTO(message.getId(),
                             message.getText(),
@@ -150,13 +163,12 @@ public class ServiceMessages {
         return getChatDTO(chat.getId());
     }
 
-    public void changeChatColor(Long idChat, Color newColor)
-    {
+    public void changeChatColor(Long idChat, Color newColor) {
         Chat chat = repoChats.findOne(idChat);
-        if(chat == null)
+        if (chat == null)
             throw new ServiceException("No chat with the specified id exists!");
         chat.setColor(newColor);
-        if(!repoChats.update(chat))
+        if (!repoChats.update(chat))
             throw new ServiceException("Could not change the color of the chat!");
     }
 
