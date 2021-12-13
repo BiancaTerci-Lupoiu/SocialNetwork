@@ -64,7 +64,8 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         if (user == null)
             throw new IllegalArgumentException("user must be not null!");
         validator.validate(user);
-
+        if(findByEmail(user.getEmail()) != null)
+            return false;
         String sql = "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)
@@ -151,7 +152,6 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         String sql = "select * from users where email=?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
-
         ) {
             statement.setString(1, email);
             try (ResultSet resultSet = statement.executeQuery()) {
