@@ -112,7 +112,7 @@ public class ServiceFriends {
     private String generateSalt() {
         StringBuilder randomString = new StringBuilder(32);
         for (int i = 0; i < 32; i++) {
-            int index = (int) (256 * Math.random());
+            int index = (int) (255 * Math.random()+1);
             randomString.append((char) index);
         }
         return randomString.toString();
