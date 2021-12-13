@@ -1,7 +1,7 @@
 package project.lab6.factory;
 
 import javafx.fxml.FXMLLoader;
-import project.lab6.HelloApplication;
+import project.lab6.SocialNetworkApplication;
 import project.lab6.config.ApplicationContext;
 import project.lab6.domain.Friendship;
 import project.lab6.domain.Tuple;
@@ -15,10 +15,10 @@ import project.lab6.repository.database.*;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryChat;
 import project.lab6.repository.repointerface.RepositoryUser;
-import project.lab6.service.Service;
+import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterService;
+import project.lab6.setter_interface.SetterServiceFriends;
 
 public class Factory {
     private static Factory instance = null;
@@ -40,7 +40,7 @@ public class Factory {
     private Repository<Long, Message> messageRepository = null;
 
 
-    private Service service = null;
+    private ServiceFriends serviceFriends = null;
     private ServiceMessages serviceMessages = null;
 
     private Long idLoggedUser = null;
@@ -124,12 +124,12 @@ public class Factory {
         return messageRepository;
     }
 
-    public Service getService()
+    public ServiceFriends getServiceFriends()
     {
-        if(service == null)
-            service = new Service(getUserRepository(),
+        if(serviceFriends == null)
+            serviceFriends = new ServiceFriends(getUserRepository(),
                     getFriendshipRepository());
-        return service;
+        return serviceFriends;
     }
 
     public ServiceMessages getServiceMessages()
@@ -148,7 +148,7 @@ public class Factory {
 
     public FXMLLoader getLoader(String viewPath)
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(viewPath));
+        FXMLLoader fxmlLoader = new FXMLLoader(SocialNetworkApplication.class.getResource(viewPath));
         fxmlLoader.setControllerFactory(controllerClass ->
         {
             Object object = null;
@@ -158,8 +158,8 @@ public class Factory {
             {
                 throw new RuntimeException(ex);
             }
-            if(object instanceof SetterService serviceSetter)
-                serviceSetter.setService(getService());
+            if(object instanceof SetterServiceFriends serviceSetter)
+                serviceSetter.setServiceFriends(getServiceFriends());
             if(object instanceof SetterIdLoggedUser loggedUserSetter)
             {
                 if(idLoggedUser == null)

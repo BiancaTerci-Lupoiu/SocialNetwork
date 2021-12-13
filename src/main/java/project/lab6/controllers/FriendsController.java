@@ -2,24 +2,21 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import project.lab6.service.Service;
+import project.lab6.service.ServiceFriends;
 import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterService;
+import project.lab6.setter_interface.SetterServiceFriends;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class FriendsController implements SetterIdLoggedUser, SetterService {
+public class FriendsController implements SetterIdLoggedUser, SetterServiceFriends {
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
-    private Service service;
+    private ServiceFriends serviceFriends;
     private Long id;
 
     @FXML
@@ -45,7 +42,7 @@ public class FriendsController implements SetterIdLoggedUser, SetterService {
     }
 
     private List<UserFriend> getFriendsList() {
-        return service.getFriends(this.id)
+        return serviceFriends.getFriends(this.id)
                 .stream()
                 .map(n -> new UserFriend(n.getUser().getId(),
                         n.getUser().getFirstName(),
@@ -61,7 +58,7 @@ public class FriendsController implements SetterIdLoggedUser, SetterService {
         /*addUnfriendButton.setPrefWidth(70);
         addUnfriendButton.setPrefHeight(30);*/
         addUnfriendButton.setOnAction(event -> {
-                    service.deleteFriendship(this.id, idFriend);
+                    serviceFriends.deleteFriendship(this.id, idFriend);
                     modelFriends.setAll(getFriendsList());
                 }
         );
@@ -69,8 +66,8 @@ public class FriendsController implements SetterIdLoggedUser, SetterService {
     }
 
     @Override
-    public void setService(Service service) {
-        this.service = service;
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 
     @Override

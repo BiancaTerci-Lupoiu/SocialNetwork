@@ -9,14 +9,14 @@ import project.lab6.factory.Factory;
 import project.lab6.utils.Constants;
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class SocialNetworkApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
         stage.setScene(scene);
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setResizable(false);
         stage.show();
     }
 

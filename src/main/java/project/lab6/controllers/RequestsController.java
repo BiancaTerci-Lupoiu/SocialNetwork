@@ -10,17 +10,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Status;
-import project.lab6.service.Service;
+import project.lab6.service.ServiceFriends;
 import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterService;
+import project.lab6.setter_interface.SetterServiceFriends;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class RequestsController implements SetterService, SetterIdLoggedUser {
+public class RequestsController implements SetterServiceFriends, SetterIdLoggedUser {
     private Long id;
-    private Service service;
+    private ServiceFriends serviceFriends;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
 
     @FXML
@@ -84,7 +84,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
 
     public List<UserFriend> getFriendsList(DirectedStatus status) {
         if (status == DirectedStatus.PENDING_SEND)
-            return service.getUserWithFriends(this.id)
+            return serviceFriends.getUserWithFriends(this.id)
                     .getFriends(status)
                     .stream()
                     .map(n -> new UserFriend(n.getUser().getId(),
@@ -93,7 +93,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
                             n.getDate(),
                             createCancelButton(n.getUser().getId()))).toList();
         else
-            return service.getUserWithFriends(this.id)
+            return serviceFriends.getUserWithFriends(this.id)
                     .getFriends(status)
                     .stream()
                     .map(n -> new UserFriend(n.getUser().getId(),
@@ -109,7 +109,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
         /*addUnfriendButton.setPrefWidth(70);
         addUnfriendButton.setPrefHeight(30);*/
         addDenyButton.setOnAction(event -> {
-                    service.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );
@@ -119,7 +119,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
         Button addCancelButton=new Button();
         addCancelButton.setText("Cancel");
         addCancelButton.setOnAction(event -> {
-                    service.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_SEND));
                 }
         );
@@ -129,7 +129,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
         Button addAcceptButton = new Button();
         addAcceptButton.setText("Accept");
         addAcceptButton.setOnAction(event -> {
-                    service.modifyFriendRequestStatus(idFriend,this.id, Status.APPROVED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.APPROVED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );
@@ -142,7 +142,7 @@ public class RequestsController implements SetterService, SetterIdLoggedUser {
     }
 
     @Override
-    public void setService(Service service) {
-        this.service = service;
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 }

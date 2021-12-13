@@ -9,16 +9,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import project.lab6.HelloApplication;
 import project.lab6.domain.User;
 import project.lab6.factory.Factory;
-import project.lab6.service.Service;
-import project.lab6.setter_interface.SetterService;
+import project.lab6.service.ServiceFriends;
+import project.lab6.setter_interface.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class LoginController implements SetterService {
+public class LoginController implements SetterServiceFriends {
     @FXML
     private Button loginButton;
     @FXML
@@ -30,11 +29,11 @@ public class LoginController implements SetterService {
     @FXML
     private PasswordField passwordTextField;
 
-    private Service service;
+    private ServiceFriends serviceFriends;
 
     @Override
-    public void setService(Service service) {
-        this.service = service;
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 
     public void closeLoginWindow(ActionEvent actionEvent) {
@@ -44,14 +43,14 @@ public class LoginController implements SetterService {
 
     public void logInUser(ActionEvent actionEvent) throws IOException {
         //daca result=null->mesaj email/password incorrect, daca nu result=useru conectat
-        User loggedUser = service.loginUser(emailTextField.getText(), passwordTextField.getText());
+        User loggedUser = serviceFriends.loginUser(emailTextField.getText(), passwordTextField.getText());
         if (loggedUser != null) {
             Factory.getInstance().setIdLoggedUser(loggedUser.getId());
             FXMLLoader loader=Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
             Stage mainStage=new Stage();
             Scene scene=new Scene(loader.load(),600,500);
             mainStage.setScene(scene);
-            mainStage.initStyle(StageStyle.TRANSPARENT);
+            mainStage.setResizable(false);
             mainStage.show();
             closeLoginWindow(null);
         }
@@ -63,7 +62,7 @@ public class LoginController implements SetterService {
         Stage newAccountStage = new Stage();
         Scene scene = new Scene(loader.load(), 400, 570);
         newAccountStage.setScene(scene);
-        newAccountStage.initStyle(StageStyle.TRANSPARENT);
+        newAccountStage.setResizable(false);
         newAccountStage.show();
         closeLoginWindow(null);
     }

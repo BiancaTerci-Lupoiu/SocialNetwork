@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class Service {
+public class ServiceFriends {
     private final RepositoryUser repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
     private Long idMax = 0L;
@@ -22,7 +22,7 @@ public class Service {
      * @param repoUsers       the repository with users
      * @param repoFriendships the repository with friendships
      */
-    public Service(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
+    public ServiceFriends(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
         //setIdMax();
