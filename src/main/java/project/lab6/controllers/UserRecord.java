@@ -2,37 +2,71 @@ package project.lab6.controllers;
 
 import javafx.scene.control.Button;
 
+/**
+ * entity for the addFriends table from the GUI
+ */
 public class UserRecord {
     private String name;
     private Button addButton;
     private Long id;
 
-    public UserRecord(Long id,String name, Button addButton) {
-        this.id=id;
+    /**
+     * constructor
+     *
+     * @param id
+     * @param name
+     * @param addButton
+     */
+    public UserRecord(Long id, String name, Button addButton) {
+        this.id = id;
         this.name = name;
         this.addButton = addButton;
     }
 
+    /**
+     * @return the id of the UserRecord
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * sets the id of the UserRecord to id
+     *
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the name of the UserRecord
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * sets the name of the UserRecord to name
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return the addButton of the UserRecord
+     */
     public Button getAddButton() {
         return addButton;
     }
 
+    /**
+     * sets the addButton of the user record to addButton
+     *
+     * @param addButton
+     */
     public void setAddButton(Button addButton) {
         this.addButton = addButton;
     }

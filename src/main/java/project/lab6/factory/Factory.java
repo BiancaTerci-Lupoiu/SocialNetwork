@@ -20,6 +20,9 @@ import project.lab6.service.ServiceMessages;
 import project.lab6.setter_interface.SetterIdLoggedUser;
 import project.lab6.setter_interface.SetterServiceFriends;
 
+/**
+ * Factory class to construct the skeleton of the application
+ */
 public class Factory {
     private static Factory instance = null;
 
@@ -45,29 +48,46 @@ public class Factory {
 
     private Long idLoggedUser = null;
 
+    /**
+     * constructor
+     * we initialize the information about the database
+     */
     private Factory() {
         url = ApplicationContext.getPROPERTIES().getProperty("database.url");
         username = ApplicationContext.getPROPERTIES().getProperty("database.username");
         password = ApplicationContext.getPROPERTIES().getProperty("database.password");
     }
 
+    /**
+     * @return the instance of the class
+     */
     public static Factory getInstance() {
         if (instance == null)
             instance = new Factory();
         return instance;
     }
 
+    /**
+     * sets the idLoggedUser to the idLoggedUser value
+     * @param idLoggedUser
+     */
     public void setIdLoggedUser(Long idLoggedUser)
     {
         this.idLoggedUser = idLoggedUser;
     }
 
+    /**
+     * @return the user validator
+     */
     public Validator<User> getUserValidator() {
         if (userValidator == null)
             userValidator = new UserValidator();
         return userValidator;
     }
 
+    /**
+     * @return the friendship validator
+     */
     public Validator<Friendship> getFriendshipValidator()
     {
         if(friendshipValidator == null)
@@ -93,12 +113,18 @@ public class Factory {
         return messageValidator;
     }
 
+    /**
+     * @return the users repository
+     */
     public RepositoryUser getUserRepository() {
         if (userRepository == null)
             userRepository = new UserDbRepository(url, username, password, getUserValidator());
         return userRepository;
     }
 
+    /**
+     * @return the friendships repository
+     */
     public Repository<Tuple<Long,Long>, Friendship> getFriendshipRepository()
     {
         if(friendshipRepository == null)
@@ -124,6 +150,9 @@ public class Factory {
         return messageRepository;
     }
 
+    /**
+     * @return the ServiceFriends
+     */
     public ServiceFriends getServiceFriends()
     {
         if(serviceFriends == null)
@@ -146,6 +175,11 @@ public class Factory {
         return serviceMessages;
     }
 
+    /**
+     *
+     * @param viewPath the path to an FXML file
+     * @return the specific fxmlLoader to the viewPath path
+     */
     public FXMLLoader getLoader(String viewPath)
     {
         FXMLLoader fxmlLoader = new FXMLLoader(SocialNetworkApplication.class.getResource(viewPath));

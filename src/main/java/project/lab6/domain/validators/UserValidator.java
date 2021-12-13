@@ -9,7 +9,8 @@ public class UserValidator implements Validator<User> {
      * @param entity - the entity to be validated (User)
      * @throws ValidationException if the id<=0 or
      *                             firstName is null or does not start with a capital letter or
-     *                             lastName is null or does not start with a capital letter
+     *                             lastName is null or does not start with a capital letter or
+     *                             email is not a valid email address
      */
     @Override
     public void validate(User entity) throws ValidationException {
