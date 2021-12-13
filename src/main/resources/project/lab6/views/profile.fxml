@@ -5,31 +5,33 @@
 <?import javafx.scene.text.*?>
 
 <VBox alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ProfileController"
-      style="-fx-background-color: #bb99ff;">
+      style="-fx-background-color: #bb99ff;" spacing="10">
 
-   <Label fx:id="labelHello" text="Hello" textAlignment="CENTER">
+   <Label fx:id="labelHello" text="Hello" textAlignment="CENTER" alignment="TOP_CENTER">
        <font>
-           <Font size="30"/>
+           <Font size="30" name="Cambria Bold"/>
        </font>
    </Label>
-   <Label prefWidth="Infinity" text="Profile" underline="true">
+    <Region prefHeight="100"/>
+   <Label prefWidth="Infinity" text="Profile" underline="true" translateX="10">
       <font>
-         <Font name="System Bold" size="22.0" />
+         <Font name="Cambria Bold" size="22.0" />
       </font>
    </Label>
-    <Label fx:id="labelFirstName" text="First name:" prefWidth="Infinity">
+    <Region prefHeight="10"/>
+    <Label fx:id="labelFirstName" text="First name:" prefWidth="Infinity" translateX="20">
         <font>
-            <Font size="20.0" />
+            <Font size="20.0" name="Cambria"/>
         </font>
     </Label>
-    <Label fx:id="labelLastName" text="Last name:" prefWidth="Infinity">
+    <Label fx:id="labelLastName" text="Last name:" prefWidth="Infinity" translateX="20">
         <font>
-            <Font size="20.0" />
+            <Font size="20.0" name="Cambria"/>
         </font>
     </Label>
-    <Label fx:id="labelEmail" text="Email:" prefWidth="Infinity">
+    <Label fx:id="labelEmail" text="Email:" prefWidth="Infinity" translateX="20">
         <font>
-            <Font size="20.0" />
+            <Font size="20.0" name="Cambria"/>
         </font>
     </Label>
 </VBox>
