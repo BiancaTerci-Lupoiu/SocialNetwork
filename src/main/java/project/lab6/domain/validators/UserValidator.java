@@ -15,7 +15,7 @@ public class UserValidator implements Validator<User> {
     @Override
     public void validate(User entity) throws ValidationException {
         String errors = "";
-        if (entity.getId() <= 0)
+        if (entity.getId()!=null && entity.getId() <= 0)
             errors += "invalid id!\n";
         String firstName = entity.getFirstName();
         if (firstName == null || firstName.isEmpty() || firstName.charAt(0) < 'A' || firstName.charAt(0) > 'Z')
