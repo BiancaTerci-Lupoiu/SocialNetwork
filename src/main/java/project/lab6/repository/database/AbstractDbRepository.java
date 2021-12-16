@@ -5,20 +5,38 @@ import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract class to store E entities to database
+ *
+ * @param <ID> -type E must have an attribute of type ID
+ * @param <E>  - type of entities saved in repository
+ */
 public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
 
     protected final ConnectionPool connectionPool;
 
+    /**
+     * @param connectionPool
+     */
     protected AbstractDbRepository(ConnectionPool connectionPool) {
         this.connectionPool = connectionPool;
     }
 
+    /**
+     * @return a String with a sql statement that returns all the entities from database
+     */
     protected abstract String getFindAllSqlStatement();
 
+    /**
+     * @return all entities
+     */
     @Override
     public List<E> findAll() {
         String sql = getFindAllSqlStatement();
@@ -119,5 +137,10 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
         return false;
     }
 
+    /**
+     * @param set the ResultSet of a query
+     * @return the entity created based on that ResultSet
+     * @throws SQLException if the entity could not be converted
+     */
     protected abstract E getEntityFromSet(ResultSet set) throws SQLException;
 }

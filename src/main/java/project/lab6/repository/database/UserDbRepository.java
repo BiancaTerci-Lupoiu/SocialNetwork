@@ -40,6 +40,9 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         });
     }
 
+    /**
+     * @return a String with a sql statement that returns all the users from database
+     */
     @Override
     protected String getFindAllSqlStatement() {
         return "SELECT * FROM users";
@@ -48,7 +51,7 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     /**
      * @param user user must be not null
      * @return true- if the given user is saved
-     * otherwise returns false (id already exists)
+     * otherwise returns false (id already exists or email already exists)
      * @throws ValidationException      if the user is not valid
      * @throws IllegalArgumentException if the given user is null.     *
      */
@@ -130,6 +133,11 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         });
     }
 
+    /**
+     * @param email of the user we search for
+     * @return the user with the specified email or
+     * null otherwise
+     */
     @Override
     public User findByEmail(String email) {
         return genericFindOne(new Query() {
@@ -145,6 +153,11 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         });
     }
 
+    /**
+     * @param set the ResultSet of a query
+     * @return the user created based on the ResultSet
+     * @throws SQLException if the user could not be converted
+     */
     @Override
     protected User getEntityFromSet(ResultSet set) throws SQLException {
         Long id = set.getLong("id");

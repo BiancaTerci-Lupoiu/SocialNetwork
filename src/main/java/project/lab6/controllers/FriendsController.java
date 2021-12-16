@@ -55,8 +55,6 @@ public class FriendsController implements SetterIdLoggedUser, SetterServiceFrien
     private Button createUnfriendButton(Long idFriend) {
         Button addUnfriendButton = new Button();
         addUnfriendButton.setText("Unfriend");
-        /*addUnfriendButton.setPrefWidth(70);
-        addUnfriendButton.setPrefHeight(30);*/
         addUnfriendButton.setOnAction(event -> {
                     serviceFriends.deleteFriendship(this.id, idFriend);
                     modelFriends.setAll(getFriendsList());
@@ -72,6 +70,6 @@ public class FriendsController implements SetterIdLoggedUser, SetterServiceFrien
 
     @Override
     public void setIdLoggedUser(Long idLoggedUser) {
-        this.id=idLoggedUser;
+        this.id = idLoggedUser;
     }
 }

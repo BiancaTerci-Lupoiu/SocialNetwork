@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.lab6.domain.User;
+import project.lab6.domain.validators.ValidationException;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.setter_interface.SetterServiceFriends;
@@ -47,19 +48,24 @@ public class NewAccountController implements SetterServiceFriends {
      * @throws IOException
      */
     public void registerUser(ActionEvent actionEvent) throws IOException {
-        //verifica daca returneaza false- exista deja useru + exceptiile de validare
-        boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
-        if (!result)
-            return;
-        User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
-        Factory.getInstance().setIdLoggedUser(loggedUser.getId());
-        FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
-        Stage mainStage = new Stage();
-        Scene scene = new Scene(loader.load(), 600, 500);
-        mainStage.setScene(scene);
-        mainStage.setResizable(false);
-        mainStage.show();
-        closeWindow();
+        try {
+            boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
+            if (result) {
+                User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
+                Factory.getInstance().setIdLoggedUser(loggedUser.getId());
+                FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
+                Stage mainStage = new Stage();
+                Scene scene = new Scene(loader.load(), 600, 500);
+                mainStage.setScene(scene);
+                mainStage.setResizable(false);
+                mainStage.show();
+                closeWindow();
+            } else {
+                AlertMessage.showErrorMessage("You already have an account with this email address!");
+            }
+        } catch (ValidationException validationException) {
+            AlertMessage.showErrorMessage(validationException.getMessage());
+        }
     }
 
     public void backToLogIn(ActionEvent actionEvent) throws IOException {

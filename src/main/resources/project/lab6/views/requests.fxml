@@ -25,6 +25,9 @@
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
             </columnResizePolicy>
+            <placeholder>
+                <Label text="" />
+            </placeholder>
             <columns>
                 <TableColumn fx:id="firstName" prefWidth="102.66662406921387" style="-fx-background-color: #bb99ff;"
                              text="FirstName"/>
