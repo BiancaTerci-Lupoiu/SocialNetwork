@@ -23,7 +23,7 @@ import project.lab6.setter_interface.SetterServiceFriends;
 /**
  * Factory class to construct the skeleton of the application
  */
-public class Factory {
+public class Factory implements AutoCloseable {
     private static Factory instance = null;
 
     private String url;
@@ -36,8 +36,10 @@ public class Factory {
     private Validator<UserChatInfo> userChatInfoValidator = null;
     private Validator<Message> messageValidator = null;
 
+    private ConnectionPool connectionPool = null;
+
     private RepositoryUser userRepository = null;
-    private Repository<Tuple<Long,Long>, Friendship> friendshipRepository = null;
+    private Repository<Tuple<Long, Long>, Friendship> friendshipRepository = null;
     private RepositoryChat repositoryChat = null;
     private Repository<TupleWithIdChatUser, UserChatInfo> userChatInfoRepository = null;
     private Repository<Long, Message> messageRepository = null;
@@ -102,51 +104,49 @@ public class Factory {
     }
 
     public Validator<UserChatInfo> getUserChatInfoValidator() {
-        if(userChatInfoValidator == null)
-            userChatInfoValidator = new UserChatInfoValidator();
+        if(userChatInfoValidator == null) userChatInfoValidator = new UserChatInfoValidator();
         return userChatInfoValidator;
     }
 
     public Validator<Message> getMessageValidator() {
-        if(messageValidator == null)
-            messageValidator = new MessageValidator();
+        if (messageValidator == null) messageValidator = new MessageValidator();
         return messageValidator;
+    }
+
+    public ConnectionPool getConnectionPool() {
+        if (connectionPool == null) connectionPool = new BasicConnectionPool(url, username, password);
+        return connectionPool;
     }
 
     /**
      * @return the users repository
      */
     public RepositoryUser getUserRepository() {
-        if (userRepository == null)
-            userRepository = new UserDbRepository(url, username, password, getUserValidator());
+        if (userRepository == null) userRepository = new UserDbRepository(getConnectionPool(), getUserValidator());
         return userRepository;
     }
 
     /**
      * @return the friendships repository
      */
-    public Repository<Tuple<Long,Long>, Friendship> getFriendshipRepository()
-    {
-        if(friendshipRepository == null)
-            friendshipRepository = new FriendshipDbRepository(url,username,password, getFriendshipValidator());
+    public Repository<Tuple<Long, Long>, Friendship> getFriendshipRepository() {
+        if (friendshipRepository == null)
+            friendshipRepository = new FriendshipDbRepository(getConnectionPool(), getFriendshipValidator());
         return friendshipRepository;
     }
 
     public RepositoryChat getRepositoryChat() {
-        if(repositoryChat == null)
-            return new ChatDbRepository(url,username,password);
+        if(repositoryChat == null) return new ChatDbRepository(getConnectionPool());
         return repositoryChat;
     }
 
     public Repository<TupleWithIdChatUser, UserChatInfo> getUserChatInfoRepository() {
-        if(userChatInfoRepository == null)
-            userChatInfoRepository = new UserChatInfoDbRepository(url,username,password);
+        if(userChatInfoRepository == null) userChatInfoRepository = new UserChatInfoDbRepository(getConnectionPool());
         return userChatInfoRepository;
     }
 
     public Repository<Long, Message> getMessageRepository() {
-        if(messageRepository == null)
-            messageRepository = new MessageDbRepository(url,username,password);
+        if(messageRepository == null) messageRepository = new MessageDbRepository(getConnectionPool());
         return messageRepository;
     }
 
@@ -196,8 +196,7 @@ public class Factory {
                 serviceSetter.setServiceFriends(getServiceFriends());
             if(object instanceof SetterIdLoggedUser loggedUserSetter)
             {
-                if(idLoggedUser == null)
-                    throw new RuntimeException("Nu a fost setat id-ul userului");
+                if (idLoggedUser == null) throw new RuntimeException("Nu a fost setat id-ul userului");
                 loggedUserSetter.setIdLoggedUser(idLoggedUser);
             }
             return object;
@@ -206,4 +205,8 @@ public class Factory {
         return fxmlLoader;
     }
 
+    @Override
+    public void close() throws Exception {
+        if (connectionPool != null) connectionPool.close();
+    }
 }

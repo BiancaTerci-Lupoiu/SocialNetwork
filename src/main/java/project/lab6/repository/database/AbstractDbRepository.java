@@ -1,11 +1,17 @@
 package project.lab6.repository.database;
 
 import project.lab6.domain.Entity;
+import project.lab6.repository.database.query.Query;
+import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Abstract class to store E entities to database
  *
@@ -13,20 +19,14 @@ import java.util.List;
  * @param <E>  - type of entities saved in repository
  */
 public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements Repository<ID, E> {
-    private final String url;
-    private final String username;
-    private final String password;
+
+    protected final ConnectionPool connectionPool;
 
     /**
-     * constructor
-     * @param url
-     * @param username
-     * @param password
+     * @param connectionPool
      */
-    protected AbstractDbRepository(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    protected AbstractDbRepository(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     /**
@@ -41,25 +41,100 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
     public List<E> findAll() {
         String sql = getFindAllSqlStatement();
         List<E> entities = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()
-        ) {
-            while (resultSet.next()) {
-                entities.add(getEntityFromSet(resultSet));
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    entities.add(getEntityFromSet(resultSet));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            connectionPool.releaseConnection(connection);
         }
         return entities;
     }
 
-    /**
-     * @return the connection to the database
-     * @throws SQLException if the connection failed
-     */
-    protected Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+    protected E genericFindOne(Query query) {
+        String sql = query.getSqlString();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                query.setStatementParameters(statement);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return getEntityFromSet(resultSet);
+                    }
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) connectionPool.releaseConnection(connection);
+        }
+        return null;
+    }
+
+    protected boolean genericUpdate(Query query) {
+        return genericDeleteAndUpdate(query);
+    }
+
+    protected E genericSave(E entity, SaveQuery<E> query) {
+        String sql = query.getSqlString();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                query.setStatementParameters(statement);
+                statement.executeUpdate();
+                query.setId(entity, connection);
+                return entity;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+        return null;
+    }
+
+    protected Long getLongId(Connection connection, String tableName, String idCollumn) throws SQLException {
+        String sqlGetId = String.format("select currval(pg_get_serial_sequence('%s','%s'))", tableName, idCollumn);
+        try (PreparedStatement statementGetId = connection.prepareStatement(sqlGetId)) {
+            try (var result = statementGetId.executeQuery()) {
+                if (!result.next())
+                    return null;
+                Long id = result.getLong(1);
+                return id;
+            }
+        }
+    }
+
+    protected boolean genericDelete(Query query) {
+        return genericDeleteAndUpdate(query);
+    }
+
+    private boolean genericDeleteAndUpdate(Query query)
+    {
+        String sql = query.getSqlString();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                query.setStatementParameters(statement);
+                if(statement.executeUpdate() == 1)
+                    return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectionPool.releaseConnection(connection);
+        }
+        return false;
     }
 
     /**

@@ -110,12 +110,11 @@ public abstract class AbstractFileRepository<ID, E extends Entity<ID>> extends I
      * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public boolean save(E entity) {
-        boolean result = super.save(entity);
-        if (result == true)
-            writeToFile(entity);
+    public E save(E entity) {
+        E result = super.save(entity);
+        if (result != null)
+            writeToFile(result);
         return result;
-
     }
 
     /**

@@ -3,6 +3,8 @@ package project.lab6.repository.database;
 import project.lab6.domain.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
+import project.lab6.repository.database.query.Query;
+import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.RepositoryUser;
 
 import java.sql.*;
@@ -11,40 +13,31 @@ import java.sql.*;
 public class UserDbRepository extends AbstractDbRepository<Long, User> implements RepositoryUser {
     private final Validator<User> validator;
 
-    public UserDbRepository(String url, String username, String password, Validator<User> validator) {
-        super(url, username, password);
+    public UserDbRepository(ConnectionPool connectionPool, Validator<User> validator) {
+        super(connectionPool);
         this.validator = validator;
     }
 
     /**
      * @param id -the id of the user to be returned
-     *              id must not be null
+     *           id must not be null
      * @return the user with the specified id (id)
      * or null - if there is no user with the given id
      * @throws IllegalArgumentException if id(id) is null.
      */
     @Override
     public User findOne(Long id) {
-        if (id == null)
-            throw new IllegalArgumentException("id must be not null!");
-
-        String sql = "select * from users where id=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-
-        ) {
-            statement.setLong(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return getEntityFromSet(resultSet);
-                }
+        return genericFindOne(new Query() {
+            @Override
+            public String getSqlString() {
+                return "select * from users where id=?";
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, id);
+            }
+        });
     }
 
     /**
@@ -63,27 +56,30 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
      * @throws IllegalArgumentException if the given user is null.     *
      */
     @Override
-    public boolean save(User user) {
-        if (user == null)
-            throw new IllegalArgumentException("user must be not null!");
+    public User save(User user) {
+        if (user == null) throw new IllegalArgumentException("user must be not null!");
         validator.validate(user);
-        if(findByEmail(user.getEmail()) != null)
-            return false;
-        String sql = "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getHashPassword());
-            statement.setString(4, user.getEmail());
-            statement.setString(5, user.getSalt());
+        if (findByEmail(user.getEmail()) != null) return null;
+        return genericSave(user, new SaveQuery<User>() {
+            @Override
+            public void setId(User entity, Connection connection) throws SQLException {
+                entity.setId(getLongId(connection, "users", "id"));
+            }
 
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
+            @Override
+            public String getSqlString() {
+                return "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
+            }
+
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setString(1, user.getFirstName());
+                statement.setString(2, user.getLastName());
+                statement.setString(3, user.getHashPassword());
+                statement.setString(4, user.getEmail());
+                statement.setString(5, user.getSalt());
+            }
+        });
     }
 
     /**
@@ -95,26 +91,19 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
      */
     @Override
     public boolean delete(Long id) {
-        if (id == null)
-            throw new IllegalArgumentException("id must be not null!");
+        if (id == null) throw new IllegalArgumentException("id must be not null!");
 
-        User result = findOne(id);
-        if (result != null) {
-            String sql = "delete from users where id=?";
-
-            try (Connection connection = getConnection();
-                 PreparedStatement statement = connection.prepareStatement(sql)
-            ) {
-                statement.setLong(1, id);
-
-                statement.executeUpdate();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+        return genericDelete(new Query() {
+            @Override
+            public String getSqlString() {
+                return "delete from users where id=?";
             }
-            return true;
-        }
-        return false;
+
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, id);
+            }
+        });
     }
 
     /**
@@ -126,28 +115,22 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
      */
     @Override
     public boolean update(User entity) {
-        if (entity == null)
-            throw new IllegalArgumentException("entity must be not null!");
+        if (entity == null) throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
 
-        String sql = "update users set first_name=?, last_name=? where id=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)
+        return genericUpdate(new Query() {
+            @Override
+            public String getSqlString() {
+                return "update users set first_name=?, last_name=? where id=?";
+            }
 
-        ) {
-            statement.setString(1, entity.getFirstName());
-            statement.setString(2, entity.getLastName());
-            statement.setLong(3, entity.getId());
-
-            int numberOfRowsAffected = statement.executeUpdate();
-            if (numberOfRowsAffected != 1)
-                return false;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return true;
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setString(1, entity.getFirstName());
+                statement.setString(2, entity.getLastName());
+                statement.setLong(3, entity.getId());
+            }
+        });
     }
 
     /**
@@ -157,22 +140,17 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
      */
     @Override
     public User findByEmail(String email) {
-        String sql = "select * from users where email=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-        ) {
-            statement.setString(1, email);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return getEntityFromSet(resultSet);
-                }
+        return genericFindOne(new Query() {
+            @Override
+            public String getSqlString() {
+                return "select * from users where email=?";
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setString(1, email);
+            }
+        });
     }
 
     /**

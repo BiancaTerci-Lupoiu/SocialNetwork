@@ -5,6 +5,8 @@ import project.lab6.domain.Status;
 import project.lab6.domain.Tuple;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
+import project.lab6.repository.database.query.Query;
+import project.lab6.repository.database.query.SaveQuery;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -12,8 +14,8 @@ import java.time.LocalDate;
 public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Long>, Friendship> {
     private final Validator<Friendship> validator;
 
-    public FriendshipDbRepository(String url, String username, String password, Validator<Friendship> validator) {
-        super(url, username, password);
+    public FriendshipDbRepository(ConnectionPool pool, Validator<Friendship> validator) {
+        super(pool);
         this.validator = validator;
     }
 
@@ -28,24 +30,21 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
     public Friendship findOne(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
-        String sql = "select * from friendships where id_user1=? and id_user2=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
-            Long idUser1 = id.getLeft();
-            Long idUser2 = id.getRight();
-
-            statement.setLong(1, idUser1);
-            statement.setLong(2, idUser2);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return getEntityFromSet(resultSet);
-                }
+        return genericFindOne(new Query() {
+            @Override
+            public String getSqlString() {
+                return "select * from friendships where id_user1=? and id_user2=?";
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                Long idUser1 = id.getLeft();
+                Long idUser2 = id.getRight();
+
+                statement.setLong(1, idUser1);
+                statement.setLong(2, idUser2);
+            }
+        });
     }
 
     /**
@@ -56,29 +55,29 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
      * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public boolean save(Friendship entity) {
+    public Friendship save(Friendship entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
 
         validator.validate(entity);
-        if (findOne(entity.getId()) != null)
-            return false;
+        return genericSave(entity, new SaveQuery<Friendship>() {
+            @Override
+            public void setId(Friendship entity, Connection connection) {
+            }
 
-        String sql = "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
-            statement.setLong(1, entity.getId().getLeft());
-            statement.setLong(2, entity.getId().getRight());
-            statement.setDate(3, Date.valueOf(entity.getDate()));
-            statement.setInt(4, entity.getStatus().toInt());
+            @Override
+            public String getSqlString() {
+                return "insert into friendships (id_user1,id_user2,date,status) values (?,?,?,?)";
+            }
 
-            if (statement.executeUpdate() == 1)
-                return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, entity.getId().getLeft());
+                statement.setLong(2, entity.getId().getRight());
+                statement.setDate(3, Date.valueOf(entity.getDate()));
+                statement.setInt(4, entity.getStatus().toInt());
+            }
+        });
     }
 
     /**
@@ -92,22 +91,21 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
     public boolean delete(Tuple<Long, Long> id) {
         if (id == null)
             throw new IllegalArgumentException("id must be not null!");
-        String sql = "delete from friendships where id_user1=? and id_user2=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-        ) {
-            Long idUser1 = id.getLeft();
-            Long idUser2 = id.getRight();
+        return genericDelete(new Query() {
+            @Override
+            public String getSqlString() {
+                return "delete from friendships where id_user1=? and id_user2=?";
+            }
 
-            statement.setLong(1, idUser1);
-            statement.setLong(2, idUser2);
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                Long idUser1 = id.getLeft();
+                Long idUser2 = id.getRight();
 
-            if (statement.executeUpdate() == 1)
-                return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+                statement.setLong(1, idUser1);
+                statement.setLong(2, idUser2);
+            }
+        });
     }
 
     /**
@@ -122,28 +120,25 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
-        String sql = "update friendships set date=?,status=? where id_user1=? and id_user2=?";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)
-        ) {
-            Long idUser1 = entity.getId().getLeft();
-            Long idUser2 = entity.getId().getRight();
-            Date date = Date.valueOf(entity.getDate());
-            Status status = entity.getStatus();
+        return genericUpdate(new Query() {
+            @Override
+            public String getSqlString() {
+                return "update friendships set date=?,status=? where id_user1=? and id_user2=?";
+            }
 
-            statement.setDate(1, date);
-            statement.setInt(2, status.toInt());
-            statement.setLong(3, idUser1);
-            statement.setLong(4, idUser2);
+            @Override
+            public void setStatementParameters(PreparedStatement statement) throws SQLException {
+                Long idUser1 = entity.getId().getLeft();
+                Long idUser2 = entity.getId().getRight();
+                Date date = Date.valueOf(entity.getDate());
+                Status status = entity.getStatus();
 
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected == 1)
-                return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+                statement.setDate(1, date);
+                statement.setInt(2, status.toInt());
+                statement.setLong(3, idUser1);
+                statement.setLong(4, idUser2);
+            }
+        });
     }
 
     /**

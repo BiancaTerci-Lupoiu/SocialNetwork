@@ -17,7 +17,6 @@ import project.lab6.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
@@ -46,14 +45,14 @@ public class ServiceMessages {
         if (chat != null)
             return chat;
         chat = new Chat(null, Constants.DEFAULT_CHAT_COLOR, true);
-        chat = repoChats.saveAndReturnChat(chat);
+        chat = repoChats.save(chat);
         User user1 = repoUsers.findOne(idUser1);
         User user2 = repoUsers.findOne(idUser2);
         if (user1 == null || user2 == null)
             throw new ServiceException("Users not found");
-        UserChatInfo info1 = new UserChatInfo(chat.getId(), idUser1, createNickName(user1));
-        UserChatInfo info2 = new UserChatInfo(chat.getId(), idUser2, createNickName(user2));
-        if (repoUserChatInfo.save(info1) && repoUserChatInfo.save(info2))
+        UserChatInfo info1 = new UserChatInfo(chat.getId(), idUser1, createNickname(user1));
+        UserChatInfo info2 = new UserChatInfo(chat.getId(), idUser2, createNickname(user2));
+        if (repoUserChatInfo.save(info1) != null && repoUserChatInfo.save(info2) != null)
             return chat;
         else {
             repoUserChatInfo.delete(info1.getId());
@@ -152,12 +151,12 @@ public class ServiceMessages {
     public ChatDTO createChatGroup(String name, List<Long> idUsers) {
         Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false);
         validatorChat.validate(chat);
-        chat = repoChats.saveAndReturnChat(chat);
+        chat = repoChats.save(chat);
         Chat finalChat = chat;
         idUsers.stream().map(repoUsers::findOne).forEach(user ->
         {
             repoUserChatInfo.save(new UserChatInfo(finalChat.getId(), user.getId(),
-                    createNickName(user)));
+                    createNickname(user)));
         });
 
         return getChatDTO(chat.getId());
@@ -181,9 +180,9 @@ public class ServiceMessages {
         User user = repoUsers.findOne(idUser);
         if (user == null)
             throw new ServiceException("The id doesn't belong to a user");
-        UserChatInfo userChatInfo = new UserChatInfo(idChat, idUser, createNickName(user));
+        UserChatInfo userChatInfo = new UserChatInfo(idChat, idUser, createNickname(user));
         validatorUserChatInfo.validate(userChatInfo);
-        if (!repoUserChatInfo.save(userChatInfo))
+        if (repoUserChatInfo.save(userChatInfo) == null)
             throw new ServiceException("The user could not by added to the chat");
     }
 
@@ -203,7 +202,7 @@ public class ServiceMessages {
             throw new ServiceException("Could not update the user nickname!");
     }
 
-    private String createNickName(User user) {
+    private String createNickname(User user) {
         return user.getFirstName() + " " + user.getLastName();
     }
 }
