@@ -52,7 +52,8 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            connectionPool.releaseConnection(connection);
+            if (connection != null)
+                connectionPool.releaseConnection(connection);
         }
         return entities;
     }
