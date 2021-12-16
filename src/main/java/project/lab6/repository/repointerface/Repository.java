@@ -28,12 +28,11 @@ public interface Repository<ID, E extends Entity<ID>> {
 
     /**
      * @param entity entity must be not null
-     * @return true- if the given entity is saved
-     * otherwise returns false (id already exists)
+     * @return the entity with the id completed or null if the operation failed
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.     *
      */
-    boolean save(E entity);
+    E save(E entity);
 
     /**
      * removes the entity with the specified id

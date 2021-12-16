@@ -60,15 +60,15 @@ public class InMemoryRepository<ID, E extends Entity<ID>> implements Repository<
      * @throws IllegalArgumentException if the given entity is null.     *
      */
     @Override
-    public boolean save(E entity) {
+    public E save(E entity) {
         if (entity == null)
             throw new IllegalArgumentException("entity must be not null!");
         validator.validate(entity);
         if (entities.get(entity.getId()) != null)
-            return false;
+            return null;
         else
             entities.put(entity.getId(), entity);
-        return true;
+        return entity;
     }
 
     /**

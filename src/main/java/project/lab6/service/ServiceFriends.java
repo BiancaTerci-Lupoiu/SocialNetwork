@@ -16,7 +16,6 @@ import java.util.stream.StreamSupport;
 public class ServiceFriends {
     private final RepositoryUser repoUsers;
     private final Repository<Tuple<Long, Long>, Friendship> repoFriendships;
-    private Long idMax = 0L;
 
     /**
      * @param repoUsers       the repository with users
@@ -25,7 +24,6 @@ public class ServiceFriends {
     public ServiceFriends(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
-        //setIdMax();
     }
 
     private String generateHashPassword(String password, String salt) {
@@ -42,13 +40,13 @@ public class ServiceFriends {
     }
 
     /**
-     *
      * @param email
      * @return the user with the email =email, or null otherwise
      */
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         return repoUsers.findByEmail(email);
     }
+
     public User loginUser(String email, String password) {
         User user = repoUsers.findByEmail(email);
         if (user == null)
@@ -61,9 +59,9 @@ public class ServiceFriends {
     /**
      * Returns a list with users whose name(last name + first name) matches the string name,
      * except the loggedUser, and they are not friends with the logged user
-     * @param loggedUser     the logged user
-     * @param name           string with a name
      *
+     * @param loggedUser the logged user
+     * @param name       string with a name
      * @return a list with users whose name(last name + first name) matches the string name
      */
     public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
@@ -79,16 +77,6 @@ public class ServiceFriends {
                 })
                 .collect(Collectors.toList());
         return usersWithName;
-    }
-
-    /**
-     * finds the maximum value for the user ids
-     * and sets the idMax data member to that value
-     */
-    private void setIdMax() {
-        for (User user : repoUsers.findAll())
-            if (user.getId() > idMax)
-                idMax = user.getId();
     }
 
     /**
@@ -118,11 +106,9 @@ public class ServiceFriends {
     public boolean addUser(String email, String firstName, String lastName, String password) {
         String salt = generateSalt(); //generam un salt random pentru acest user
         String hashPassword = generateHashPassword(password, salt);
-        User user = new User(idMax + 1, email, firstName, lastName, hashPassword, salt);
-        boolean result = repoUsers.save(user);
-        if (result)
-            idMax++;
-        return result;
+        User user = new User(email, firstName, lastName, hashPassword, salt);
+        user = repoUsers.save(user);
+        return user != null;
     }
 
     /**
@@ -261,7 +247,7 @@ public class ServiceFriends {
         User user1 = repoUsers.findOne(id1);
         User user2 = repoUsers.findOne(id2);
         if (user1 != null && user2 != null) {
-            return repoFriendships.save(new Friendship(id1, id2, date, status));
+            return repoFriendships.save(new Friendship(id1, id2, date, status)) != null;
         } else
             throw new ServiceException("users not found!");
     }

@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import project.lab6.factory.Factory;
 import project.lab6.utils.Constants;
+
 import java.io.IOException;
 
 public class SocialNetworkApplication extends Application {
@@ -19,7 +20,9 @@ public class SocialNetworkApplication extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
-        launch();
+    public static void main(String[] args) throws Exception {
+        try (Factory ignored = Factory.getInstance()) {
+            launch();
+        }
     }
 }
