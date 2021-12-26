@@ -1,5 +1,7 @@
 package project.lab6.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -26,6 +28,7 @@ public class AddFriendsController implements SetterServiceFriends, SetterIdLogge
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
 
+    private ObservableList<UserRecord> userRecordList= FXCollections.observableArrayList();
     private Long idLoggedUser;
     private ServiceFriends serviceFriends;
 
@@ -47,7 +50,8 @@ public class AddFriendsController implements SetterServiceFriends, SetterIdLogge
         nameColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, String>("name"));
         addFriendColumn.setCellValueFactory(new PropertyValueFactory<UserRecord, Button>("addButton"));
         userNameTextField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
-        updateTableWithUsers("");
+        addFriendsTableView.setItems(userRecordList);
+        updateTableWithUsersAtSearch("");
     }
 
     private Button createAddButton(Long idUserTo) {
@@ -63,19 +67,26 @@ public class AddFriendsController implements SetterServiceFriends, SetterIdLogge
         return addFriendButton;
     }
 
-    private void updateTableWithUsers(String searchName) {
-        addFriendsTableView.getItems().clear();
+    private ObservableList<UserRecord> getUserRecordList(String searchName)
+    {
         List<User> usersList = serviceFriends.searchUsersByNameNotFriendsWithLoggedUser(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
+        ObservableList<UserRecord> userRecordObservableList=FXCollections.observableArrayList();
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton = createAddButton(user.getId());
             UserRecord userRecord = new UserRecord(user.getId(), name, addFriendButton);
 
-            addFriendsTableView.getItems().add(userRecord);
+            userRecordObservableList.add(userRecord);
         }
+        return userRecordObservableList;
+    }
+
+    private void updateTableWithUsersAtSearch(String searchName) {
+        addFriendsTableView.getItems().clear();
+        userRecordList.setAll(getUserRecordList(searchName));
     }
 
     public void findUserByName() {
-        updateTableWithUsers(userNameTextField.getText());
+        updateTableWithUsersAtSearch(userNameTextField.getText());
     }
 }
