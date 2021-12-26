@@ -103,8 +103,8 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
         return null;
     }
 
-    protected Long getLongId(Connection connection, String tableName, String idCollumn) throws SQLException {
-        String sqlGetId = String.format("select currval(pg_get_serial_sequence('%s','%s'))", tableName, idCollumn);
+    protected Long getLongId(Connection connection, String tableName, String idColumn) throws SQLException {
+        String sqlGetId = String.format("select currval(pg_get_serial_sequence('%s','%s'))", tableName, idColumn);
         try (PreparedStatement statementGetId = connection.prepareStatement(sqlGetId)) {
             try (var result = statementGetId.executeQuery()) {
                 if (!result.next())

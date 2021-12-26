@@ -78,7 +78,7 @@ public class ServiceMessages {
     }
 
     /**
-     * Takes the message from a user in a group chat and replies to that messge to the user in private
+     * Takes the message from a user in a group chat and replies to that message to the user in private
      */
     public void replyInPrivate(Long idUserFrom, Long idMessageToReply, String text, LocalDateTime date) {
         Message message = repoMessages.findOne(idMessageToReply);

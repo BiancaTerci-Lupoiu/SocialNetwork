@@ -57,7 +57,7 @@ public class BasicConnectionPool implements ConnectionPool {
         for(Connection connection: connectionPool)
             connection.close();
         if(usedConnections.size()!= 0)
-            System.out.println("Warning! Au ramas conexiuni care nu au fost inchise");
+            System.out.println("Warning! There are some connections still open!");
         for(Connection connection: usedConnections)
             connection.close();
     }
