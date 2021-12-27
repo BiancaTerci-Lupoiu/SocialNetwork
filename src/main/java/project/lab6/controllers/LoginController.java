@@ -42,7 +42,7 @@ public class LoginController implements SetterServiceFriends {
     }
 
     public void logInUser(ActionEvent actionEvent) throws IOException {
-        //daca result=null->mesaj email/password incorrect, daca nu result=useru conectat
+
         User loggedUser = serviceFriends.loginUser(emailTextField.getText(), passwordTextField.getText());
         if (loggedUser == null)
             AlertMessage.showErrorMessage("Invalid email and/or password!");

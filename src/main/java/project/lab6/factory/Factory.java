@@ -19,6 +19,7 @@ import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter_interface.SetterIdLoggedUser;
 import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.setter_interface.SetterServiceMessages;
 
 /**
  * Factory class to construct the skeleton of the application
@@ -198,6 +199,9 @@ public class Factory implements AutoCloseable {
             {
                 if (idLoggedUser == null) throw new RuntimeException("Nu a fost setat id-ul userului");
                 loggedUserSetter.setIdLoggedUser(idLoggedUser);
+            }
+            if(object instanceof SetterServiceMessages serviceMessagesSetter){
+                serviceMessagesSetter.setServiceMessages(getServiceMessages());
             }
             return object;
         });
