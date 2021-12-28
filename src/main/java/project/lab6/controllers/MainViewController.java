@@ -75,7 +75,7 @@ public class MainViewController implements Initializable {
         }
         FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.MAIN_CHAT);
         Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 600, 500);
         Stage stage = new Stage();
         stage.setScene(scene);
         messagesOpen = true;
