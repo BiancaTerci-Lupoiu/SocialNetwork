@@ -89,7 +89,8 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
             });
             return cell;
         });
-        setConversationView(chatDTOList.get(0).getIdChat());
+        if(!chatDTOList.isEmpty())
+            setConversationView(chatDTOList.get(0).getIdChat());
     }
 
     /**
@@ -109,15 +110,17 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
 
     public void setConversationView(Long idChat){
         FXMLLoader loader=Factory.getInstance().getLoader(Constants.View.CONVERSATION);
-        ConversationController conversationController=loader.getController();
-        conversationController.setIdChat(idChat);
-
         Region region = null;
         try {
             region = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        ConversationController conversationController=loader.getController();
+        conversationController.setIdChat(idChat);
+
+
         if (mainHorizontalBox.getChildren().size() > 1)
             mainHorizontalBox.getChildren().set(1, region);
         else
