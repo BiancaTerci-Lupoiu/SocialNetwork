@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -23,6 +24,8 @@ import project.lab6.setter_interface.SetterServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
 public class MainChatController implements SetterServiceMessages, SetterIdLoggedUser {
@@ -37,8 +40,12 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
         public CustomCellChat(Long idLoggedUser){
             super();
             this.idLoggedUser=idLoggedUser;
+            groupImage.setFitWidth(20);
+            groupImage.setFitHeight(20);
+            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14");
+            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
             horizontalBox.getChildren().addAll(groupImage,chatName);
-            horizontalBox.setAlignment(Pos.TOP_RIGHT);
+            horizontalBox.setAlignment(Pos.TOP_LEFT);
         }
 
         @Override
@@ -89,6 +96,7 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
             });
             return cell;
         });
+        System.out.println(chatDTOList.size());
         if(!chatDTOList.isEmpty())
             setConversationView(chatDTOList.get(0).getIdChat());
     }
@@ -119,8 +127,6 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
 
         ConversationController conversationController=loader.getController();
         conversationController.setIdChat(idChat);
-
-
         if (mainHorizontalBox.getChildren().size() > 1)
             mainHorizontalBox.getChildren().set(1, region);
         else

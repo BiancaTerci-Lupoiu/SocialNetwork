@@ -15,7 +15,10 @@
       <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="400.0">
          <children>
             <ImageView fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
-            <Label prefHeight="53.0" prefWidth="312.0" text="Label" />
+            <Label fx:id="groupNameLabel" prefHeight="53.0" prefWidth="312.0">
+               <font>
+                  <Font name="Cambria Bold" size="16.0" />
+               </font></Label>
             <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="68.0">
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
@@ -26,15 +29,15 @@
                </graphic></Button>
          </children>
       </HBox>
-      <ListView prefHeight="405.0" prefWidth="400.0" />
+      <ListView fx:id="listViewMessages" prefHeight="405.0" prefWidth="400.0" style="-fx-background-color: #ccccff;" />
       <HBox alignment="TOP_RIGHT" prefHeight="37.0" prefWidth="370.0">
          <children>
-            <TextField prefHeight="48.0" prefWidth="293.0" promptText="Type a message...">
+            <TextField fx:id="typeMessageTextField" prefHeight="48.0" prefWidth="293.0" promptText="Type a message...">
                <font>
                   <Font name="Cambria" size="17.0" />
                </font>
             </TextField>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="60.0">
+            <Button fx:id="sendMessageButton" mnemonicParsing="false" onAction="#sendMessageAction" prefHeight="50.0" prefWidth="60.0">
                <graphic>
                   <ImageView fitHeight="38.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
                   <image>
