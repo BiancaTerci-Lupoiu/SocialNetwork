@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ChatDTO {
+    private final Long idChat;
     private final Color color;
     private final boolean isPrivateChat;
     private final List<MessageDTO> messages;
     private final List<UserChatInfoDTO> users;
 
-    protected ChatDTO(Color color, boolean isPrivateChat) {
+    protected ChatDTO(Long idChat, Color color, boolean isPrivateChat) {
+        this.idChat = idChat;
         this.color = color;
         this.isPrivateChat = isPrivateChat;
         messages = new ArrayList<>();
@@ -29,6 +31,11 @@ public abstract class ChatDTO {
     }
 
     public abstract String getName(Long idLoggedUser);
+
+
+    public Long getIdChat() {
+        return idChat;
+    }
 
     public Color getColor() {
         return color;
@@ -53,11 +60,11 @@ public abstract class ChatDTO {
      * @param isPrivateChat True if the chat is private and false otherwise
      * @return ChatDTO
      */
-    public static ChatDTO createChatDTO(String name, Color color, boolean isPrivateChat)
+    public static ChatDTO createChatDTO(Long idChat,String name, Color color, boolean isPrivateChat)
     {
         if(isPrivateChat)
-            return new PrivateChatDTO(color);
+            return new PrivateChatDTO(idChat,color);
         else
-            return new GroupChatDTO(name,color);
+            return new GroupChatDTO(idChat,name,color);
     }
 }

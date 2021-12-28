@@ -6,8 +6,8 @@ public class GroupChatDTO extends ChatDTO {
 
     private final String chatName;
 
-    public GroupChatDTO(String chatName, Color color) {
-        super(color, false);
+    public GroupChatDTO(Long idChat,String chatName, Color color) {
+        super(idChat, color, false);
         this.chatName = chatName;
     }
 
