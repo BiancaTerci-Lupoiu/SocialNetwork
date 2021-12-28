@@ -2,12 +2,14 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -21,6 +23,7 @@ import project.lab6.setter_interface.SetterServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
+
 
 public class MainChatController implements SetterServiceMessages, SetterIdLoggedUser {
 
@@ -70,13 +73,23 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
     public void initialize(){
         chatDTOList.setAll(serviceMessages.getChatsDTO(idLoggedUser));
         listViewChats.setItems(chatDTOList);
-        listViewChats.setCellFactory(new Callback<ListView<ChatDTO>, ListCell<ChatDTO>>() {
+        /*listViewChats.setCellFactory(new Callback<ListView<ChatDTO>, ListCell<ChatDTO>>() {
             @Override
             public ListCell<ChatDTO> call(ListView<ChatDTO> param) {
                 return new CustomCellChat(idLoggedUser);
             }
+        });*/
+        listViewChats.setCellFactory(listView->{
+            ListCell<ChatDTO> cell=new CustomCellChat(idLoggedUser);
+            cell.setOnMouseClicked(event -> {
+                if(!cell.isEmpty()){
+                    setConversationView(cell.getItem().getIdChat());
+                    event.consume();
+                }
+            });
+            return cell;
         });
-        //setConversationView(chatDTOList.get(0).);
+        setConversationView(chatDTOList.get(0).getIdChat());
     }
 
     /**

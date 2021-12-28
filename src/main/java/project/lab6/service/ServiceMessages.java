@@ -129,7 +129,7 @@ public class ServiceMessages {
 
     public ChatDTO getChatDTO(Long idChat) {
         Chat chat = repoChats.findOne(idChat);
-        ChatDTO chatDTO = ChatDTO.createChatDTO(chat.getName(), chat.getColor(), chat.isPrivateChat());
+        ChatDTO chatDTO = ChatDTO.createChatDTO(chat.getId(),chat.getName(), chat.getColor(), chat.isPrivateChat());
 
         getUserChatInfoDTOForChat(idChat)
                 .forEach(chatDTO::addUserInfo);

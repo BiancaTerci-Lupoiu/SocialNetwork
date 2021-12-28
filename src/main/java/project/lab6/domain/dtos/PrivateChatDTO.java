@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 public class PrivateChatDTO extends ChatDTO{
-    public PrivateChatDTO(Color color) {
-        super(color, true);
+    public PrivateChatDTO(Long idChat,Color color) {
+        super(idChat, color, true);
     }
 
     @Override
