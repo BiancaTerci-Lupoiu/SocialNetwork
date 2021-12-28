@@ -93,6 +93,26 @@ public class ServiceFriends {
     }
 
     /**
+     *
+     * @param loggedUser
+     * @param searchName
+     * @return
+     */
+    public List<User>searchUsersByName(User loggedUser,String searchName){
+        String name=searchName.trim().replaceAll("[ ]+"," ").toLowerCase();
+        List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
+                .filter(user -> {
+                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+                    return !loggedUser.findFriend(user.getId()) &&
+                            (lastNameFirstName.startsWith(name)
+                                    || firstNameLastName.startsWith(name));
+                })
+                .collect(Collectors.toList());
+        return usersWithName;
+
+    }
+    /**
      * generates a random 32 characters long string
      *
      * @return the random string (32 chars)
