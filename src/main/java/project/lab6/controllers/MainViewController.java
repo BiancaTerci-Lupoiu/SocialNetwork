@@ -4,15 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.lab6.factory.Factory;
-import project.lab6.setter_interface.SetterIdLoggedUser;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
@@ -65,5 +63,24 @@ public class MainViewController implements Initializable {
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         Stage stage = (Stage) horizontalBox.getScene().getWindow();
         stage.setScene(scene);
+    }
+
+    private boolean messagesOpen = false;
+    private Stage messagesStage = null;
+
+    public void openMessagesView(ActionEvent actionEvent) throws IOException {
+        if (messagesOpen) {
+            messagesStage.toFront();
+            return;
+        }
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.MAIN_CHAT);
+        Parent root = fxmlLoader.load();
+        Scene scene = new Scene(root, 600, 400);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        messagesOpen = true;
+        messagesStage = stage;
+        stage.onCloseRequestProperty().addListener(event -> messagesOpen = false);
+        stage.show();
     }
 }
