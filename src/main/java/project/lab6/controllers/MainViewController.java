@@ -11,6 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import project.lab6.factory.Factory;
+import project.lab6.has_interface.HasIdChat;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class MainViewController implements Initializable {
     }
 
     private void setView(String viewName) {
-        FXMLLoader loader = Factory.getInstance().getLoader(viewName);
+        FXMLLoader loader = Factory.getInstance().getLoader(this, viewName);
         Region region = null;
         try {
             region = loader.load();
@@ -59,7 +60,7 @@ public class MainViewController implements Initializable {
 
     public void logout(ActionEvent actionEvent) throws IOException {
         Factory.getInstance().setIdLoggedUser(null);
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(this, Constants.View.LOGIN);
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         Stage stage = (Stage) horizontalBox.getScene().getWindow();
         stage.setScene(scene);
@@ -73,14 +74,14 @@ public class MainViewController implements Initializable {
             messagesStage.toFront();
             return;
         }
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.MAIN_CHAT);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(this, Constants.View.MAIN_CHAT);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 600, 500);
         Stage stage = new Stage();
         stage.setScene(scene);
         messagesOpen = true;
         messagesStage = stage;
-        stage.onCloseRequestProperty().addListener(event -> messagesOpen = false);
+        stage.setOnCloseRequest(handle -> messagesOpen = false);
         stage.show();
     }
 }

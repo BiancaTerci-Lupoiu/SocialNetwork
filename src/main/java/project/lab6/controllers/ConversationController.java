@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class ConversationController implements SetterServiceMessages, SetterIdLoggedUser {
-
-
     public static class CustomCellMessage extends ListCell<MessageDTO> {
         HBox horizontalBox = new HBox();
         Label messageText = new Label();

@@ -12,7 +12,7 @@ import java.io.IOException;
 public class SocialNetworkApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(null, Constants.View.LOGIN);
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
         stage.setScene(scene);
