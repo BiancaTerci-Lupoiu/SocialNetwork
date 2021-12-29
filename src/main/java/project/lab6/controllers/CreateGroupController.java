@@ -51,7 +51,7 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
                     participants.add(idLoggedUser);
                     String chatName = new String(groupName.textProperty().getValue());
                     serviceMessages.createChatGroup(chatName, participants);
-                    done.disarm();
+                    done.disabledProperty();
                 }
         );
 
@@ -67,7 +67,7 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
         {
             participants.add(id);
             addParticipantButton.setText("Added");
-            addParticipantButton.disarm();
+            addParticipantButton.disabledProperty();
             usersRecord.remove(new UserRecord(id,serviceFriends.getUserWithFriends(id).getLastName() + " "
                     + serviceFriends.getUserWithFriends(id).getFirstName(),addParticipantButton));
 
