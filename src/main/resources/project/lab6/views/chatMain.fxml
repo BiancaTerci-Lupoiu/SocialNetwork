@@ -40,7 +40,7 @@ fx:controller="project.lab6.controllers.MainChatController">
                   </graphic>
                </Button>
             </children></HBox>
-            <ListView fx:id="listViewChats" prefHeight="301.0" prefWidth="213.0" />
+            <ListView fx:id="listViewChats" style="-fx-background-color: #ccccff" prefHeight="301.0" prefWidth="213.0" />
          </children></VBox>
 
    </children>
