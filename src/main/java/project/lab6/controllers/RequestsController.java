@@ -11,16 +11,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Status;
 import project.lab6.service.ServiceFriends;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class RequestsController implements SetterServiceFriends, SetterIdLoggedUser {
-    private Long id;
-    private ServiceFriends serviceFriends;
+public class RequestsController extends Controller {
+    private final Long idLoggedUser;
+    private final ServiceFriends serviceFriends;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
 
     @FXML
@@ -36,19 +35,21 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
     @FXML
     TableColumn<UserFriend, Button> buttonCancel;
     @FXML
-    TableColumn<UserFriend,Button>buttonDeny;
+    TableColumn<UserFriend, Button> buttonDeny;
     @FXML
     TableView<UserFriend> tableViewRequests;
 
+    public RequestsController(Long idLoggedUser, ServiceFriends serviceFriends) {
+        this.idLoggedUser = idLoggedUser;
+        this.serviceFriends = serviceFriends;
+    }
 
     @FXML
     public void initialize() {
         comboBoxStatus.setPromptText("Select status");
         comboBoxStatus.setItems(FXCollections.observableArrayList("Sent", "Received"));
 
-        comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
-                (x)->initializeCombo(x.toString())
-        );
+        comboBoxStatus.getSelectionModel().selectedItemProperty().addListener((x) -> initializeCombo(x.toString()));
         firstName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("firstName")));
         lastName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("lastName")));
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
@@ -75,7 +76,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
 
     public List<UserFriend> getFriendsList(DirectedStatus status) {
         if (status == DirectedStatus.PENDING_SEND)
-            return serviceFriends.getUserWithFriends(this.id)
+            return serviceFriends.getUserWithFriends(this.idLoggedUser)
                     .getFriends(status)
                     .stream()
                     .map(n -> new UserFriend(n.getUser().getId(),
@@ -84,7 +85,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
                             n.getDate(),
                             createCancelButton(n.getUser().getId()))).toList();
         else
-            return serviceFriends.getUserWithFriends(this.id)
+            return serviceFriends.getUserWithFriends(this.idLoggedUser)
                     .getFriends(status)
                     .stream()
                     .map(n -> new UserFriend(n.getUser().getId(),
@@ -98,7 +99,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
         Button addDenyButton = new Button();
         addDenyButton.setText("Deny");
         addDenyButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );
@@ -108,7 +109,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
         Button addCancelButton=new Button();
         addCancelButton.setText("Cancel");
         addCancelButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_SEND));
                 }
         );
@@ -118,7 +119,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
         Button addAcceptButton = new Button();
         addAcceptButton.setText("Accept");
         addAcceptButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.id, Status.APPROVED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.APPROVED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );
@@ -126,12 +127,7 @@ public class RequestsController implements SetterServiceFriends, SetterIdLoggedU
     }
 
     @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.id = idLoggedUser;
-    }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
+    public String getViewPath() {
+        return Constants.View.REQUESTS;
     }
 }

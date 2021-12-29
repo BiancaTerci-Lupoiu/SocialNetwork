@@ -8,16 +8,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import project.lab6.domain.User;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
-import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class LoginController implements SetterServiceFriends {
+public class LoginController extends Controller {
     @FXML
     private Button loginButton;
     @FXML
@@ -29,12 +28,14 @@ public class LoginController implements SetterServiceFriends {
     @FXML
     private PasswordField passwordTextField;
 
-    private ServiceFriends serviceFriends;
+    private final ServiceFriends serviceFriends;
+    private final ServiceMessages serviceMessages;
 
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
+    public LoginController(ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
         this.serviceFriends = serviceFriends;
+        this.serviceMessages = serviceMessages;
     }
+
 
     public void closeLoginWindow(ActionEvent actionEvent) {
         Stage stage = (Stage) closeLoginButton.getScene().getWindow();
@@ -47,8 +48,7 @@ public class LoginController implements SetterServiceFriends {
         if (loggedUser == null)
             AlertMessage.showErrorMessage("Invalid email and/or password!");
         else {
-            Factory.getInstance().setIdLoggedUser(loggedUser.getId());
-            FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.MAIN_VIEW);
+            FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId(), serviceFriends, serviceMessages));
             Stage mainStage = new Stage();
             Scene scene = new Scene(loader.load(), 600, 500);
             mainStage.setScene(scene);
@@ -60,12 +60,17 @@ public class LoginController implements SetterServiceFriends {
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.CREATE_NEW_ACCOUNT);
+        FXMLLoader loader = Factory.getInstance().getLoader(new NewAccountController(serviceFriends, serviceMessages));
         Stage newAccountStage = new Stage();
         Scene scene = new Scene(loader.load(), 400, 570);
         newAccountStage.setScene(scene);
         newAccountStage.setResizable(false);
         newAccountStage.show();
         closeLoginWindow(null);
+    }
+
+    @Override
+    public String getViewPath() {
+        return Constants.View.LOGIN;
     }
 }

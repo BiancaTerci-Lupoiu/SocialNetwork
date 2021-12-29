@@ -22,6 +22,7 @@ public class Constants {
         public static String REQUESTS="views/requests.fxml";
         public static String PROFILE="views/profile.fxml";
         public static String MAIN_CHAT="views/chatMain.fxml";
-        public static String CONVERSATION="views/conversation.fxml";
+        public static String CONVERSATION = "views/conversation.fxml";
+        public static String CHAT_DETAILS = "views/chat-details.fxml";
     }
 }

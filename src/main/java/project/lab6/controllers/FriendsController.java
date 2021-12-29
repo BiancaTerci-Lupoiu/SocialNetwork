@@ -8,16 +8,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.service.ServiceFriends;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
 
-public class FriendsController implements SetterIdLoggedUser, SetterServiceFriends {
+public class FriendsController extends Controller {
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
-    private ServiceFriends serviceFriends;
-    private Long id;
+    private final ServiceFriends serviceFriends;
+    private final Long idLoggedUser;
 
     @FXML
     TableColumn<UserFriend, String> firstName;
@@ -29,6 +28,11 @@ public class FriendsController implements SetterIdLoggedUser, SetterServiceFrien
     TableColumn<UserFriend, Button> button;
     @FXML
     TableView<UserFriend> tableViewFriends;
+
+    public FriendsController(Long idLoggedUser, ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+        this.idLoggedUser = idLoggedUser;
+    }
 
     @FXML
     public void initialize() {
@@ -42,7 +46,7 @@ public class FriendsController implements SetterIdLoggedUser, SetterServiceFrien
     }
 
     private List<UserFriend> getFriendsList() {
-        return serviceFriends.getFriends(this.id)
+        return serviceFriends.getFriends(this.idLoggedUser)
                 .stream()
                 .map(n -> new UserFriend(n.getUser().getId(),
                         n.getUser().getFirstName(),
@@ -56,20 +60,15 @@ public class FriendsController implements SetterIdLoggedUser, SetterServiceFrien
         Button addUnfriendButton = new Button();
         addUnfriendButton.setText("Unfriend");
         addUnfriendButton.setOnAction(event -> {
-                    serviceFriends.deleteFriendship(this.id, idFriend);
-                    modelFriends.setAll(getFriendsList());
+            serviceFriends.deleteFriendship(this.idLoggedUser, idFriend);
+            modelFriends.setAll(getFriendsList());
                 }
         );
         return addUnfriendButton;
     }
 
     @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
-    }
-
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.id = idLoggedUser;
+    public String getViewPath() {
+        return Constants.View.FRIENDS;
     }
 }
