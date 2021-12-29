@@ -48,7 +48,7 @@ public class LoginController implements SetterServiceFriends {
             AlertMessage.showErrorMessage("Invalid email and/or password!");
         else {
             Factory.getInstance().setIdLoggedUser(loggedUser.getId());
-            FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
+            FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.MAIN_VIEW);
             Stage mainStage = new Stage();
             Scene scene = new Scene(loader.load(), 600, 500);
             mainStage.setScene(scene);
@@ -60,7 +60,7 @@ public class LoginController implements SetterServiceFriends {
     }
 
     public void createNewAccount(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.CREATE_NEW_ACCOUNT);
+        FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.CREATE_NEW_ACCOUNT);
         Stage newAccountStage = new Stage();
         Scene scene = new Scene(loader.load(), 400, 570);
         newAccountStage.setScene(scene);
