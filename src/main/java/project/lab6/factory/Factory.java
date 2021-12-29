@@ -1,7 +1,6 @@
 package project.lab6.factory;
 
 import javafx.fxml.FXMLLoader;
-import project.lab6.Info;
 import project.lab6.SocialNetworkApplication;
 import project.lab6.config.ApplicationContext;
 import project.lab6.controllers.Controller;
