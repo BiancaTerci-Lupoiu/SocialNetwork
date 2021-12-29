@@ -117,7 +117,7 @@ public class MainChatController implements SetterServiceMessages, SetterIdLogged
     }
 
     public void setConversationView(Long idChat){
-        FXMLLoader loader=Factory.getInstance().getLoader(this, Constants.View.CONVERSATION);
+        FXMLLoader loader=Factory.getInstance().getLoader(Constants.View.CONVERSATION);
         Region region = null;
         try {
             region = loader.load();

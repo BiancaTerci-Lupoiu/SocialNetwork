@@ -52,7 +52,7 @@ public class NewAccountController implements SetterServiceFriends {
             if (result) {
                 User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
                 Factory.getInstance().setIdLoggedUser(loggedUser.getId());
-                FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.MAIN_VIEW);
+                FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
                 Stage mainStage = new Stage();
                 Scene scene = new Scene(loader.load(), 600, 500);
                 mainStage.setScene(scene);
@@ -68,7 +68,7 @@ public class NewAccountController implements SetterServiceFriends {
     }
 
     public void backToLogIn(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(this, Constants.View.LOGIN);
+        FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.LOGIN);
         Stage loginStage = new Stage();
 
         Scene scene = new Scene(loader.load(), 600, 400);
