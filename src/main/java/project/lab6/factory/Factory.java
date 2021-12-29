@@ -29,9 +29,9 @@ import project.lab6.setter_interface.local.SetterIdChat;
 public class Factory implements AutoCloseable {
     private static Factory instance = null;
 
-    private String url;
-    private String username;
-    private String password;
+    private final String url;
+    private final String username;
+    private final String password;
 
     private Validator<User> userValidator = null;
     private Validator<Friendship> friendshipValidator = null;
@@ -138,7 +138,7 @@ public class Factory implements AutoCloseable {
     }
 
     public RepositoryChat getRepositoryChat() {
-        if(repositoryChat == null) return new ChatDbRepository(getConnectionPool());
+        if (repositoryChat == null) repositoryChat = new ChatDbRepository(getConnectionPool());
         return repositoryChat;
     }
 
