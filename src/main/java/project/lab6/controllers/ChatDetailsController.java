@@ -5,9 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -16,18 +14,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.service.ServiceMessages;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceMessages;
-import project.lab6.setter_interface.local.SetterIdChat;
+import project.lab6.utils.Constants;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ChatDetailsController implements Initializable, SetterIdLoggedUser, SetterServiceMessages, SetterIdChat {
+public class ChatDetailsController extends Controller implements Initializable {
+    @Override
+    public String getViewPath() {
+        return Constants.View.CHAT_DETAILS;
+    }
 
     public static class CustomCellChat extends ListCell<UserChatInfoDTO> {
         AnchorPane rootAnchor = new AnchorPane();
@@ -68,22 +67,13 @@ public class ChatDetailsController implements Initializable, SetterIdLoggedUser,
     @FXML
     private Label chatNameLabel;
 
-    private Long idLoggerUser;
-    private ServiceMessages serviceMessages;
-    private Long idChat;
+    private final Long idLoggerUser;
+    private final ServiceMessages serviceMessages;
+    private final Long idChat;
 
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.idLoggerUser = idLoggedUser;
-    }
-
-    @Override
-    public void setServiceMessages(ServiceMessages serviceMessages) {
+    public ChatDetailsController(Long idLoggerUser, ServiceMessages serviceMessages, Long idChat) {
+        this.idLoggerUser = idLoggerUser;
         this.serviceMessages = serviceMessages;
-    }
-
-    @Override
-    public void setIdChat(Long idChat) {
         this.idChat = idChat;
     }
 
@@ -94,12 +84,6 @@ public class ChatDetailsController implements Initializable, SetterIdLoggedUser,
         userChatInfos.setAll(chat.getUsersInfo());
         listView.setCellFactory(param -> new CustomCellChat());
         listView.setItems(userChatInfos);
-    }
-
-    public void setStage(Stage stage)
-    {
-        stage.widthProperty().addListener((obs, oldValue,newValue)->
-                listView.setPrefWidth(newValue.doubleValue()));
     }
 
     public void addUserToChat(ActionEvent actionEvent) {

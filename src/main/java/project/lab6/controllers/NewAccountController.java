@@ -11,12 +11,12 @@ import project.lab6.domain.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
-import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class NewAccountController implements SetterServiceFriends {
+public class NewAccountController extends Controller {
 
     @FXML
     private TextField firstNameTextField;
@@ -27,17 +27,18 @@ public class NewAccountController implements SetterServiceFriends {
     @FXML
     private PasswordField passwordTextField;
 
-    private ServiceFriends serviceFriends;
+    private final ServiceFriends serviceFriends;
+    private final ServiceMessages serviceMessages;
+
+    public NewAccountController(ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
+        this.serviceFriends = serviceFriends;
+        this.serviceMessages = serviceMessages;
+    }
 
 
     private void closeWindow() {
         Stage stage = (Stage) emailTextField.getScene().getWindow();
         stage.close();
-    }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
     }
 
     /**
@@ -51,8 +52,7 @@ public class NewAccountController implements SetterServiceFriends {
             boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
             if (result) {
                 User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
-                Factory.getInstance().setIdLoggedUser(loggedUser.getId());
-                FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.MAIN_VIEW);
+                FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId(), serviceFriends, serviceMessages));
                 Stage mainStage = new Stage();
                 Scene scene = new Scene(loader.load(), 600, 500);
                 mainStage.setScene(scene);
@@ -68,7 +68,7 @@ public class NewAccountController implements SetterServiceFriends {
     }
 
     public void backToLogIn(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(Constants.View.LOGIN);
+        FXMLLoader loader = Factory.getInstance().getLoader(new LoginController(serviceFriends, serviceMessages));
         Stage loginStage = new Stage();
 
         Scene scene = new Scene(loader.load(), 600, 400);
@@ -76,5 +76,10 @@ public class NewAccountController implements SetterServiceFriends {
         loginStage.setResizable(false);
         closeWindow();
         loginStage.show();
+    }
+
+    @Override
+    public String getViewPath() {
+        return Constants.View.CREATE_NEW_ACCOUNT;
     }
 }
