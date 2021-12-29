@@ -19,7 +19,7 @@
                <font>
                   <Font name="Cambria Bold" size="16.0" />
                </font></Label>
-            <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="68.0">
+            <Button onAction="#chatInfoButtonClick" mnemonicParsing="false" prefHeight="47.0" prefWidth="68.0">
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
                      <image>

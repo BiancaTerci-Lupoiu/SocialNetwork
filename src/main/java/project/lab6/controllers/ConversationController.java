@@ -6,29 +6,45 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import project.lab6.domain.dtos.MessageDTO;
+import project.lab6.factory.Factory;
 import project.lab6.service.ServiceMessages;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceMessages;
 import project.lab6.utils.Constants;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class ConversationController implements SetterServiceMessages, SetterIdLoggedUser {
+public class ConversationController extends Controller {
+    public ConversationController(Long idChat, ServiceMessages serviceMessages, Long idLoggedUser) {
+        this.idChat = idChat;
+        this.serviceMessages = serviceMessages;
+        this.idLoggedUser = idLoggedUser;
+    }
 
+    @Override
+    public String getViewPath() {
+        return Constants.View.CONVERSATION;
+    }
+
+    public void chatInfoButtonClick(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceMessages, idChat));
+        Scene scene = new Scene(loader.load(), 600,400);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.showAndWait();
+        //TODO: Actualizeaza ChatDTO
+    }
 
     public static class CustomCellMessage extends ListCell<MessageDTO> {
         HBox horizontalBox = new HBox();
@@ -125,14 +141,14 @@ public class ConversationController implements SetterServiceMessages, SetterIdLo
     @FXML
     public Label labelMessageToReply;
 
-    private Long idChat;
-    private ServiceMessages serviceMessages;
-    private Long idLoggedUser;
+    private final Long idChat;
+    private final ServiceMessages serviceMessages;
+    private final Long idLoggedUser;
     private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
 
+    public void initialize() {
+        //groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
 
-    public void setIdChat(Long idChat) {
-        this.idChat = idChat;
         groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
         messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
         listViewMessages.setItems(messageDTOList);
@@ -146,27 +162,8 @@ public class ConversationController implements SetterServiceMessages, SetterIdLo
         //Color color=serviceMessages.getChatDTO(idChat).getColor();
         //String hex = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
         //listViewMessages.setStyle("-fx-background-color:"+hex);
-
     }
 
-    @Override
-    public void setServiceMessages(ServiceMessages serviceMessages) {
-        this.serviceMessages = serviceMessages;
-    }
-
-    public void initialize() {
-        //groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
-    }
-
-    /**
-     * sets the id of the logged user to idLoggedUser
-     *
-     * @param idLoggedUser
-     */
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.idLoggedUser = idLoggedUser;
-    }
 
     public void sendMessageAction(ActionEvent actionEvent) {
         if (!typeMessageTextField.getText().isEmpty()) {

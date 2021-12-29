@@ -3,14 +3,20 @@ package project.lab6.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import project.lab6.domain.dtos.ChatDTO;
+import project.lab6.factory.Factory;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
+
+import java.io.IOException;
 
 
 public class MainChatController extends Controller {
@@ -103,20 +109,18 @@ public class MainChatController extends Controller {
      */
 
     public void setConversationView(Long idChat) {
-//        FXMLLoader loader=Factory.getInstance().getLoader(new ConversationController());
-//        Region region = null;
-//        try {
-//            region = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ConversationController conversationController=loader.getController();
-//        conversationController.setIdChat(idChat);
-//        if (mainHorizontalBox.getChildren().size() > 1)
-//            mainHorizontalBox.getChildren().set(1, region);
-//        else
-//            mainHorizontalBox.getChildren().add(region);
-//        HBox.setHgrow(region, Priority.ALWAYS);
+        FXMLLoader loader= Factory.getInstance().getLoader(new ConversationController(idChat, serviceMessages, idLoggedUser));
+        Region region = null;
+        try {
+            region = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (mainHorizontalBox.getChildren().size() > 1)
+            mainHorizontalBox.getChildren().set(1, region);
+        else
+            mainHorizontalBox.getChildren().add(region);
+        HBox.setHgrow(region, Priority.ALWAYS);
     }
 }
