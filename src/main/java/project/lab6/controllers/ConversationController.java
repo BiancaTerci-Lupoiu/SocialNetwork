@@ -11,8 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import project.lab6.domain.dtos.MessageDTO;
@@ -26,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class ConversationController extends Controller {
+
     public ConversationController(Long idChat, ServiceMessages serviceMessages, Long idLoggedUser) {
         this.idChat = idChat;
         this.serviceMessages = serviceMessages;
@@ -59,12 +63,16 @@ public class ConversationController extends Controller {
         Button replyInChatButton = new Button();
         Button replyInPrivateButton = new Button();
         HBox hBoxButtons = new HBox();
+        String cellColor;
 
-        public CustomCellMessage(Long idLoggedUser, Label labelShownAboveTypeText) {
+        public CustomCellMessage(Long idLoggedUser, Label labelShownAboveTypeText,String cellColor) {
             super();
             this.idLoggedUser = idLoggedUser;
             this.labelShownAboveTypeText = labelShownAboveTypeText;
+            this.cellColor=cellColor;
+            this.setStyle("-fx-background-color: "+cellColor+";-fx-border-color: transparent");
             hBoxButtons.setVisible(false);
+            hBoxButtons.setSpacing(5);
             horizontalBox.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
                 if (newValue) {
                     hBoxButtons.setVisible(true);
@@ -73,9 +81,11 @@ public class ConversationController extends Controller {
                 }
             });
             replyInChatButton.setText("Reply");
-            replyInChatButton.setStyle("-fx-font-family: Cambria;-fx-font-size: 12;-fx-background-color: ");
+            replyInPrivateButton.setText("Private reply");
+            replyInChatButton.setStyle("-fx-font-family: Cambria Bold;-fx-font-size: 13;-fx-background-color: #5900b3;-fx-text-fill: white;-fx-border-radius: 15;-fx-background-radius: 15");
+            replyInPrivateButton.setStyle("-fx-font-family: Cambria Bold;-fx-font-size: 13;-fx-background-color: #5900b3;-fx-text-fill: white;-fx-border-radius: 15;-fx-background-radius: 15");
             repliedMessageText.setStyle("-fx-font-family: Cambria;-fx-text-fill:#696766;-fx-font-size: 16;-fx-background-color: #d1b3ff;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
-            dateLabel.setStyle("-fx-background-color: transparent;-fx-font-family: Cambria;-fx-font-size: 12;-fx-padding: 2px 15px 2px 0px");
+            dateLabel.setStyle("-fx-background-color: transparent;-fx-font-family: Cambria;-fx-font-size: 12;-fx-padding: 2px 10px 2px 0px");
             userNameLabel.setStyle("-fx-background-color: transparent;-fx-font-family: Cambria;-fx-font-size: 14");
             hBoxButtons.getChildren().addAll(dateLabel, replyInChatButton, replyInPrivateButton);
             verticalBox.getChildren().addAll(userNameLabel, repliedMessageText, messageText, hBoxButtons);
@@ -118,12 +128,13 @@ public class ConversationController extends Controller {
                     userNameLabel.setVisible(false);
                     messageText.setStyle("-fx-background-color: #b3b3ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
                     dateLabel.setStyle("-fx-padding: 2px 0px 2px 15px");
-                    hBoxButtons.getChildren().setAll(replyInChatButton, replyInPrivateButton, dateLabel);
+                    hBoxButtons.getChildren().setAll(replyInChatButton,  dateLabel);
+                    verticalBox.setAlignment(Pos.TOP_RIGHT);
                 } else {
                     horizontalBox.setAlignment(Pos.TOP_LEFT);
                     userNameLabel.setVisible(true);
                     userNameLabel.setText(message.getUserFrom().getNickname());
-                    messageText.setStyle("-fx-background-color: #bb99ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
+                    messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
                 }
                 setGraphic(horizontalBox);
             }
@@ -140,6 +151,10 @@ public class ConversationController extends Controller {
     public Button sendMessageButton;
     @FXML
     public Label labelMessageToReply;
+    @FXML
+    public ImageView userImage;
+    @FXML
+    public VBox mainVBox;
 
     private final Long idChat;
     private final ServiceMessages serviceMessages;
@@ -147,24 +162,24 @@ public class ConversationController extends Controller {
     private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
 
     public void initialize() {
-        //groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
-
         groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
         messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
         listViewMessages.setItems(messageDTOList);
         labelMessageToReply.setVisible(false);
-        listViewMessages.setCellFactory(new Callback<ListView<MessageDTO>, ListCell<MessageDTO>>() {
-            @Override
-            public ListCell<MessageDTO> call(ListView<MessageDTO> param) {
-                return new CustomCellMessage(idLoggedUser, labelMessageToReply);
-            }
-        });
-        //Color color=serviceMessages.getChatDTO(idChat).getColor();
-        //String hex = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
-        //listViewMessages.setStyle("-fx-background-color:"+hex);
+        String chatColor=convertColorToString(serviceMessages.getChatDTO(idChat).getColor());
+        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, labelMessageToReply,chatColor));
+        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+        listViewMessages.setStyle("-fx-background-color:"+chatColor);
+        mainVBox.setStyle("-fx-background-color:"+chatColor);
     }
 
-
+    private String convertColorToString(Color color) {
+        int r = (int) (255 * color.getRed());
+        int g = (int) (255 * color.getGreen());
+        int b = (int) (255 * color.getBlue());
+        int a = (int) (255 * color.getOpacity());
+        return String.format("#%02x%02x%02x%02x", r, g, b, a);
+    }
     public void sendMessageAction(ActionEvent actionEvent) {
         if (!typeMessageTextField.getText().isEmpty()) {
             if (!labelMessageToReply.isVisible()) {

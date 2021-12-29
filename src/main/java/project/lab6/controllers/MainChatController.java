@@ -40,9 +40,9 @@ public class MainChatController extends Controller {
         public CustomCellChat(Long idLoggedUser) {
             super();
             this.idLoggedUser = idLoggedUser;
-            groupImage.setFitWidth(20);
-            groupImage.setFitHeight(20);
-            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14");
+            groupImage.setFitWidth(24);
+            groupImage.setFitHeight(24);
+            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
             horizontalBox.getChildren().addAll(groupImage, chatName);
             horizontalBox.setAlignment(Pos.TOP_LEFT);
