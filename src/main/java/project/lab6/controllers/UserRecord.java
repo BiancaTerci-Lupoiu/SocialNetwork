@@ -2,6 +2,8 @@ package project.lab6.controllers;
 
 import javafx.scene.control.Button;
 
+import java.util.Objects;
+
 /**
  * entity for the addFriends table from the GUI
  */
@@ -69,5 +71,18 @@ public class UserRecord {
      */
     public void setAddButton(Button addButton) {
         this.addButton = addButton;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRecord that = (UserRecord) o;
+        return Objects.equals(name, that.name) && Objects.equals(addButton, that.addButton) && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, addButton, id);
     }
 }

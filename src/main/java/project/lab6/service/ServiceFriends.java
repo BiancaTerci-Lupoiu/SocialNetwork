@@ -28,8 +28,9 @@ public class ServiceFriends {
 
     /**
      * Based on a password and a salt creates a hashed password (for better security)
+     *
      * @param password a Sting introduced by the user
-     * @param salt a 32 random char String
+     * @param salt     a 32 random char String
      * @return the hashed password
      */
     private String generateHashPassword(String password, String salt) {
@@ -47,6 +48,7 @@ public class ServiceFriends {
 
     /**
      * finds a user based on his email
+     *
      * @param email
      * @return the user with the email =email, or null otherwise
      */
@@ -56,6 +58,7 @@ public class ServiceFriends {
 
     /**
      * Checks if the user with email=email exists and if his password is correct. (log in the user)
+     *
      * @param email
      * @param password
      * @return the user, if the user is logged in successfully, or null otherwise
@@ -93,18 +96,17 @@ public class ServiceFriends {
     }
 
     /**
-     *
      * @param loggedUser
      * @param searchName
      * @return
      */
-    public List<User>searchUsersByName(User loggedUser,String searchName){
-        String name=searchName.trim().replaceAll("[ ]+"," ").toLowerCase();
+    public List<User> searchUsersByName(User loggedUser, String searchName) {
+        String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
         List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
                 .filter(user -> {
                     String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
                     String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
-                    return !loggedUser.findFriend(user.getId()) &&
+                    return !user.getId().equals(loggedUser.getId()) &&
                             (lastNameFirstName.startsWith(name)
                                     || firstNameLastName.startsWith(name));
                 })
@@ -112,6 +114,7 @@ public class ServiceFriends {
         return usersWithName;
 
     }
+
     /**
      * generates a random 32 characters long string
      *
@@ -120,7 +123,7 @@ public class ServiceFriends {
     private String generateSalt() {
         StringBuilder randomString = new StringBuilder(32);
         for (int i = 0; i < 32; i++) {
-            int character = (int) (255 * Math.random()+1);
+            int character = (int) (255 * Math.random() + 1);
             randomString.append((char) character);
         }
         return randomString.toString();

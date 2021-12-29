@@ -14,14 +14,14 @@ import project.lab6.setter_interface.SetterIdLoggedUser;
 import project.lab6.setter_interface.SetterServiceFriends;
 import project.lab6.setter_interface.SetterServiceMessages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGroupController implements SetterServiceMessages, SetterServiceFriends, SetterIdLoggedUser {
-    private GroupChatDTO group;
     private ServiceMessages serviceMessages;
-    private ObservableList<UserRecord>usersRecord= FXCollections.observableArrayList();
+    private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     @FXML
-    private TableColumn<UserRecord,String>name;
+    private TableColumn<UserRecord, String> name;
     @FXML
     private TableColumn<UserRecord, Button> addButton;
     @FXML
@@ -30,35 +30,54 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
     private TextField userNameTextField;
     @FXML
     private TextField groupName;
-    private ServiceFriends serviceFriends;
-    private Long id;
-    /*todo trebuie setat numele chat-ului(constructor?)
-    *  trebuie adaugat userul logat in grup pe langa userii pe care doreste sa ii adauge
-    * todo fiecare user adaugat in grup trebuie sters din observable */
     @FXML
-    public void initialize(){
+    private Button done;
+    private ServiceFriends serviceFriends;
+    private Long idLoggedUser;
+    private List<Long> participants=new ArrayList<>() ;
+
+    /*todo trebuie setat numele chat-ului(constructor?)--done
+     *  trebuie adaugat userul logat in grup pe langa userii pe care doreste sa ii adauge--done
+     * todo fiecare user adaugat in grup trebuie sters din observable */
+    @FXML
+    public void initialize() {
         addParticipantsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        name.setCellValueFactory(new PropertyValueFactory<UserRecord,String>("name"));
-        addButton.setCellValueFactory(new PropertyValueFactory<UserRecord,Button>("addButton"));
+        name.setCellValueFactory(new PropertyValueFactory<UserRecord, String>("name"));
+        addButton.setCellValueFactory(new PropertyValueFactory<UserRecord, Button>("addButton"));
         name.prefWidthProperty().bind(addParticipantsTableView.widthProperty().divide(2));
         addButton.prefWidthProperty().bind(addParticipantsTableView.widthProperty().divide(2));
-        userNameTextField.textProperty().addListener((obs,oldText,newText)->findUserByName());
-        String chatName=new String(groupName.textProperty().getValue());
+        userNameTextField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
+        done.setOnAction(event -> {
+                    participants.add(idLoggedUser);
+                    String chatName = new String(groupName.textProperty().getValue());
+                    serviceMessages.createChatGroup(chatName, participants);
+                    done.disarm();
+                }
+        );
+
+
         addParticipantsTableView.setItems(usersRecord);
         updateTableAtSearch("");
     }
-    private Button createAddParticipantsButton(Long id){
-        Button addParticipant=new Button();
-        addParticipant.setText("Add");
-        addParticipant.setOnAction(event->
-        group.addUserInfo(new UserChatInfoDTO(serviceFriends.getUserWithFriends(id),
-                        serviceFriends.getUserWithFriends(id).getFirstName()+" "
-                                +serviceFriends.getUserWithFriends(id).getLastName())));
-        return addParticipant;
+
+    private Button createAddParticipantsButton(Long id) {
+        Button addParticipantButton = new Button();
+        addParticipantButton.setText("Add");
+        addParticipantButton.setOnAction(event ->
+        {
+            participants.add(id);
+            addParticipantButton.setText("Added");
+            addParticipantButton.disarm();
+            usersRecord.remove(new UserRecord(id,serviceFriends.getUserWithFriends(id).getLastName() + " "
+                    + serviceFriends.getUserWithFriends(id).getFirstName(),addParticipantButton));
+
+        });
+        return addParticipantButton;
     }
-    private ObservableList<UserRecord> getUserList(String searchName){
-        List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(id), searchName);
-        ObservableList<UserRecord> userRecordObservableList=FXCollections.observableArrayList();
+
+    private ObservableList<UserRecord> getUserList(String searchName) {
+        List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
+        ObservableList<UserRecord> userRecordObservableList = FXCollections.observableArrayList();
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addParticipantButton = createAddParticipantsButton(user.getId());
@@ -68,17 +87,21 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
         }
         return userRecordObservableList;
     }
-    private void updateTableAtSearch(String searchName){
+
+    private void updateTableAtSearch(String searchName) {
         addParticipantsTableView.getItems().clear();
         usersRecord.setAll(getUserList(searchName));
     }
-    private void findUserByName(){
+
+    private void findUserByName() {
         updateTableAtSearch(userNameTextField.getText());
     }
+
     @Override
     public void setServiceMessages(ServiceMessages serviceMessages) {
-        this.serviceMessages=serviceMessages;
+        this.serviceMessages = serviceMessages;
     }
+
     @Override
     public void setServiceFriends(ServiceFriends serviceFriends) {
         this.serviceFriends = serviceFriends;
@@ -86,7 +109,7 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
 
     @Override
     public void setIdLoggedUser(Long idLoggedUser) {
-        this.id = idLoggedUser;
+        this.idLoggedUser = idLoggedUser;
     }
 
 }
