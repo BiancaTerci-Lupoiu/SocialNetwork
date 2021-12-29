@@ -15,14 +15,8 @@ import java.io.IOException;
 public class SocialNetworkApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.CREATE_NEW_GROUP);
-        Factory.getInstance().setIdLoggedUser(1L);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(Constants.View.LOGIN);
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        CreateGroupController ctrl=fxmlLoader.getController();
-        ServiceFriends friends=Factory.getInstance().getServiceFriends();
-        ServiceMessages messages=Factory.getInstance().getServiceMessages();
-        ctrl.setServiceMessages(messages);
-        ctrl.setServiceFriends(friends);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
