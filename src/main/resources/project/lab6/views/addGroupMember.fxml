@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.views.AddGroupMember">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.AddMemberController">
    <children>
-      <TableView fx:id="addButton" layoutX="35.0" layoutY="133.0" prefHeight="220.0" prefWidth="530.0" style="-fx-background-color: #bb99ff;">
+      <TableView fx:id="addMembersTableView" layoutX="35.0" layoutY="133.0" prefHeight="220.0" prefWidth="530.0" style="-fx-background-color: #bb99ff;">
         <columns>
           <TableColumn fx:id="name" prefWidth="263.3333740234375" style="-fx-background-color: #bb99ff;" text="Name" />
-          <TableColumn prefWidth="265.33331298828125" style="-fx-background-color: #bb99ff;" />
+          <TableColumn fx:id="addButton" prefWidth="265.33331298828125" style="-fx-background-color: #bb99ff;" />
         </columns>
       </TableView>
       <TextField fx:id="searchField" layoutX="147.0" layoutY="86.0" prefHeight="36.0" prefWidth="306.0" promptText="Search user...">
@@ -26,7 +26,7 @@
             <Font name="Cambria Bold" size="24.0" />
          </font>
       </Label>
-      <Button layoutX="35.0" layoutY="36.0" mnemonicParsing="false" text="Back">
+      <Button fx:id="backButton" layoutX="35.0" layoutY="36.0" mnemonicParsing="false" text="Back">
          <font>
             <Font name="Cambria" size="12.0" />
          </font></Button>

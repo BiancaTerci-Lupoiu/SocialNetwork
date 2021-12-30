@@ -24,5 +24,6 @@ public class Constants {
         public static String MAIN_CHAT="views/chatMain.fxml";
         public static String CONVERSATION="views/conversation.fxml";
         public static String CREATE_NEW_GROUP="views/createGroup.fxml";
+        public static String ADD_GROUP_MEMBER="views/addGroupMember.fxml";
     }
 }
