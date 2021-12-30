@@ -84,7 +84,7 @@ public class MainViewController extends Controller implements Initializable {
             messagesStage.toFront();
             return;
         }
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser, serviceMessages));
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser, serviceMessages,serviceFriends));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 600, 500);
         Stage stage = new Stage();
