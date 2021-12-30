@@ -11,13 +11,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.Status;
 import project.lab6.domain.User;
 import project.lab6.service.ServiceFriends;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceFriends;
+import project.lab6.utils.Constants;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class AddFriendsController implements SetterServiceFriends, SetterIdLoggedUser {
+public class AddFriendsController extends Controller {
 
     @FXML
     private TextField userNameTextField;
@@ -28,17 +27,12 @@ public class AddFriendsController implements SetterServiceFriends, SetterIdLogge
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
 
-    private ObservableList<UserRecord> userRecordList= FXCollections.observableArrayList();
-    private Long idLoggedUser;
-    private ServiceFriends serviceFriends;
+    private ObservableList<UserRecord> userRecordList = FXCollections.observableArrayList();
+    private final Long idLoggedUser;
+    private final ServiceFriends serviceFriends;
 
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
+    public AddFriendsController(Long idLoggedUser, ServiceFriends serviceFriends) {
         this.idLoggedUser = idLoggedUser;
-    }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
         this.serviceFriends = serviceFriends;
     }
 
@@ -88,5 +82,10 @@ public class AddFriendsController implements SetterServiceFriends, SetterIdLogge
 
     public void findUserByName() {
         updateTableWithUsersAtSearch(userNameTextField.getText());
+    }
+
+    @Override
+    public String getViewPath() {
+        return Constants.View.ADD_FRIENDS;
     }
 }

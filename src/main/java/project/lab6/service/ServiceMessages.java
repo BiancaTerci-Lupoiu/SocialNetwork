@@ -91,6 +91,7 @@ public class ServiceMessages {
         return repoUserChatInfo.findAll().stream()
                 .map(userChatInfo ->
                         new UserChatInfoDTO(
+                                userChatInfo.getIdChat(),
                                 repoUsers.findOne(userChatInfo.getIdUser()),
                                 userChatInfo.getNickname()
                         )).toList();
@@ -101,6 +102,7 @@ public class ServiceMessages {
                 .filter(userChatInfo -> userChatInfo.getIdChat().equals(idChat))
                 .map(userChatInfo ->
                         new UserChatInfoDTO(
+                                userChatInfo.getIdChat(),
                                 repoUsers.findOne(userChatInfo.getIdUser()),
                                 userChatInfo.getNickname()
                         )).toList();
@@ -114,7 +116,7 @@ public class ServiceMessages {
                     System.out.println(message);
                     UserChatInfo from = repoUserChatInfo.findOne(new TupleWithIdChatUser(idChat, message.getIdUserFrom()));
                     User userFrom = repoUsers.findOne(from.getIdUser());
-                    UserChatInfoDTO fromDTO = new UserChatInfoDTO(userFrom, from.getNickname());
+                    UserChatInfoDTO fromDTO = new UserChatInfoDTO(from.getIdChat(), userFrom, from.getNickname());
                     Message repliedMessage = null;
                     if (message.getIdReplyMessage() != null)
                         repliedMessage = repoMessages.findOne(message.getIdReplyMessage());

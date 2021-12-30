@@ -11,24 +11,35 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import project.lab6.factory.Factory;
-import project.lab6.has_interface.HasIdChat;
+import project.lab6.service.ServiceFriends;
+import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainViewController implements Initializable {
+public class MainViewController extends Controller implements Initializable {
     @FXML
     private HBox horizontalBox;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setView(Constants.View.PROFILE);
+    private final Long idLoggedUser;
+    private final ServiceFriends serviceFriends;
+    private final ServiceMessages serviceMessages;
+
+    public MainViewController(Long idLoggedUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
+        this.idLoggedUser = idLoggedUser;
+        this.serviceFriends = serviceFriends;
+        this.serviceMessages = serviceMessages;
     }
 
-    private void setView(String viewName) {
-        FXMLLoader loader = Factory.getInstance().getLoader(this, viewName);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setView(new ProfileController(idLoggedUser, serviceFriends));
+    }
+
+    private void setView(Controller controller) {
+        FXMLLoader loader = Factory.getInstance().getLoader(controller);
         Region region = null;
         try {
             region = loader.load();
@@ -43,24 +54,23 @@ public class MainViewController implements Initializable {
     }
 
     public void openProfileView(ActionEvent actionEvent) {
-        setView(Constants.View.PROFILE);
+        setView(new ProfileController(idLoggedUser, serviceFriends));
     }
 
     public void openAddFriendsView(ActionEvent actionEvent) {
-        setView(Constants.View.ADD_FRIENDS);
+        setView(new AddFriendsController(idLoggedUser, serviceFriends));
     }
 
     public void openFriendsView(ActionEvent actionEvent) {
-        setView(Constants.View.FRIENDS);
+        setView(new FriendsController(idLoggedUser, serviceFriends));
     }
 
     public void openRequestsView(ActionEvent actionEvent) {
-        setView(Constants.View.REQUESTS);
+        setView(new RequestsController(idLoggedUser, serviceFriends));
     }
 
     public void logout(ActionEvent actionEvent) throws IOException {
-        Factory.getInstance().setIdLoggedUser(null);
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(this, Constants.View.LOGIN);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new LoginController(serviceFriends, serviceMessages));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         Stage stage = (Stage) horizontalBox.getScene().getWindow();
         stage.setScene(scene);
@@ -74,7 +84,7 @@ public class MainViewController implements Initializable {
             messagesStage.toFront();
             return;
         }
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(this, Constants.View.MAIN_CHAT);
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser, serviceMessages,serviceFriends));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 600, 500);
         Stage stage = new Stage();
@@ -83,5 +93,10 @@ public class MainViewController implements Initializable {
         messagesStage = stage;
         stage.setOnCloseRequest(handle -> messagesOpen = false);
         stage.show();
+    }
+
+    @Override
+    public String getViewPath() {
+        return Constants.View.MAIN_VIEW;
     }
 }

@@ -9,23 +9,26 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.User;
-import project.lab6.domain.dtos.UserChatInfoDTO;
-import project.lab6.has_interface.HasIdChat;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceFriends;
-import project.lab6.setter_interface.SetterServiceMessages;
-import project.lab6.setter_interface.local.SetterIdChat;
+import project.lab6.utils.Constants;
 
 import java.util.List;
-import java.util.Objects;
 
-public class AddMemberController implements SetterServiceFriends, SetterServiceMessages, SetterIdChat, SetterIdLoggedUser, HasIdChat {
+public class AddMemberController extends Controller {
     private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private ServiceFriends serviceFriends;
-    private ServiceMessages serviceMessages;
-    private Long idChat;
+    private final ServiceFriends serviceFriends;
+    private final ServiceMessages serviceMessages;
+    private final Long idChat;
+    private final Long idLoggedUser;
+
+    public AddMemberController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idChat, Long idLoggedUser) {
+        this.serviceFriends = serviceFriends;
+        this.serviceMessages = serviceMessages;
+        this.idChat = idChat;
+        this.idLoggedUser = idLoggedUser;
+    }
+
     @FXML
     private TextField searchField;
     @FXML
@@ -36,7 +39,6 @@ public class AddMemberController implements SetterServiceFriends, SetterServiceM
     private TableView<UserRecord> addMembersTableView;
     @FXML
     private Button backButton;
-    private Long idLoggedUser;
 
     @FXML
     public void initialize() {
@@ -90,27 +92,7 @@ public class AddMemberController implements SetterServiceFriends, SetterServiceM
     }
 
     @Override
-    public void setIdChat(Long idChat) {
-        this.idChat = idChat;
-    }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
-    }
-
-    @Override
-    public void setServiceMessages(ServiceMessages serviceMessages) {
-        this.serviceMessages = serviceMessages;
-    }
-
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.idLoggedUser = idLoggedUser;
-    }
-
-    @Override
-    public Long getIdChat() {
-        return this.idChat;
+    public String getViewPath() {
+        return Constants.View.ADD_GROUP_MEMBER;
     }
 }

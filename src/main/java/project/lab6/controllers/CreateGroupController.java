@@ -3,23 +3,31 @@ package project.lab6.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.User;
-import project.lab6.domain.dtos.GroupChatDTO;
-import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
-import project.lab6.setter_interface.SetterIdLoggedUser;
-import project.lab6.setter_interface.SetterServiceFriends;
-import project.lab6.setter_interface.SetterServiceMessages;
+import project.lab6.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateGroupController implements SetterServiceMessages, SetterServiceFriends, SetterIdLoggedUser {
-    private ServiceMessages serviceMessages;
+public class CreateGroupController extends Controller {
     private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
+    private final ServiceMessages serviceMessages;
+    private final ServiceFriends serviceFriends;
+    private final Long idLoggedUser;
+
+    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser) {
+        this.serviceMessages = serviceMessages;
+        this.serviceFriends = serviceFriends;
+        this.idLoggedUser = idLoggedUser;
+    }
+
     @FXML
     private TableColumn<UserRecord, String> name;
     @FXML
@@ -32,8 +40,6 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
     private TextField groupName;
     @FXML
     private Button done;
-    private ServiceFriends serviceFriends;
-    private Long idLoggedUser;
     private List<Long> participants=new ArrayList<>() ;
 
     /*todo trebuie setat numele chat-ului(constructor?)--done
@@ -52,6 +58,7 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
                     String chatName = new String(groupName.textProperty().getValue());
                     serviceMessages.createChatGroup(chatName, participants);
                     done.disabledProperty();
+                    getStage().close();
                 }
         );
 
@@ -98,18 +105,7 @@ public class CreateGroupController implements SetterServiceMessages, SetterServi
     }
 
     @Override
-    public void setServiceMessages(ServiceMessages serviceMessages) {
-        this.serviceMessages = serviceMessages;
+    public String getViewPath() {
+        return Constants.View.CREATE_NEW_GROUP;
     }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
-    }
-
-    @Override
-    public void setIdLoggedUser(Long idLoggedUser) {
-        this.idLoggedUser = idLoggedUser;
-    }
-
 }

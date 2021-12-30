@@ -10,16 +10,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ConversationController">
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ConversationController">
    <children>
       <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="400.0">
          <children>
-            <ImageView fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="userImage" fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="groupNameLabel" prefHeight="53.0" prefWidth="312.0">
                <font>
                   <Font name="Cambria Bold" size="16.0" />
                </font></Label>
-            <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="68.0">
+            <Button mnemonicParsing="false" onAction="#chatInfoButtonClick" prefHeight="47.0" prefWidth="68.0">
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="81.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -29,10 +29,15 @@
                </graphic></Button>
          </children>
       </HBox>
-      <ListView fx:id="listViewMessages" prefHeight="405.0" prefWidth="400.0" style="-fx-background-color: #ccccff;" />
+      <ListView fx:id="listViewMessages" prefHeight="416.0" prefWidth="393.0" />
+      <Label fx:id="labelMessageToReply" alignment="CENTER_RIGHT" maxHeight="0.0" prefHeight="0.0" prefWidth="400.0">
+         <font>
+            <Font name="Cambria" size="1.0" />
+         </font>
+      </Label>
       <HBox alignment="TOP_RIGHT" prefHeight="37.0" prefWidth="370.0">
          <children>
-            <TextField fx:id="typeMessageTextField" prefHeight="48.0" prefWidth="293.0" promptText="Type a message...">
+            <TextField fx:id="typeMessageTextField" prefHeight="46.0" prefWidth="344.0" promptText="Type a message...">
                <font>
                   <Font name="Cambria" size="17.0" />
                </font>
