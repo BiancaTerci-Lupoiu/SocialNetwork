@@ -18,6 +18,7 @@ import project.lab6.repository.repointerface.RepositoryChat;
 import project.lab6.repository.repointerface.RepositoryUser;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.utils.CustomLoader;
 
 /**
  * Factory class to construct the skeleton of the application
@@ -163,14 +164,8 @@ public class Factory implements AutoCloseable {
         return serviceMessages;
     }
 
-    /**
-     * @param viewPath the path to an FXML file
-     * @return the specific fxmlLoader to the viewPath path
-     */
     public FXMLLoader getLoader(Controller controller) {
-        FXMLLoader fxmlLoader = new FXMLLoader(SocialNetworkApplication.class.getResource(controller.getViewPath()));
-        fxmlLoader.setControllerFactory(controllerClass -> controller);
-        return fxmlLoader;
+        return new CustomLoader(controller);
     }
 
     @Override
