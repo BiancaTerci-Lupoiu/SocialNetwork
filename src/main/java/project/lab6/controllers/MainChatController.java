@@ -13,6 +13,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.factory.Factory;
+import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
@@ -20,9 +21,10 @@ import java.io.IOException;
 
 
 public class MainChatController extends Controller {
-    public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages) {
+    public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages,ServiceFriends serviceFriends) {
         this.idLoggedUser = idLoggedUser;
         this.serviceMessages = serviceMessages;
+        this.serviceFriends=serviceFriends;
     }
 
     @Override
@@ -40,9 +42,9 @@ public class MainChatController extends Controller {
         public CustomCellChat(Long idLoggedUser) {
             super();
             this.idLoggedUser = idLoggedUser;
-            groupImage.setFitWidth(20);
-            groupImage.setFitHeight(20);
-            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14");
+            groupImage.setFitWidth(24);
+            groupImage.setFitHeight(24);
+            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
             horizontalBox.getChildren().addAll(groupImage, chatName);
             horizontalBox.setAlignment(Pos.TOP_LEFT);
@@ -76,6 +78,7 @@ public class MainChatController extends Controller {
 
     ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
     private final ServiceMessages serviceMessages;
+    private final ServiceFriends serviceFriends;
     private final Long idLoggedUser;
 
     public void initialize() {
