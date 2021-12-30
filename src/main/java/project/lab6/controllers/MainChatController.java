@@ -106,6 +106,7 @@ public class MainChatController extends Controller {
         searchChatTextField.textProperty().addListener((obs, oldText, newText) -> findChatByName());
     }
     private void updateListWithChatsOnSearch(String chatName){
+        listViewChats.getItems().clear();
         chatDTOList.setAll(serviceMessages.findChatByName(idLoggedUser,chatName));
     }
     public void findChatByName(){
