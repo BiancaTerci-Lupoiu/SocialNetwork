@@ -103,13 +103,14 @@ public class MainChatController extends Controller {
         System.out.println(chatDTOList.size());
         if (!chatDTOList.isEmpty())
             setConversationView(chatDTOList.get(0).getIdChat());
+        searchChatTextField.textProperty().addListener((obs, oldText, newText) -> findChatByName());
     }
-
-    /**
-     * sets the id of the logged user to idLoggedUser
-     *
-     * @param idChat
-     */
+    private void updateListWithChatsOnSearch(String chatName){
+        chatDTOList.setAll(serviceMessages.findChatByName(idLoggedUser,chatName));
+    }
+    public void findChatByName(){
+        updateListWithChatsOnSearch(searchChatTextField.getText());
+    }
 
     public void setConversationView(Long idChat) {
         FXMLLoader loader= Factory.getInstance().getLoader(new ConversationController(idChat, serviceMessages, idLoggedUser));

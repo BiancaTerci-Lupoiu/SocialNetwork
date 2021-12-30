@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -171,6 +172,11 @@ public class ConversationController extends Controller {
         userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
         listViewMessages.setStyle("-fx-background-color:"+chatColor);
         mainVBox.setStyle("-fx-background-color:"+chatColor);
+        typeMessageTextField.setOnKeyPressed(event->{
+            if(event.getCode().equals(KeyCode.ENTER)){
+                sendMessageAction(new ActionEvent());
+            }
+        });
     }
 
     private String convertColorToString(Color color) {
