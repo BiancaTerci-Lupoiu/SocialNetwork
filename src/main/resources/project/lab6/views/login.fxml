@@ -58,14 +58,15 @@
                         <Font name="Cambria Bold" size="23.0" />
                      </font>
                   </Label>
+                  <TextField fx:id="emailTextField" promptText="Email" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font>
+                  </TextField>
                   <PasswordField fx:id="passwordTextField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font name="Cambria" size="14.0" />
                      </font></PasswordField>
-                  <TextField fx:id="emailTextField" promptText="Email" GridPane.columnIndex="1">
-                     <font>
-                        <Font name="Cambria" size="14.0" />
-                     </font></TextField>
                </children>
             </GridPane>
             <Button fx:id="loginButton" layoutX="133.0" layoutY="273.0" mnemonicParsing="false" onAction="#logInUser" style="-fx-background-radius: 25; -fx-border-radius: 20; -fx-background-color: #5c0e63;" text="Login" textFill="WHITE">
