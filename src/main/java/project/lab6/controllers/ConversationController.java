@@ -26,10 +26,13 @@ import java.util.function.Consumer;
 
 public class ConversationController extends Controller {
 
-    public ConversationController(Long idChat, ServiceMessages serviceMessages, Long idLoggedUser) {
+    public ConversationController(Long idChat, ServiceMessages serviceMessages, Long idLoggedUser,MainChatController mainChatController,boolean isOpenForPrivateReply,MessageDTO messageToReply) {
         this.idChat = idChat;
         this.serviceMessages = serviceMessages;
         this.idLoggedUser = idLoggedUser;
+        this.mainChatController=mainChatController;
+        this.isOpenForPrivateReply=isOpenForPrivateReply;
+        this.messageToReply=messageToReply;
     }
 
     @Override
@@ -56,22 +59,24 @@ public class ConversationController extends Controller {
         Label userNameLabel = new Label();
         MessageDTO message;
         Long idLoggedUser;
-        Label labelShownAboveTypeText;
+        Label labelReplyShownAboveTypeText;
         Button replyInChatButton = new Button();
         Button replyInPrivateButton = new Button();
-        HBox hBoxButtons = new HBox();
+        HBox hBoxButtonsReply = new HBox();
         String cellColor;
         Consumer<Boolean> showReplyBar;
+        MainChatController mainChatController;
 
-        public CustomCellMessage(Long idLoggedUser, Consumer<Boolean> showReplyBar, Label labelShownAboveTypeText, String cellColor) {
+        public CustomCellMessage(Long idLoggedUser, Consumer<Boolean> showReplyBar, Label labelShownAboveTypeText, String cellColor,MainChatController mainChatController) {
             this.idLoggedUser = idLoggedUser;
-            this.labelShownAboveTypeText = labelShownAboveTypeText;
+            this.labelReplyShownAboveTypeText = labelShownAboveTypeText;
             this.cellColor = cellColor;
             this.showReplyBar = showReplyBar;
+            this.mainChatController=mainChatController;
             this.setStyle("-fx-background-color: " + cellColor + ";-fx-border-color: transparent");
-            hBoxButtons.setSpacing(5);
-            horizontalBox.hoverProperty().addListener((observable, oldValue, newValue) -> hBoxButtons.setVisible(newValue));
-            hBoxButtons.setVisible(false);
+            hBoxButtonsReply.setSpacing(5);
+            horizontalBox.hoverProperty().addListener((observable, oldValue, newValue) -> hBoxButtonsReply.setVisible(newValue));
+            hBoxButtonsReply.setVisible(false);
             replyInChatButton.setText("Reply");
             replyInPrivateButton.setText("Private reply");
             replyInChatButton.setStyle("-fx-font-family: Cambria Bold;-fx-font-size: 13;-fx-background-color: #5900b3;-fx-text-fill: white;-fx-border-radius: 15;-fx-background-radius: 15");
@@ -84,11 +89,15 @@ public class ConversationController extends Controller {
             labelShownAboveTypeText.setStyle("-fx-font-size: 16;-fx-font-family: Cambria Bold;-fx-text-fill: #696766");
             repliedMessageText.setStyle("-fx-font-family: Cambria;-fx-text-fill:#696766;-fx-font-size: 16;-fx-background-color: #d1b3ff;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
 
-            dateLabel.setStyle("-fx-padding: 2px 0px 2px 15px");
+            //dateLabel.setStyle("-fx-padding: 2px 0px 2px 15px");
 
             replyInChatButton.setOnAction(event -> {
                 labelShownAboveTypeText.setText("Reply to:  " + messageText.getText());
                 labelShownAboveTypeText.setId(message.getId().toString());
+                showReplyBar.accept(true);
+            });
+            replyInPrivateButton.setOnAction(event->{
+                mainChatController.setConversationView(mainChatController.getServiceMessages().getOrCreatePrivateChatBetweenUsers(idLoggedUser,message.getUserFrom().getUser().getId()).getId(),true,message);
                 showReplyBar.accept(true);
             });
         }
@@ -121,15 +130,15 @@ public class ConversationController extends Controller {
                 if (isLoggedUser) {
                     horizontalBox.setAlignment(Pos.CENTER_RIGHT);
                     messageText.setStyle("-fx-background-color: #b3b3ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
-                    hBoxButtons.getChildren().setAll(replyInChatButton, dateLabel);
+                    hBoxButtonsReply.getChildren().setAll(replyInChatButton, dateLabel);
                     verticalBox.setAlignment(Pos.CENTER_RIGHT);
                 } else {
                     horizontalBox.setAlignment(Pos.CENTER_LEFT);
                     verticalBox.setAlignment(Pos.CENTER_LEFT);
-                    hBoxButtons.getChildren().setAll(dateLabel, replyInChatButton, replyInPrivateButton);
+                    hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton, replyInPrivateButton);
                     messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
                 }
-                verticalBox.getChildren().add(hBoxButtons);
+                verticalBox.getChildren().add(hBoxButtonsReply);
                 setGraphic(horizontalBox);
             }
         }
@@ -157,7 +166,10 @@ public class ConversationController extends Controller {
     private final Long idChat;
     private final ServiceMessages serviceMessages;
     private final Long idLoggedUser;
+    private final MainChatController mainChatController;
     private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
+    private final boolean isOpenForPrivateReply;
+    private final MessageDTO messageToReply;
 
     public void initialize() {
         groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
@@ -165,7 +177,7 @@ public class ConversationController extends Controller {
         listViewMessages.setItems(messageDTOList);
         String chatColor = convertColorToString(serviceMessages.getChatDTO(idChat).getColor());
         cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
-        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor));
+        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor,mainChatController));
         userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
         listViewMessages.setStyle("-fx-background-color:" + chatColor);
         mainVBox.setStyle("-fx-background-color:" + chatColor);
@@ -176,7 +188,13 @@ public class ConversationController extends Controller {
         });
         hBoxReplyBar.setSpacing(10);
         hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
-        setReplyBarVisible(false);
+        if(messageToReply!=null){
+            labelMessageToReply.setText("Reply to:  " +messageToReply.getText());
+            labelMessageToReply.setId(messageToReply.getId().toString());
+        }
+        if(!isOpenForPrivateReply) {
+            setReplyBarVisible(false);
+        }
     }
 
     private String convertColorToString(Color color) {
@@ -193,7 +211,7 @@ public class ConversationController extends Controller {
                 serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
             } else {
                 Long idMessageToReply = Long.parseLong(labelMessageToReply.getId());
-                serviceMessages.replyToMessage(idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
+                serviceMessages.replyToMessage(idChat,idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
                 cancelReplyAction(new ActionEvent());
             }
             listViewMessages.getItems().clear();
@@ -218,4 +236,5 @@ public class ConversationController extends Controller {
     public void cancelReplyAction(ActionEvent actionEvent) {
         setReplyBarVisible(false);
     }
+
 }
