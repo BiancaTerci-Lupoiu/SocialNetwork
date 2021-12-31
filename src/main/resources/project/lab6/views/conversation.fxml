@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ConversationController">
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="400.0" style="-fx-border-color: #5c0e63; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ConversationController">
    <children>
       <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="400.0">
          <children>
@@ -30,11 +30,20 @@
          </children>
       </HBox>
       <ListView fx:id="listViewMessages" prefHeight="416.0" prefWidth="393.0" />
-      <Label fx:id="labelMessageToReply" alignment="CENTER_RIGHT" maxHeight="0.0" prefHeight="0.0" prefWidth="400.0">
-         <font>
-            <Font name="Cambria" size="1.0" />
-         </font>
-      </Label>
+      <HBox fx:id="hBoxReplyBar" prefHeight="0.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="labelMessageToReply" alignment="CENTER_RIGHT" maxHeight="0.0" prefHeight="0.0" prefWidth="400.0">
+               <font>
+                  <Font name="Cambria" size="1.0" />
+               </font>
+            </Label>
+            <Button fx:id="cancelReplyButton" onAction="#cancelReplyAction" mnemonicParsing="false">
+               <font>
+                  <Font size="1.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
       <HBox alignment="TOP_RIGHT" prefHeight="37.0" prefWidth="370.0">
          <children>
             <TextField fx:id="typeMessageTextField" prefHeight="46.0" prefWidth="344.0" promptText="Type a message...">

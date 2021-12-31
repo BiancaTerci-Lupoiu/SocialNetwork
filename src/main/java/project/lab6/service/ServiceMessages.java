@@ -17,6 +17,7 @@ import project.lab6.utils.Constants;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
@@ -206,5 +207,15 @@ public class ServiceMessages {
 
     private String createNickname(User user) {
         return user.getFirstName() + " " + user.getLastName();
+    }
+
+    public List<ChatDTO> findChatByName(Long idLoggedUser,String chatName){
+        String chatNameWithoutExtraSpaces = chatName.trim().replaceAll("[ ]+", " ").toLowerCase();
+        return getChatsDTO(idLoggedUser).stream().filter(chatDTO->{
+            String name=chatDTO.getName(idLoggedUser).toLowerCase();
+            return name.startsWith(chatNameWithoutExtraSpaces);
+
+        }).collect(Collectors.toList());
+
     }
 }

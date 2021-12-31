@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import project.lab6.domain.User;
 import project.lab6.factory.Factory;
@@ -36,7 +37,26 @@ public class LoginController extends Controller {
         this.serviceMessages = serviceMessages;
     }
 
-
+    public void initialize(){
+        emailTextField.setOnKeyPressed(event->{
+            if(event.getCode().equals(KeyCode.ENTER)){
+                try {
+                    logInUser(new ActionEvent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        passwordTextField.setOnKeyPressed(event->{
+            if(event.getCode().equals(KeyCode.ENTER)){
+                try {
+                    logInUser(new ActionEvent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     public void closeLoginWindow(ActionEvent actionEvent) {
         Stage stage = (Stage) closeLoginButton.getScene().getWindow();
         stage.close();
