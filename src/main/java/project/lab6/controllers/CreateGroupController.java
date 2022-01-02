@@ -92,11 +92,12 @@ public class CreateGroupController extends Controller {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
         List<UserRecord> userRecordObservableList = new ArrayList<>();
         for (User user : usersList) {
-            String name = user.getLastName() + " " + user.getFirstName();
+            if(!(participants.contains(user.getId())))
+            {String name = user.getLastName() + " " + user.getFirstName();
             Button addParticipantButton = createAddParticipantsButton(user.getId());
             UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);
 
-            userRecordObservableList.add(userRecord);
+            userRecordObservableList.add(userRecord);}
         }
         return userRecordObservableList;
     }

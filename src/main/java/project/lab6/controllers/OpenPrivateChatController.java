@@ -3,29 +3,31 @@ package project.lab6.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.User;
+import project.lab6.domain.chat.Chat;
+import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
+import java.io.IOException;
 import java.util.List;
 
-public class AddMemberController extends Controller {
+public class OpenPrivateChatController extends Controller {
     private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private final ServiceFriends serviceFriends;
     private final ServiceMessages serviceMessages;
-    private final Long idChat;
     private final Long idLoggedUser;
 
-    public AddMemberController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idChat, Long idLoggedUser) {
+    public OpenPrivateChatController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idLoggedUser) {
         this.serviceFriends = serviceFriends;
         this.serviceMessages = serviceMessages;
-        this.idChat = idChat;
         this.idLoggedUser = idLoggedUser;
     }
 
@@ -36,35 +38,27 @@ public class AddMemberController extends Controller {
     @FXML
     private TableColumn<UserRecord, Button> addButton;
     @FXML
-    private TableView<UserRecord> addMembersTableView;
-    @FXML
-    private Button backButton;
+    private TableView<UserRecord> usersTable;
 
     @FXML
     public void initialize() {
-        addMembersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        usersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         name.setCellValueFactory(new PropertyValueFactory<UserRecord, String>("name"));
         addButton.setCellValueFactory(new PropertyValueFactory<UserRecord, Button>("addButton"));
-        name.prefWidthProperty().bind(addMembersTableView.widthProperty().divide(2));
-        addButton.prefWidthProperty().bind(addMembersTableView.widthProperty().divide(2));
+        name.prefWidthProperty().bind(usersTable.widthProperty().divide(2));
+        addButton.prefWidthProperty().bind(usersTable.widthProperty().divide(2));
         searchField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
-        addMembersTableView.setItems(usersRecord);
+        usersTable.setItems(usersRecord);
         updateTableAtSearch("");
-        backButton.setOnAction(event->getStage().close());
-
     }
 
-    private Button createAddParticipantsButton(Long id) {
+    private Button createOpenChatButton(Long id) {
         Button addParticipantButton = new Button();
-        addParticipantButton.setText("Add");
+        addParticipantButton.setText("Open Chat");
         addParticipantButton.setOnAction(event ->
-        {
-            serviceMessages.addUserToChat(this.idChat, id);
-            addParticipantButton.setText("Added");
-            addParticipantButton.disabledProperty();
-            usersRecord.remove(new UserRecord(id, serviceFriends.getUserWithFriends(id).getLastName() + " "
-                    + serviceFriends.getUserWithFriends(id).getFirstName(), addParticipantButton));
-
+        {   Chat chat=serviceMessages.getOrCreatePrivateChatBetweenUsers(idLoggedUser,id);
+            //todo
+            getStage().close();
         });
         return addParticipantButton;
     }
@@ -73,18 +67,17 @@ public class AddMemberController extends Controller {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
         ObservableList<UserRecord> userRecordObservableList = FXCollections.observableArrayList();
         for (User user : usersList) {
-            if (!(serviceMessages.getChatDTO(idChat).getUsersInfo().stream().map(x->x.getUser().getId()).toList().contains(user.getId()))) {
-                String name = user.getLastName() + " " + user.getFirstName();
-                Button addParticipantButton = createAddParticipantsButton(user.getId());
-                UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);
-                userRecordObservableList.add(userRecord);
-            }
+            String name = user.getLastName() + " " + user.getFirstName();
+            Button addParticipantButton = createOpenChatButton(user.getId());
+            UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);
+
+            userRecordObservableList.add(userRecord);
         }
         return userRecordObservableList;
     }
 
     private void updateTableAtSearch(String searchName) {
-        addMembersTableView.getItems().clear();
+        usersTable.getItems().clear();
         usersRecord.setAll(getUserList(searchName));
     }
 
@@ -94,6 +87,6 @@ public class AddMemberController extends Controller {
 
     @Override
     public String getViewPath() {
-        return Constants.View.ADD_GROUP_MEMBER;
+        return Constants.View.OPEN_PRIVATE_CHAT;
     }
 }
