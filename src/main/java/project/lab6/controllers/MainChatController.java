@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import project.lab6.domain.dtos.ChatDTO;
+import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
@@ -35,12 +36,15 @@ public class MainChatController extends Controller {
         return Constants.View.MAIN_CHAT;
     }
 
-    public void CreateGroupButton(ActionEvent actionEvent) throws IOException {
+    public void createGroupAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends,idLoggedUser));
         Scene scene = new Scene(loader.load(),600,400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    public void createPrivateChatAction(ActionEvent actionEvent) {
     }
 
     public static class CustomCellChat extends ListCell<ChatDTO> {
@@ -90,6 +94,10 @@ public class MainChatController extends Controller {
     private final ServiceFriends serviceFriends;
     private final Long idLoggedUser;
 
+    public ServiceMessages getServiceMessages(){
+        return serviceMessages;
+    }
+
     public void initialize() {
         chatDTOList.setAll(serviceMessages.getChatsDTO(idLoggedUser));
         listViewChats.setItems(chatDTOList);
@@ -103,7 +111,7 @@ public class MainChatController extends Controller {
             ListCell<ChatDTO> cell = new CustomCellChat(idLoggedUser);
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty()) {
-                    setConversationView(cell.getItem().getIdChat());
+                    setConversationView(cell.getItem().getIdChat(),false,null);
                     event.consume();
                 }
             });
@@ -111,7 +119,7 @@ public class MainChatController extends Controller {
         });
         System.out.println(chatDTOList.size());
         if (!chatDTOList.isEmpty())
-            setConversationView(chatDTOList.get(0).getIdChat());
+            setConversationView(chatDTOList.get(0).getIdChat(),false,null);
         searchChatTextField.textProperty().addListener((obs, oldText, newText) -> findChatByName());
     }
     private void updateListWithChatsOnSearch(String chatName){
@@ -122,8 +130,8 @@ public class MainChatController extends Controller {
         updateListWithChatsOnSearch(searchChatTextField.getText());
     }
 
-    public void setConversationView(Long idChat) {
-        FXMLLoader loader= Factory.getInstance().getLoader(new ConversationController(idChat, serviceMessages, idLoggedUser));
+    public void setConversationView(Long idChat, boolean isOpenForPrivateReply, MessageDTO messageToReply) {
+        FXMLLoader loader= Factory.getInstance().getLoader(new ConversationController(idChat, serviceMessages, idLoggedUser,this,isOpenForPrivateReply,messageToReply));
         Region region = null;
         try {
             region = loader.load();

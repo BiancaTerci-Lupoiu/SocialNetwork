@@ -32,7 +32,7 @@
             <children>
                 <HBox prefHeight="48.0" prefWidth="308.0">
                <children>
-                  <TextField fx:id="userNameTextField" prefHeight="42.0" prefWidth="282.0" promptText="Search...">
+                  <TextField fx:id="userNameTextField" prefHeight="42.0" prefWidth="282.0" promptText="Search..." style="-fx-background-color: #e0ccff; -fx-border-color: #5c0e63; -fx-border-radius: 5; -fx-background-radius: 5;">
                      <font>
                         <Font name="Cambria" size="14.0" />
                      </font>

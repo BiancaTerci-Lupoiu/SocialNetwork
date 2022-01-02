@@ -69,24 +69,14 @@ public class ServiceMessages {
         repoMessages.save(message);
     }
 
-    public void replyToMessage(Long idUserFrom, Long idMessageToReply, String text, LocalDateTime date) {
-        Message message = repoMessages.findOne(idMessageToReply);
-        saveMessage(message.getIdChat(), idUserFrom, text, date, idMessageToReply);
+    public void replyToMessage(Long idChat,Long idUserFrom, Long idMessageToReply, String text, LocalDateTime date) {
+        saveMessage(idChat, idUserFrom, text, date, idMessageToReply);
     }
 
     public void sendMessageInChat(Long idChat, Long idUserFrom, String text, LocalDateTime date) {
         saveMessage(idChat, idUserFrom, text, date, null);
     }
 
-    /**
-     * Takes the message from a user in a group chat and replies to that message to the user in private
-     */
-    public void replyInPrivate(Long idUserFrom, Long idMessageToReply, String text, LocalDateTime date) {
-        Message message = repoMessages.findOne(idMessageToReply);
-        Chat chatInWhichToReply = getOrCreatePrivateChatBetweenUsers(idUserFrom, message.getIdUserFrom());
-
-        saveMessage(chatInWhichToReply.getId(), idUserFrom, text, date, idMessageToReply);
-    }
 
     private List<UserChatInfoDTO> getUsersChatInfoDTO() {
         return repoUserChatInfo.findAll().stream()
@@ -114,7 +104,6 @@ public class ServiceMessages {
                 .filter(message -> message.getIdChat().equals(idChat))
                 .map(message ->
                 {
-                    System.out.println(message);
                     UserChatInfo from = repoUserChatInfo.findOne(new TupleWithIdChatUser(idChat, message.getIdUserFrom()));
                     User userFrom = repoUsers.findOne(from.getIdUser());
                     UserChatInfoDTO fromDTO = new UserChatInfoDTO(from.getIdChat(), userFrom, from.getNickname());
