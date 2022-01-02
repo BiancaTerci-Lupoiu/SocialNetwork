@@ -15,24 +15,47 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
+import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
+import project.lab6.utils.observer.Observer;
+import project.lab6.utils.observer.ObserverChatDTO;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-public class ConversationController extends Controller {
+public class ConversationController extends Controller implements Observer<ChatDTO> {
 
-    public ConversationController(Long idChat, ServiceMessages serviceMessages, Long idLoggedUser, MainChatController mainChatController, boolean isOpenForPrivateReply, MessageDTO messageToReply) {
-        this.idChat = idChat;
+    private final ServiceFriends serviceFriends;
+
+    /**
+     * Creates a conversation controller and it opens for replying to the message specified
+     */
+    public ConversationController(ObserverChatDTO observerChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
+        this.observerChatDTO = observerChatDTO;
+        observerChatDTO.addObserver(this);
         this.serviceMessages = serviceMessages;
+        this.serviceFriends = serviceFriends;
         this.idLoggedUser = idLoggedUser;
         this.mainChatController = mainChatController;
-        this.isOpenForPrivateReply = isOpenForPrivateReply;
         this.messageToReply = messageToReply;
+    }
+
+    /**
+     * Creates a conversation controller and doesn't show a message to reply to
+     */
+    public ConversationController(ObserverChatDTO observerChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController) {
+        this(observerChatDTO, serviceMessages, serviceFriends, idLoggedUser, mainChatController, null);
+    }
+
+    @Override
+    public void update(ChatDTO newValue) {
+        groupNameLabel.setText(newValue.getName(idLoggedUser));
+        messageDTOList.setAll(newValue.getMessages());
     }
 
     @Override
@@ -41,14 +64,12 @@ public class ConversationController extends Controller {
     }
 
     public void chatInfoButtonClick(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceMessages, idChat));
+        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceFriends, serviceMessages, observerChatDTO));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
-        //TODO: Actualizeaza ChatDTO
     }
-
 
     public static class CustomCellMessage extends ListCell<MessageDTO> {
         HBox horizontalBox = new HBox();
@@ -98,7 +119,7 @@ public class ConversationController extends Controller {
                 showReplyBar.accept(true);
             });
             replyInPrivateButton.setOnAction(event -> {
-                mainChatController.setConversationView(mainChatController.getServiceMessages().getOrCreatePrivateChatBetweenUsers(idLoggedUser, message.getUserFrom().getUser().getId()).getId(), true, message);
+                mainChatController.setConversationView(mainChatController.getServiceMessages().getOrCreatePrivateChatBetweenUsers(idLoggedUser, message.getUserFrom().getUser().getId()).getId(), message);
                 showReplyBar.accept(true);
             });
         }
@@ -168,22 +189,18 @@ public class ConversationController extends Controller {
     @FXML
     public Button cancelReplyButton;
 
-    private final Long idChat;
+    private final ObserverChatDTO observerChatDTO;
     private final ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
-    private final boolean isOpenForPrivateReply;
     private final MessageDTO messageToReply;
 
     public void initialize() {
-        groupNameLabel.setText(serviceMessages.getChatDTO(idChat).getName(idLoggedUser));
-        messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
-        listViewMessages.setItems(messageDTOList);
-        String chatColor = convertColorToString(serviceMessages.getChatDTO(idChat).getColor());
+        ChatDTO chatDTO = observerChatDTO.getChat();
+        String chatColor = convertColorToString(chatDTO.getColor());
         cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
         listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
-        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
         listViewMessages.setStyle("-fx-background-color:" + chatColor);
         mainVBox.setStyle("-fx-background-color:" + chatColor);
         typeMessageTextField.setOnKeyPressed(event -> {
@@ -193,13 +210,16 @@ public class ConversationController extends Controller {
         });
         hBoxReplyBar.setSpacing(10);
         hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
+        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+        listViewMessages.setItems(messageDTOList);
         if (messageToReply != null) {
             labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
             labelMessageToReply.setId(messageToReply.getId().toString());
         }
-        if (!isOpenForPrivateReply) {
+        else {
             setReplyBarVisible(false);
         }
+        update(chatDTO);
     }
 
     private String convertColorToString(Color color) {
@@ -212,6 +232,7 @@ public class ConversationController extends Controller {
 
     public void sendMessageAction(ActionEvent actionEvent) {
         if (!typeMessageTextField.getText().isEmpty()) {
+            Long idChat = observerChatDTO.getChat().getIdChat();
             if (!isVisibleReplyBar) {
                 serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
             } else {

@@ -1,8 +1,9 @@
 package project.lab6.controllers;
 
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,14 +16,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
+import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
+import project.lab6.utils.observer.Observer;
+import project.lab6.utils.observer.ObserverChatDTO;
 
 import java.net.URL;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
-public class ChatDetailsController extends Controller implements Initializable {
+public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO> {
     @Override
     public String getViewPath() {
         return Constants.View.CHAT_DETAILS;
@@ -37,9 +40,11 @@ public class ChatDetailsController extends Controller implements Initializable {
         private Button changeNickname = new Button("Change nickname");
         private final ServiceMessages serviceMessages;
         private UserChatInfoDTO userInfo = null;
+        private final ObserverChatDTO observerChatDTO;
 
-        public CustomCellChat(ServiceMessages serviceMessages) {
+        public CustomCellChat(ServiceMessages serviceMessages, ObserverChatDTO observerChatDTO) {
             this.serviceMessages = serviceMessages;
+            this.observerChatDTO = observerChatDTO;
             userImage.setFitWidth(50);
             userImage.setFitHeight(50);
             nicknameLabel.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 20");
@@ -57,6 +62,8 @@ public class ChatDetailsController extends Controller implements Initializable {
                             changeTextField.getText());
                     nicknameLabel.setText(changeTextField.getText());
                     horizontalBox.getChildren().set(1, nicknameLabel);
+                    Long id = observerChatDTO.getChat().getIdChat();
+                    observerChatDTO.setChat(serviceMessages.getChatDTO(id));
                 }
                 if (keyEvent.getCode() == KeyCode.ESCAPE) {
                     horizontalBox.getChildren().set(1, nicknameLabel);
@@ -98,21 +105,32 @@ public class ChatDetailsController extends Controller implements Initializable {
 
     private final Long idLoggerUser;
     private final ServiceMessages serviceMessages;
-    private final Long idChat;
+    private final ServiceFriends serviceFriends;
+    private final ObserverChatDTO observerChatDTO;
 
-    public ChatDetailsController(Long idLoggerUser, ServiceMessages serviceMessages, Long idChat) {
+    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObserverChatDTO observerChatDTO) {
         this.idLoggerUser = idLoggerUser;
         this.serviceMessages = serviceMessages;
-        this.idChat = idChat;
+        this.serviceFriends = serviceFriends;
+        this.observerChatDTO = observerChatDTO;
+        observerChatDTO.addObserver(this);
+    }
+
+    @Override
+    public void update(ChatDTO newValue) {
+        updateChat(newValue);
+    }
+
+    private void updateChat(ChatDTO newChat) {
+        chatNameLabel.setText(newChat.getName(idLoggerUser));
+        userChatInfos.setAll(newChat.getUsersInfo());
+        listView.setItems(userChatInfos);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ChatDTO chat = serviceMessages.getChatDTO(idChat);
-        chatNameLabel.setText(chat.getName(idLoggerUser));
-        userChatInfos.setAll(chat.getUsersInfo());
-        listView.setCellFactory(param -> new CustomCellChat(serviceMessages));
-        listView.setItems(userChatInfos);
+        listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observerChatDTO));
+        updateChat(observerChatDTO.getChat());
     }
 
     public void addUserToChat(ActionEvent actionEvent) {

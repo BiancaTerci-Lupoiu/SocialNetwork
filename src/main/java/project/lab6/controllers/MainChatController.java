@@ -20,6 +20,7 @@ import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
+import project.lab6.utils.observer.ObserverChatDTO;
 
 import java.io.IOException;
 
@@ -37,8 +38,8 @@ public class MainChatController extends Controller {
     }
 
     public void createGroupAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends,idLoggedUser));
-        Scene scene = new Scene(loader.load(),600,400);
+        FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends, idLoggedUser, chatDTOList, this));
+        Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
@@ -111,7 +112,7 @@ public class MainChatController extends Controller {
             ListCell<ChatDTO> cell = new CustomCellChat(idLoggedUser);
             cell.setOnMouseClicked(event -> {
                 if (!cell.isEmpty()) {
-                    setConversationView(cell.getItem().getIdChat(),false,null);
+                    setConversationView(cell.getItem().getIdChat());
                     event.consume();
                 }
             });
@@ -119,19 +120,27 @@ public class MainChatController extends Controller {
         });
         System.out.println(chatDTOList.size());
         if (!chatDTOList.isEmpty())
-            setConversationView(chatDTOList.get(0).getIdChat(),false,null);
+            setConversationView(chatDTOList.get(0).getIdChat());
         searchChatTextField.textProperty().addListener((obs, oldText, newText) -> findChatByName());
     }
-    private void updateListWithChatsOnSearch(String chatName){
+
+    private void updateListWithChatsOnSearch(String chatName) {
         listViewChats.getItems().clear();
-        chatDTOList.setAll(serviceMessages.findChatByName(idLoggedUser,chatName));
+        chatDTOList.setAll(serviceMessages.findChatByName(idLoggedUser, chatName));
     }
-    public void findChatByName(){
+
+    public void findChatByName() {
         updateListWithChatsOnSearch(searchChatTextField.getText());
     }
 
-    public void setConversationView(Long idChat, boolean isOpenForPrivateReply, MessageDTO messageToReply) {
-        FXMLLoader loader= Factory.getInstance().getLoader(new ConversationController(idChat, serviceMessages, idLoggedUser,this,isOpenForPrivateReply,messageToReply));
+    public void setConversationView(Long idChat) {
+        setConversationView(idChat, null);
+    }
+
+    public void setConversationView(Long idChat, MessageDTO messageToReply) {
+        ObserverChatDTO observerChatDTO = new ObserverChatDTO(serviceMessages.getChatDTO(idChat));
+        observerChatDTO.addObservableList(chatDTOList);
+        FXMLLoader loader = Factory.getInstance().getLoader(new ConversationController(observerChatDTO, serviceMessages, serviceFriends, idLoggedUser, this, messageToReply));
         Region region = null;
         try {
             region = loader.load();

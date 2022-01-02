@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.User;
+import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
@@ -21,11 +22,15 @@ public class CreateGroupController extends Controller {
     private final ServiceMessages serviceMessages;
     private final ServiceFriends serviceFriends;
     private final Long idLoggedUser;
+    private final ObservableList<ChatDTO> observableList;
+    private final MainChatController mainChatController;
 
-    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser) {
+    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableList<ChatDTO> observableList, MainChatController mainChatController) {
         this.serviceMessages = serviceMessages;
         this.serviceFriends = serviceFriends;
         this.idLoggedUser = idLoggedUser;
+        this.observableList = observableList;
+        this.mainChatController = mainChatController;
     }
 
     @FXML
@@ -55,9 +60,10 @@ public class CreateGroupController extends Controller {
         userNameTextField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
         done.setOnAction(event -> {
                     participants.add(idLoggedUser);
-                    String chatName = new String(groupName.textProperty().getValue());
-                    serviceMessages.createChatGroup(chatName, participants);
-                    done.disabledProperty();
+                    String chatName = groupName.textProperty().getValue();
+                    ChatDTO newChat = serviceMessages.createChatGroup(chatName, participants);
+                    observableList.add(0, newChat);
+                    mainChatController.setConversationView(newChat.getIdChat());
                     getStage().close();
                 }
         );
@@ -82,9 +88,9 @@ public class CreateGroupController extends Controller {
         return addParticipantButton;
     }
 
-    private ObservableList<UserRecord> getUserList(String searchName) {
+    private List<UserRecord> getUserList(String searchName) {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
-        ObservableList<UserRecord> userRecordObservableList = FXCollections.observableArrayList();
+        List<UserRecord> userRecordObservableList = new ArrayList<>();
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addParticipantButton = createAddParticipantsButton(user.getId());
@@ -96,7 +102,6 @@ public class CreateGroupController extends Controller {
     }
 
     private void updateTableAtSearch(String searchName) {
-        addParticipantsTableView.getItems().clear();
         usersRecord.setAll(getUserList(searchName));
     }
 
