@@ -6,22 +6,27 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
+import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.Observer;
 import project.lab6.utils.observer.ObserverChatDTO;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -133,7 +138,12 @@ public class ChatDetailsController extends Controller implements Initializable, 
         updateChat(observerChatDTO.getChat());
     }
 
-    public void addUserToChat(ActionEvent actionEvent) {
+    public void addUserToChat(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observerChatDTO));
+        Stage stage = new Stage();
+        Scene scene = new Scene(loader.load(), 600, 400);
+        stage.setScene(scene);
+        stage.showAndWait();
     }
 
     public void changeColor(ActionEvent actionEvent) {

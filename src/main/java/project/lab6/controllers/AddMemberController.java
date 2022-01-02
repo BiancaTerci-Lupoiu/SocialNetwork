@@ -9,24 +9,27 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.domain.User;
+import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
+import project.lab6.utils.observer.ObserverChatDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddMemberController extends Controller {
     private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private final ServiceFriends serviceFriends;
     private final ServiceMessages serviceMessages;
-    private final Long idChat;
+    private final ObserverChatDTO observerChatDTO;
     private final Long idLoggedUser;
 
-    public AddMemberController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idChat, Long idLoggedUser) {
-        this.serviceFriends = serviceFriends;
+    public AddMemberController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObserverChatDTO observerChatDTO) {
         this.serviceMessages = serviceMessages;
-        this.idChat = idChat;
+        this.serviceFriends = serviceFriends;
         this.idLoggedUser = idLoggedUser;
+        this.observerChatDTO = observerChatDTO;
     }
 
     @FXML
@@ -59,19 +62,21 @@ public class AddMemberController extends Controller {
         addParticipantButton.setText("Add");
         addParticipantButton.setOnAction(event ->
         {
-            serviceMessages.addUserToChat(this.idChat, id);
+            serviceMessages.addUserToChat(observerChatDTO.getChat().getIdChat(), id);
             addParticipantButton.setText("Added");
             addParticipantButton.disabledProperty();
             usersRecord.remove(new UserRecord(id, serviceFriends.getUserWithFriends(id).getLastName() + " "
                     + serviceFriends.getUserWithFriends(id).getFirstName(), addParticipantButton));
-
+            Long idChat = observerChatDTO.getChat().getIdChat();
+            observerChatDTO.setChat(serviceMessages.getChatDTO(idChat));
         });
         return addParticipantButton;
     }
 
-    private ObservableList<UserRecord> getUserList(String searchName) {
+    private List<UserRecord> getUserList(String searchName) {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
-        ObservableList<UserRecord> userRecordObservableList = FXCollections.observableArrayList();
+        List<UserRecord> userRecordObservableList = new ArrayList<>();
+        Long idChat = observerChatDTO.getChat().getIdChat();
         for (User user : usersList) {
             if (!(serviceMessages.getChatDTO(idChat).getUsersInfo().stream().map(x->x.getUser().getId()).toList().contains(user.getId()))) {
                 String name = user.getLastName() + " " + user.getFirstName();
@@ -84,7 +89,6 @@ public class AddMemberController extends Controller {
     }
 
     private void updateTableAtSearch(String searchName) {
-        addMembersTableView.getItems().clear();
         usersRecord.setAll(getUserList(searchName));
     }
 
