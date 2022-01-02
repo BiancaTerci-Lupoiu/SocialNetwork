@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.OpenPrivateChatController">
+   <children>
+      <TableView fx:id="usersTable" layoutX="53.0" layoutY="155.0" prefHeight="214.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;">
+        <columns>
+          <TableColumn fx:id="name" prefWidth="240.666748046875" style="-fx-background-color: #bb99ff;" text="Name" />
+          <TableColumn fx:id="addButton" prefWidth="257.99993896484375" style="-fx-background-color: #bb99ff;" />
+        </columns>
+      </TableView>
+      <Label layoutX="225.0" layoutY="25.0" prefHeight="47.0" prefWidth="155.0" text="Open Chat">
+         <font>
+            <Font name="Cambria Bold" size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="searchField" layoutX="51.0" layoutY="102.0" prefHeight="36.0" prefWidth="500.0" promptText="Search user...">
+         <font>
+            <Font name="Cambria" size="15.0" />
+         </font>
+      </TextField>
+   </children>
+</AnchorPane>
