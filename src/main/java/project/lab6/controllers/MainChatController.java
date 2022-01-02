@@ -36,12 +36,15 @@ public class MainChatController extends Controller {
         return Constants.View.MAIN_CHAT;
     }
 
-    public void CreateGroupButton(ActionEvent actionEvent) throws IOException {
+    public void createGroupAction(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends,idLoggedUser));
         Scene scene = new Scene(loader.load(),600,400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    public void createPrivateChatAction(ActionEvent actionEvent) {
     }
 
     public static class CustomCellChat extends ListCell<ChatDTO> {
