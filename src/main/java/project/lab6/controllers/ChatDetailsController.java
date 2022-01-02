@@ -50,9 +50,9 @@ public class ChatDetailsController extends Controller implements Initializable, 
             this.observableChatDTO = observableChatDTO;
             userImage.setFitWidth(50);
             userImage.setFitHeight(50);
-            nicknameLabel.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 20");
+            nicknameLabel.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 20");
             setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
-
+            changeNickname.setStyle("-fx-background-color: #5c0e63;-fx-font-family: Cambria;-fx-font-size: 14;-fx-text-fill: white;-fx-background-radius: 10;-fx-border-radius: 10");
             horizontalBox.getChildren().addAll(userImage, nicknameLabel);
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             rootAnchor.getChildren().addAll(horizontalBox, changeNickname);
