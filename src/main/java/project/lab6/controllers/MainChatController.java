@@ -46,7 +46,7 @@ public class MainChatController extends Controller {
     }
 
     public void createPrivateChatAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends,serviceMessages,idLoggedUser));
+        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends,serviceMessages,idLoggedUser,this,chatDTOList));
         Scene scene = new Scene(loader.load(),600,400);
         Stage stage = new Stage();
         stage.setScene(scene);

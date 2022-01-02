@@ -76,7 +76,6 @@ public class AddFriendsController extends Controller {
     }
 
     private void updateTableWithUsersAtSearch(String searchName) {
-        addFriendsTableView.getItems().clear();
         userRecordList.setAll(getUserRecordList(searchName));
     }
 

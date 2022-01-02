@@ -240,7 +240,6 @@ public class ConversationController extends Controller implements Observer<ChatD
                 serviceMessages.replyToMessage(idChat, idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
                 cancelReplyAction(new ActionEvent());
             }
-            listViewMessages.getItems().clear();
             messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
             typeMessageTextField.setText("");
         }
