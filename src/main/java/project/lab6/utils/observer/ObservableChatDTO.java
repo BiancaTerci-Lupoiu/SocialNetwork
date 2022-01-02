@@ -7,11 +7,11 @@ import project.lab6.domain.dtos.ChatDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObserverChatDTO extends ObservableImplementation<ChatDTO> {
+public class ObservableChatDTO extends ObservableImplementation<ChatDTO> {
     private ChatDTO chat;
     private final List<ObservableList<ChatDTO>> observers;
 
-    public ObserverChatDTO(ChatDTO chat) {
+    public ObservableChatDTO(ChatDTO chat) {
         this.chat = chat;
         observers = new ArrayList<>();
     }

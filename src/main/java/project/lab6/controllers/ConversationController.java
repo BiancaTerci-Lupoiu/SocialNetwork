@@ -22,7 +22,7 @@ import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.Observer;
-import project.lab6.utils.observer.ObserverChatDTO;
+import project.lab6.utils.observer.ObservableChatDTO;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -35,9 +35,9 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and it opens for replying to the message specified
      */
-    public ConversationController(ObserverChatDTO observerChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
-        this.observerChatDTO = observerChatDTO;
-        observerChatDTO.addObserver(this);
+    public ConversationController(ObservableChatDTO observableChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
+        this.observableChatDTO = observableChatDTO;
+        observableChatDTO.addObserver(this);
         this.serviceMessages = serviceMessages;
         this.serviceFriends = serviceFriends;
         this.idLoggedUser = idLoggedUser;
@@ -48,8 +48,8 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and doesn't show a message to reply to
      */
-    public ConversationController(ObserverChatDTO observerChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController) {
-        this(observerChatDTO, serviceMessages, serviceFriends, idLoggedUser, mainChatController, null);
+    public ConversationController(ObservableChatDTO observableChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController) {
+        this(observableChatDTO, serviceMessages, serviceFriends, idLoggedUser, mainChatController, null);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     }
 
     public void chatInfoButtonClick(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceFriends, serviceMessages, observerChatDTO));
+        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceFriends, serviceMessages, observableChatDTO));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -189,7 +189,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     @FXML
     public Button cancelReplyButton;
 
-    private final ObserverChatDTO observerChatDTO;
+    private final ObservableChatDTO observableChatDTO;
     private final ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
@@ -197,7 +197,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     private final MessageDTO messageToReply;
 
     public void initialize() {
-        ChatDTO chatDTO = observerChatDTO.getChat();
+        ChatDTO chatDTO = observableChatDTO.getChat();
         String chatColor = convertColorToString(chatDTO.getColor());
         cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
         listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
@@ -232,7 +232,7 @@ public class ConversationController extends Controller implements Observer<ChatD
 
     public void sendMessageAction(ActionEvent actionEvent) {
         if (!typeMessageTextField.getText().isEmpty()) {
-            Long idChat = observerChatDTO.getChat().getIdChat();
+            Long idChat = observableChatDTO.getChat().getIdChat();
             if (!isVisibleReplyBar) {
                 serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
             } else {

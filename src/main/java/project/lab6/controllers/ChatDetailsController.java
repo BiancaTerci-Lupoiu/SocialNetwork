@@ -1,9 +1,7 @@
 package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +22,7 @@ import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.Observer;
-import project.lab6.utils.observer.ObserverChatDTO;
+import project.lab6.utils.observer.ObservableChatDTO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,11 +43,11 @@ public class ChatDetailsController extends Controller implements Initializable, 
         private Button changeNickname = new Button("Change nickname");
         private final ServiceMessages serviceMessages;
         private UserChatInfoDTO userInfo = null;
-        private final ObserverChatDTO observerChatDTO;
+        private final ObservableChatDTO observableChatDTO;
 
-        public CustomCellChat(ServiceMessages serviceMessages, ObserverChatDTO observerChatDTO) {
+        public CustomCellChat(ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
             this.serviceMessages = serviceMessages;
-            this.observerChatDTO = observerChatDTO;
+            this.observableChatDTO = observableChatDTO;
             userImage.setFitWidth(50);
             userImage.setFitHeight(50);
             nicknameLabel.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 20");
@@ -67,8 +65,8 @@ public class ChatDetailsController extends Controller implements Initializable, 
                             changeTextField.getText());
                     nicknameLabel.setText(changeTextField.getText());
                     horizontalBox.getChildren().set(1, nicknameLabel);
-                    Long id = observerChatDTO.getChat().getIdChat();
-                    observerChatDTO.setChat(serviceMessages.getChatDTO(id));
+                    Long id = observableChatDTO.getChat().getIdChat();
+                    observableChatDTO.setChat(serviceMessages.getChatDTO(id));
                 }
                 if (keyEvent.getCode() == KeyCode.ESCAPE) {
                     horizontalBox.getChildren().set(1, nicknameLabel);
@@ -111,14 +109,14 @@ public class ChatDetailsController extends Controller implements Initializable, 
     private final Long idLoggerUser;
     private final ServiceMessages serviceMessages;
     private final ServiceFriends serviceFriends;
-    private final ObserverChatDTO observerChatDTO;
+    private final ObservableChatDTO observableChatDTO;
 
-    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObserverChatDTO observerChatDTO) {
+    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
         this.idLoggerUser = idLoggerUser;
         this.serviceMessages = serviceMessages;
         this.serviceFriends = serviceFriends;
-        this.observerChatDTO = observerChatDTO;
-        observerChatDTO.addObserver(this);
+        this.observableChatDTO = observableChatDTO;
+        observableChatDTO.addObserver(this);
     }
 
     @Override
@@ -134,12 +132,12 @@ public class ChatDetailsController extends Controller implements Initializable, 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observerChatDTO));
-        updateChat(observerChatDTO.getChat());
+        listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
+        updateChat(observableChatDTO.getChat());
     }
 
     public void addUserToChat(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observerChatDTO));
+        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observableChatDTO));
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load(), 600, 400);
         stage.setScene(scene);
