@@ -43,6 +43,8 @@ public class FriendsController extends Controller {
 
         tableViewFriends.setItems(modelFriends);
         modelFriends.setAll(getFriendsList());
+        tableViewFriends.getStylesheets().add(FriendsController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
+
     }
 
     private List<UserFriend> getFriendsList() {

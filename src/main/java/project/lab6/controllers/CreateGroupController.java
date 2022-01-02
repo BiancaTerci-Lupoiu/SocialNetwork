@@ -61,7 +61,7 @@ public class CreateGroupController extends Controller {
                     getStage().close();
                 }
         );
-
+        addParticipantsTableView.getStylesheets().add(CreateGroupController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
 
         addParticipantsTableView.setItems(usersRecord);
         updateTableAtSearch("");

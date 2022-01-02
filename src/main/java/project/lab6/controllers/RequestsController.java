@@ -57,6 +57,8 @@ public class RequestsController extends Controller {
         comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
                 (x,y,z)->initializeCombo(z.toString())
         );
+        tableViewRequests.getStylesheets().add(RequestsController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
+
     }
     @FXML
     public void initializeCombo(String status){
