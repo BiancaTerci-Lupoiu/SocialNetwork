@@ -26,10 +26,29 @@ import java.io.IOException;
 
 
 public class MainChatController extends Controller {
-    public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages,ServiceFriends serviceFriends) {
+    @FXML
+    public TextField searchChatTextField;
+    @FXML
+    public Button searchChatButton;
+    @FXML
+    public HBox mainHorizontalBox;
+    @FXML
+    public ListView<ChatDTO> listViewChats;
+
+    ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
+    private final ServiceMessages serviceMessages;
+    private final ServiceFriends serviceFriends;
+    private final Long idLoggedUser;
+
+
+    public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages, ServiceFriends serviceFriends) {
         this.idLoggedUser = idLoggedUser;
         this.serviceMessages = serviceMessages;
-        this.serviceFriends=serviceFriends;
+        this.serviceFriends = serviceFriends;
+    }
+
+    public ServiceMessages getServiceMessages() {
+        return serviceMessages;
     }
 
     @Override
@@ -46,8 +65,8 @@ public class MainChatController extends Controller {
     }
 
     public void createPrivateChatAction(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends,serviceMessages,idLoggedUser,this,chatDTOList));
-        Scene scene = new Scene(loader.load(),600,400);
+        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends, serviceMessages, idLoggedUser, this, chatDTOList));
+        Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
@@ -74,34 +93,16 @@ public class MainChatController extends Controller {
         @Override
         protected void updateItem(ChatDTO item, boolean empty) {
             super.updateItem(item, empty);
-            if(empty){
-                chat=null;
+            if (empty) {
+                chat = null;
                 setGraphic(null);
-            }else{
-                chat=item;
+            } else {
+                chat = item;
                 chatName.setText(chat.getName(idLoggedUser));
                 groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
                 setGraphic(horizontalBox);
             }
         }
-    }
-
-    @FXML
-    public TextField searchChatTextField;
-    @FXML
-    public Button searchChatButton;
-    @FXML
-    public HBox mainHorizontalBox;
-    @FXML
-    public ListView<ChatDTO> listViewChats;
-
-    ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
-    private final Long idLoggedUser;
-
-    public ServiceMessages getServiceMessages(){
-        return serviceMessages;
     }
 
     public void initialize() {

@@ -13,14 +13,23 @@ public class UserChatInfoDTO {
         this.nickname = nickname;
     }
 
+    /**
+     * @return the user of the UserChatInfoDTO
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * @return the nickname of the UserChatInfoDTO
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * @return the idChat of the UserChatInfoDTO
+     */
     public Long getIdChat() {
         return idChat;
     }

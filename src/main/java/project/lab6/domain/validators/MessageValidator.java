@@ -10,18 +10,18 @@ public class MessageValidator implements Validator<Message> {
      * @throws ValidationException if the text is empty or null or
      *                             date is null or
      *                             idUserFrom is null or
-     *                             idUsersTo is an empty list or contains duplicates
+     *                             idChat is null
      */
     @Override
     public void validate(Message entity) throws ValidationException {
         String errors = "";
-        if (entity.getText().isEmpty() || entity.getText() == null)
+        if (entity.getText().trim().isEmpty() || entity.getText() == null)
             errors += "invalid text!\n";
         if (entity.getDate() == null)
             errors += "invalid date!\n";
         if (entity.getIdUserFrom() == null)
             errors += "invalid idUserFrom!\n";
-        if(entity.getIdChat() == null)
+        if (entity.getIdChat() == null)
             errors += "invalid idChat!\n";
         if (!errors.isEmpty())
             throw new ValidationException(errors);

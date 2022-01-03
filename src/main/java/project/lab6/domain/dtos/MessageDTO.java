@@ -19,22 +19,37 @@ public class MessageDTO {
         this.repliedMessage = repliedMessage;
     }
 
+    /**
+     * @return the id of the MessageDTO
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @return the text of the MessageDTO
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * @return the date of the MessageDTO
+     */
     public LocalDateTime getDate() {
         return date;
     }
 
-    public UserChatInfoDTO getUserFrom() {
+    /**
+     * @return the userFrom(UserChatInfoDTO) of the MessageDTO
+     */
+    public UserChatInfoDTO getUserFromInfo() {
         return userFrom;
     }
 
+    /**
+     * @return the repliedMessage of the MessageDTO
+     */
     public Message getRepliedMessage() {
         return repliedMessage;
     }

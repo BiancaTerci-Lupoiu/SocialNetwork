@@ -17,14 +17,26 @@ public class User extends Entity<Long> {
     /**
      * constructor
      *
-     * @param firstName of the user
-     * @param lastName  of the user
+     * @param id Long of the user
+     * @param email String of the user
+     * @param firstName String of the user
+     * @param lastName String  of the user
+     * @param hashPassword String of the user
+     * @param salt String of the user
      */
     public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt) {
         this(email, firstName, lastName, hashPassword, salt);
         setId(id);
     }
 
+    /**
+     * constructor
+     * @param email String of the user
+     * @param firstName String of the user
+     * @param lastName String  of the user
+     * @param hashPassword String of the user
+     * @param salt String of the user
+     */
     public User(String email, String firstName, String lastName, String hashPassword, String salt) {
         this.email = email;
         this.firstName = firstName;

@@ -12,6 +12,12 @@ public abstract class ChatDTO {
     private final List<MessageDTO> messages;
     private final List<UserChatInfoDTO> users;
 
+    /**
+     * constructor
+     * @param idChat
+     * @param color
+     * @param isPrivateChat
+     */
     protected ChatDTO(Long idChat, Color color, boolean isPrivateChat) {
         this.idChat = idChat;
         this.color = color;
@@ -20,35 +26,61 @@ public abstract class ChatDTO {
         users = new ArrayList<>();
     }
 
+    /**
+     * adds a UserChatInfoDTO to the users list of the ChatDTO
+     * @param userInfo
+     */
     public void addUserInfo(UserChatInfoDTO userInfo)
     {
         users.add(userInfo);
     }
 
+    /**
+     * adds a MessageDTO to the messages list of the ChatDTO
+     * @param message
+     */
     public void addMessage(MessageDTO message)
     {
         messages.add(message);
     }
 
+    /**
+     * @param idLoggedUser
+     * @return the name of the chat, according to the logged user
+     */
     public abstract String getName(Long idLoggedUser);
 
-
+    /**
+     * @return the idChat of the ChatDTO
+     */
     public Long getIdChat() {
         return idChat;
     }
 
+    /**
+     * @return the color of the ChatDTO
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @return true if the chat is private and false otherwise
+     */
     public boolean isPrivateChat() {
         return isPrivateChat;
     }
 
+    /**
+     * @return the messages list of the ChatDTO
+     */
     public List<MessageDTO> getMessages() {
         return messages;
     }
 
+    /**
+     * @return the users list of the ChatDTO
+     */
     public List<UserChatInfoDTO> getUsersInfo() {
         return users;
     }

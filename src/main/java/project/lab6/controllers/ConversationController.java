@@ -29,7 +29,31 @@ import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 public class ConversationController extends Controller implements Observer<ChatDTO> {
+    @FXML
+    public Label groupNameLabel;
+    @FXML
+    public ListView<MessageDTO> listViewMessages;
+    @FXML
+    public TextField typeMessageTextField;
+    @FXML
+    public Button sendMessageButton;
+    @FXML
+    public Label labelMessageToReply;
+    @FXML
+    public ImageView userImage;
+    @FXML
+    public VBox mainVBox;
+    @FXML
+    public HBox hBoxReplyBar;
+    @FXML
+    public Button cancelReplyButton;
 
+    private final ObservableChatDTO observableChatDTO;
+    private final ServiceMessages serviceMessages;
+    private final Long idLoggedUser;
+    private final MainChatController mainChatController;
+    private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
+    private final MessageDTO messageToReply;
     private final ServiceFriends serviceFriends;
 
     /**
@@ -119,7 +143,7 @@ public class ConversationController extends Controller implements Observer<ChatD
                 showReplyBar.accept(true);
             });
             replyInPrivateButton.setOnAction(event -> {
-                mainChatController.setConversationView(mainChatController.getServiceMessages().getOrCreatePrivateChatBetweenUsers(idLoggedUser, message.getUserFrom().getUser().getId()).getId(), message);
+                mainChatController.setConversationView(mainChatController.getServiceMessages().getOrCreatePrivateChatBetweenUsers(idLoggedUser, message.getUserFromInfo().getUser().getId()).getId(), message);
                 showReplyBar.accept(true);
             });
         }
@@ -134,10 +158,10 @@ public class ConversationController extends Controller implements Observer<ChatD
                 message = item;
                 verticalBox.getChildren().clear();
                 dateLabel.setText(message.getDate().format(Constants.DATETIME_FORMATTER));
-                boolean isLoggedUser = idLoggedUser.equals(message.getUserFrom().getUser().getId());
+                boolean isLoggedUser = idLoggedUser.equals(message.getUserFromInfo().getUser().getId());
                 //Daca nu e userul logat, adaugam label cu nume deasupra
                 if (!isLoggedUser) {
-                    userNameLabel.setText(message.getUserFrom().getNickname());
+                    userNameLabel.setText(message.getUserFromInfo().getNickname());
                     verticalBox.getChildren().add(userNameLabel);
                 }
                 //Daca a dat reply la un mesaj, adaugam un label cu mesajul la care a dat reply
@@ -170,31 +194,6 @@ public class ConversationController extends Controller implements Observer<ChatD
         }
     }
 
-    @FXML
-    public Label groupNameLabel;
-    @FXML
-    public ListView<MessageDTO> listViewMessages;
-    @FXML
-    public TextField typeMessageTextField;
-    @FXML
-    public Button sendMessageButton;
-    @FXML
-    public Label labelMessageToReply;
-    @FXML
-    public ImageView userImage;
-    @FXML
-    public VBox mainVBox;
-    @FXML
-    public HBox hBoxReplyBar;
-    @FXML
-    public Button cancelReplyButton;
-
-    private final ObservableChatDTO observableChatDTO;
-    private final ServiceMessages serviceMessages;
-    private final Long idLoggedUser;
-    private final MainChatController mainChatController;
-    private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
-    private final MessageDTO messageToReply;
 
     public void initialize() {
         ChatDTO chatDTO = observableChatDTO.getChat();
@@ -215,8 +214,7 @@ public class ConversationController extends Controller implements Observer<ChatD
         if (messageToReply != null) {
             labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
             labelMessageToReply.setId(messageToReply.getId().toString());
-        }
-        else {
+        } else {
             setReplyBarVisible(false);
         }
         update(chatDTO);
