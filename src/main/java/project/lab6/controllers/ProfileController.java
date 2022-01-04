@@ -20,17 +20,17 @@ public class ProfileController extends Controller implements Initializable {
     @FXML
     Label labelEmail;
 
-    private final Long idLoggeduser;
+    private final Long idLoggedUser;
     private final ServiceFriends serviceFriends;
 
     public ProfileController(Long idLoggeduser, ServiceFriends serviceFriends) {
-        this.idLoggeduser = idLoggeduser;
+        this.idLoggedUser = idLoggeduser;
         this.serviceFriends = serviceFriends;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        User user = serviceFriends.getUserWithFriends(idLoggeduser);
+        User user = serviceFriends.getUserWithFriends(idLoggedUser);
         labelHello.setText(String.format("Hello %s! Welcome back!", user.getFirstName()));
         labelFirstName.setText(String.format("First name: %s", user.getFirstName()));
         labelLastName.setText(String.format("Last name: %s", user.getLastName()));
