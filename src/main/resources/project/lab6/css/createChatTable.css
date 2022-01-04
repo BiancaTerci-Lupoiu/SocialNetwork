@@ -1,0 +1,18 @@
+.column-header-background { visibility: hidden; -fx-padding: -1em; }
+.table-view  {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-border-color: #5c0e63 ;
+    -fx-border-width: 2;
+    -fx-control-inner-background:  #bb99ff;
+}
+.table-view .cell{
+    -fx-text-fill: black;
+    -fx-font-family: Cambria Bold;
+    -fx-font-size: 14;
+}
+.table-view .button{
+    -fx-background-color: #5c0e63;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: Cambria Bold;
+}

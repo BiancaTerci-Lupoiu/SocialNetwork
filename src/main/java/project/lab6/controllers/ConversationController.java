@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -118,6 +119,7 @@ public class ConversationController extends Controller implements Observer<ChatD
             this.cellColor = cellColor;
             this.showReplyBar = showReplyBar;
             this.mainChatController = mainChatController;
+            verticalBox.setMaxWidth(300.0);
             messageText.setWrapText(true);
             repliedMessageText.setWrapText(true);
             this.setStyle("-fx-background-color: " + cellColor + ";-fx-border-color: transparent");
@@ -132,7 +134,6 @@ public class ConversationController extends Controller implements Observer<ChatD
             dateLabel.setStyle("-fx-background-color: transparent;-fx-font-family: Cambria;-fx-font-size: 12;-fx-padding: 2px 10px 2px 0px");
             userNameLabel.setStyle("-fx-background-color: transparent;-fx-font-family: Cambria;-fx-font-size: 14");
             horizontalBox.getChildren().add(verticalBox);
-
             labelShownAboveTypeText.setStyle("-fx-font-size: 16;-fx-font-family: Cambria Bold;-fx-text-fill: #696766");
             repliedMessageText.setStyle("-fx-font-family: Cambria;-fx-text-fill:#696766;-fx-font-size: 16;-fx-background-color: #d1b3ff;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
 
@@ -148,6 +149,35 @@ public class ConversationController extends Controller implements Observer<ChatD
             });
         }
 
+        private void addLabelWithUserName() {
+            userNameLabel.setText(message.getUserFromInfo().getNickname());
+            verticalBox.getChildren().add(userNameLabel);
+        }
+
+        private void addLabelWithRepliedMessage() {
+            verticalBox.getChildren().add(repliedMessageText);
+            repliedMessageText.setText(message.getRepliedMessage().getText());
+        }
+
+        private void addLabelWithMessage() {
+            messageText.setText(message.getText());
+            verticalBox.getChildren().add(messageText);
+        }
+
+        private void alignComponentsToRight() {
+            horizontalBox.setAlignment(Pos.CENTER_RIGHT);
+            messageText.setStyle("-fx-background-color: #b3b3ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
+            hBoxButtonsReply.getChildren().setAll(replyInChatButton, dateLabel);
+            verticalBox.setAlignment(Pos.CENTER_RIGHT);
+        }
+
+        private void alignComponentsToLeft() {
+            horizontalBox.setAlignment(Pos.CENTER_LEFT);
+            verticalBox.setAlignment(Pos.CENTER_LEFT);
+            hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton, replyInPrivateButton);
+            messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
+        }
+
         @Override
         protected void updateItem(MessageDTO item, boolean empty) {
             super.updateItem(item, empty);
@@ -159,34 +189,17 @@ public class ConversationController extends Controller implements Observer<ChatD
                 verticalBox.getChildren().clear();
                 dateLabel.setText(message.getDate().format(Constants.DATETIME_FORMATTER));
                 boolean isLoggedUser = idLoggedUser.equals(message.getUserFromInfo().getUser().getId());
-                //Daca nu e userul logat, adaugam label cu nume deasupra
                 if (!isLoggedUser) {
-                    userNameLabel.setText(message.getUserFromInfo().getNickname());
-                    verticalBox.getChildren().add(userNameLabel);
+                    addLabelWithUserName();
                 }
-                //Daca a dat reply la un mesaj, adaugam un label cu mesajul la care a dat reply
                 if (message.getRepliedMessage() != null) {
-                    verticalBox.getChildren().add(repliedMessageText);
-                    repliedMessageText.setText(message.getRepliedMessage().getText());
-                    if (repliedMessageText.getText().length() > 23)
-                        repliedMessageText.setMaxWidth(200);
+                    addLabelWithRepliedMessage();
                 }
-                //Adaugam mesajul in sine
-                messageText.setText(message.getText());
-                if (messageText.getText().length() > 23)
-                    messageText.setMaxWidth(200);
-                verticalBox.getChildren().add(messageText);
-                //Adaugam butoanele in ordinea corecta si aliniem
+                addLabelWithMessage();
                 if (isLoggedUser) {
-                    horizontalBox.setAlignment(Pos.CENTER_RIGHT);
-                    messageText.setStyle("-fx-background-color: #b3b3ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
-                    hBoxButtonsReply.getChildren().setAll(replyInChatButton, dateLabel);
-                    verticalBox.setAlignment(Pos.CENTER_RIGHT);
+                    alignComponentsToRight();
                 } else {
-                    horizontalBox.setAlignment(Pos.CENTER_LEFT);
-                    verticalBox.setAlignment(Pos.CENTER_LEFT);
-                    hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton, replyInPrivateButton);
-                    messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
+                    alignComponentsToLeft();
                 }
                 verticalBox.getChildren().add(hBoxButtonsReply);
                 setGraphic(horizontalBox);

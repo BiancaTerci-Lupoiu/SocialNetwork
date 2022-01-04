@@ -17,7 +17,7 @@
             <ImageView fx:id="userImage" fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="groupNameLabel" prefHeight="53.0" prefWidth="312.0">
                <font>
-                  <Font name="Cambria Bold" size="16.0" />
+                  <Font name="Cambria Bold" size="18.0" />
                </font></Label>
             <Button mnemonicParsing="false" onAction="#chatInfoButtonClick" prefHeight="47.0" prefWidth="42.0" style="-fx-background-color: #5c0e63; -fx-border-radius: 5; -fx-background-radius: 5;">
                <graphic>

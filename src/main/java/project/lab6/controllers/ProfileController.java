@@ -31,7 +31,7 @@ public class ProfileController extends Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         User user = serviceFriends.getUserWithFriends(idLoggeduser);
-        labelHello.setText(String.format("Hello %s! Welcome back!", user.getLastName()));
+        labelHello.setText(String.format("Hello %s! Welcome back!", user.getFirstName()));
         labelFirstName.setText(String.format("First name: %s", user.getFirstName()));
         labelLastName.setText(String.format("Last name: %s", user.getLastName()));
         labelEmail.setText(String.format("Email: %s", user.getEmail()));

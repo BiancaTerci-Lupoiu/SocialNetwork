@@ -1,0 +1,16 @@
+.table-view .column-header{
+    -fx-font-family: Cambria Bold;
+    -fx-font-size: 16;
+}
+
+.table-view .cell{
+    -fx-text-fill: black;
+    -fx-font-family: Cambria Bold;
+    -fx-font-size: 14;
+}
+.table-view .button{
+    -fx-background-color: #5c0e63;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: Cambria Bold;
+    -fx-font-size: 14;
+}
