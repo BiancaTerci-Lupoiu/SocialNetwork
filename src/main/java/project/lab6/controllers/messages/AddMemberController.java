@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.User;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;

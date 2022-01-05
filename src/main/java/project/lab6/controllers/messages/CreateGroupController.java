@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,8 +8,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.AlertMessage;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.User;
 import project.lab6.domain.dtos.ChatDTO;
+import project.lab6.domain.validators.ValidationException;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
@@ -61,10 +66,15 @@ public class CreateGroupController extends Controller {
         done.setOnAction(event -> {
                     participants.add(idLoggedUser);
                     String chatName = groupName.textProperty().getValue();
-                    ChatDTO newChat = serviceMessages.createChatGroup(chatName, participants);
-                    observableList.add(0, newChat);
-                    mainChatController.setConversationView(newChat.getIdChat());
-                    getStage().close();
+                    try {
+                        ChatDTO newChat = serviceMessages.createChatGroup(chatName, participants);
+                        observableList.add(0, newChat);
+                        mainChatController.setConversationView(newChat.getIdChat());
+                        getStage().close();
+                    } catch (ServiceException | ValidationException ex) {
+                        AlertMessage.showErrorMessage(ex.getMessage());
+                        participants.remove(idLoggedUser);
+                    }
                 }
         );
         addParticipantsTableView.getStylesheets().add(CreateGroupController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());

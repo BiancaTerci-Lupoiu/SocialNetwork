@@ -10,11 +10,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="478.0" prefWidth="400.0" style="-fx-border-color: #5c0e63; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ConversationController">
+<?import javafx.geometry.Insets?>
+<VBox fx:id="mainVBox" maxHeight="Infinity" maxWidth="Infinity" prefHeight="478.0" prefWidth="400.0" style="-fx-border-color: #5c0e63; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.ConversationController">
    <children>
-      <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="400.0">
+      <HBox alignment="TOP_RIGHT" prefHeight="49.0" prefWidth="Infinity">
          <children>
-            <ImageView fx:id="userImage" fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="userImage" fitHeight="48.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true"/>
             <Label fx:id="groupNameLabel" prefHeight="53.0" prefWidth="312.0">
                <font>
                   <Font name="Cambria Bold" size="18.0" />
@@ -23,13 +24,13 @@
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/three-dots.png" />
+                        <Image url="@../../images/three-dots.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
          </children>
       </HBox>
-      <ListView fx:id="listViewMessages" prefHeight="377.0" prefWidth="392.0" />
+      <ListView fx:id="listViewMessages" prefHeight="377.0" prefWidth="392.0" VBox.vgrow="ALWAYS"/>
       <HBox fx:id="hBoxReplyBar" prefHeight="0.0" prefWidth="200.0">
          <children>
             <Label fx:id="labelMessageToReply" alignment="CENTER_RIGHT" maxHeight="0.0" prefHeight="0.0" prefWidth="400.0">
@@ -44,9 +45,13 @@
             </Button>
          </children>
       </HBox>
-      <HBox alignment="BOTTOM_CENTER" prefHeight="37.0" prefWidth="370.0" style="-fx-spacing: 5; -fx-padding: 3 5 0 5;">
+      <HBox alignment="BOTTOM_CENTER" prefHeight="37.0" prefWidth="370.0">
+         <VBox.margin>
+            <Insets bottom="20" left="5" right="5"/>
+         </VBox.margin>
          <children>
-            <TextField fx:id="typeMessageTextField" prefHeight="46.0" prefWidth="344.0" promptText="Type a message..." style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-border-color: #5c0e63; -fx-border-width: 2; -fx-background-color: #e0ccff;">
+            <TextField fx:id="typeMessageTextField" prefHeight="46.0" prefWidth="344.0" promptText="Type a message..." style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-border-color: #5c0e63; -fx-border-width: 2; -fx-background-color: #e0ccff;"
+               HBox.hgrow="ALWAYS">
                <font>
                   <Font name="Cambria" size="17.0" />
                </font>
@@ -55,7 +60,7 @@
                <graphic>
                   <ImageView fitHeight="37.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                   <image>
-                     <Image url="@../images/send-message-arrow.png" />
+                     <Image url="@../../images/send-message-arrow.png" />
                   </image>
                   </ImageView>
                </graphic>

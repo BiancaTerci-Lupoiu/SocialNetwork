@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.factory.Factory;
@@ -57,6 +58,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             rootAnchor.getChildren().addAll(horizontalBox, changeNickname);
             AnchorPane.setRightAnchor(changeNickname, 20d);
+            AnchorPane.setTopAnchor(changeNickname,25d);
             changeTextField.setOnKeyPressed(keyEvent ->
             {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -102,6 +104,8 @@ public class ChatDetailsController extends Controller implements Initializable, 
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
 
     @FXML
+    private HBox hboxButtons;
+    @FXML
     private ListView<UserChatInfoDTO> listView;
     @FXML
     private Label chatNameLabel;
@@ -133,7 +137,10 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
+        if(observableChatDTO.getChat().isPrivateChat())
+            hboxButtons.getChildren().remove(0);
         updateChat(observableChatDTO.getChat());
+
     }
 
     public void addUserToChat(ActionEvent actionEvent) throws IOException {

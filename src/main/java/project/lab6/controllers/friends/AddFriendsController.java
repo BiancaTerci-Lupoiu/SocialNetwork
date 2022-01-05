@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.friends;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.Status;
 import project.lab6.domain.User;
 import project.lab6.service.ServiceFriends;
@@ -61,18 +63,17 @@ public class AddFriendsController extends Controller {
         return addFriendButton;
     }
 
-    private ObservableList<UserRecord> getUserRecordList(String searchName)
-    {
+    private List<UserRecord> getUserRecordList(String searchName) {
         List<User> usersList = serviceFriends.searchUsersByNameNotFriendsWithLoggedUser(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
-        ObservableList<UserRecord> userRecordObservableList=FXCollections.observableArrayList();
+        List<UserRecord> userRecordList = FXCollections.observableArrayList();
         for (User user : usersList) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton = createAddButton(user.getId());
             UserRecord userRecord = new UserRecord(user.getId(), name, addFriendButton);
 
-            userRecordObservableList.add(userRecord);
+            userRecordList.add(userRecord);
         }
-        return userRecordObservableList;
+        return userRecordList;
     }
 
     private void updateTableWithUsersAtSearch(String searchName) {

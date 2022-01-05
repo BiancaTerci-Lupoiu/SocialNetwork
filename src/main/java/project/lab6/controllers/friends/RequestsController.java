@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.friends;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +8,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.utils.UserFriend;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Status;
 import project.lab6.service.ServiceFriends;

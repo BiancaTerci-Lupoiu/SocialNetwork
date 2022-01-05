@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="mainHorizontalBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.MainChatController">
+<HBox fx:id="mainHorizontalBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.MainChatController">
    <children>
       <VBox alignment="BOTTOM_RIGHT" maxHeight="Infinity" prefHeight="400.0" prefWidth="206.0" style="-fx-border-width: 4; -fx-border-color: #5c0e63; -fx-background-color: #bb99ff;">
          <children>
@@ -19,7 +19,7 @@
                      <graphic>
                         <ImageView fitHeight="29.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../images/create-private-chat.png" />
+                              <Image url="@../../images/create-private-chat.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -28,7 +28,7 @@
                      <graphic>
                         <ImageView fitHeight="43.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                   <Image url="@../images/create-group.png" />
+                                   <Image url="@../../images/create-group.png" />
                                 </image>
                         </ImageView>
                      </graphic>
@@ -46,7 +46,7 @@
                   <graphic>
                      <ImageView fitHeight="30.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" rotate="-27.5">
                         <image>
-                           <Image url="@../images/lupa.png" />
+                           <Image url="@../../images/lupa.png" />
                         </image>
                      </ImageView>
                   </graphic>

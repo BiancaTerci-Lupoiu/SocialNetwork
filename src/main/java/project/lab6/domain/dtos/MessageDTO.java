@@ -1,18 +1,21 @@
 package project.lab6.domain.dtos;
 
-import project.lab6.domain.chat.Message;
+import project.lab6.domain.chat.Chat;
+import project.lab6.utils.Lazy;
 
 import java.time.LocalDateTime;
 
 public class MessageDTO {
     private final Long id;
+    private final Chat chat;
     private final String text;
     private final LocalDateTime date;
     private final UserChatInfoDTO userFrom;
-    private final Message repliedMessage;
+    private final Lazy<MessageDTO> repliedMessage;
 
-    public MessageDTO(Long id, String text, LocalDateTime date, UserChatInfoDTO userFrom, Message repliedMessage) {
+    public MessageDTO(Long id, Chat chat, String text, LocalDateTime date, UserChatInfoDTO userFrom, Lazy<MessageDTO> repliedMessage) {
         this.id = id;
+        this.chat = chat;
         this.text = text;
         this.date = date;
         this.userFrom = userFrom;
@@ -26,6 +29,12 @@ public class MessageDTO {
         return id;
     }
 
+    /**
+     * @return the chat in which this message was send
+     */
+    public Chat getChat() {
+        return chat;
+    }
     /**
      * @return the text of the MessageDTO
      */
@@ -50,7 +59,7 @@ public class MessageDTO {
     /**
      * @return the repliedMessage of the MessageDTO
      */
-    public Message getRepliedMessage() {
-        return repliedMessage;
+    public MessageDTO getRepliedMessage() {
+        return repliedMessage.get();
     }
 }

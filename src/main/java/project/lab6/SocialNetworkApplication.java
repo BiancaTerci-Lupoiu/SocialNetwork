@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import project.lab6.controllers.LoginController;
+import project.lab6.controllers.login.LoginController;
 import project.lab6.factory.Factory;
 
 import java.io.IOException;

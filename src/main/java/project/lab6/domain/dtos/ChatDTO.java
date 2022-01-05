@@ -1,47 +1,23 @@
 package project.lab6.domain.dtos;
 
 import javafx.scene.paint.Color;
+import project.lab6.utils.Lazy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ChatDTO {
     private final Long idChat;
     private final Color color;
     private final boolean isPrivateChat;
-    private final List<MessageDTO> messages;
-    private final List<UserChatInfoDTO> users;
+    private final Lazy<List<MessageDTO>> messages;
+    private final Lazy<List<UserChatInfoDTO>> users;
 
-    /**
-     * constructor
-     * @param idChat
-     * @param color
-     * @param isPrivateChat
-     */
-    protected ChatDTO(Long idChat, Color color, boolean isPrivateChat) {
+    protected ChatDTO(Long idChat, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
         this.idChat = idChat;
         this.color = color;
         this.isPrivateChat = isPrivateChat;
-        messages = new ArrayList<>();
-        users = new ArrayList<>();
-    }
-
-    /**
-     * adds a UserChatInfoDTO to the users list of the ChatDTO
-     * @param userInfo
-     */
-    public void addUserInfo(UserChatInfoDTO userInfo)
-    {
-        users.add(userInfo);
-    }
-
-    /**
-     * adds a MessageDTO to the messages list of the ChatDTO
-     * @param message
-     */
-    public void addMessage(MessageDTO message)
-    {
-        messages.add(message);
+        this.messages = messages;
+        this.users = users;
     }
 
     /**
@@ -75,28 +51,28 @@ public abstract class ChatDTO {
      * @return the messages list of the ChatDTO
      */
     public List<MessageDTO> getMessages() {
-        return messages;
+        return messages.get();
     }
 
     /**
      * @return the users list of the ChatDTO
      */
     public List<UserChatInfoDTO> getUsersInfo() {
-        return users;
+        return users.get();
     }
 
     /**
      * Creates a PrivateChatDTO or a GroupChatDTO and returns it
-     * @param name The name of the chat. This argument will be ignored if isPrivateChat is true
-     * @param color The color of the chat
+     *
+     * @param name          The name of the chat. This argument will be ignored if isPrivateChat is true
+     * @param color         The color of the chat
      * @param isPrivateChat True if the chat is private and false otherwise
      * @return ChatDTO
      */
-    public static ChatDTO createChatDTO(Long idChat,String name, Color color, boolean isPrivateChat)
-    {
-        if(isPrivateChat)
-            return new PrivateChatDTO(idChat,color);
+    public static ChatDTO createChatDTO(Long idChat, String name, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
+        if (isPrivateChat)
+            return new PrivateChatDTO(idChat, color, messages, users);
         else
-            return new GroupChatDTO(idChat,name,color);
+            return new GroupChatDTO(idChat, name, color, messages, users);
     }
 }

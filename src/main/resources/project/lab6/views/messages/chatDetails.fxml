@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.ChatDetailsController">
+    <Label fx:id="chatNameLabel" alignment="CENTER" layoutX="-2.0" prefHeight="38.0" prefWidth="600.0" text="Titlu" textFill="#5c0e63" wrapText="true">
+      <font>
+         <Font name="Cambria" size="36.0" />
+      </font>
+      <effect>
+         <DropShadow height="32.7" radius="12.34" spread="0.25" width="18.66">
+            <color>
+               <Color red="1.0" green="1.0" blue="1.0" />
+            </color>
+         </DropShadow>
+      </effect></Label>
+   <HBox fx:id="hboxButtons" alignment="CENTER" layoutY="47.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="32.0" prefWidth="600.0" spacing="170">
+      <children>
+          <Button mnemonicParsing="false" onAction="#addUserToChat" style="-fx-background-color: #5c0e63; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: white; -fx-border-width: 2;" text="Add user" textFill="WHITE">
+            <font>
+               <Font name="Cambria" size="14.0" />
+            </font>
+         </Button>
+          <Button mnemonicParsing="false" onAction="#changeColor" style="-fx-background-color: #5c0e63; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-width: 2; -fx-border-color: white;" text="Change color" textFill="WHITE">
+            <font>
+               <Font name="Cambria" size="14.0" />
+            </font>
+         </Button>
+      </children>
+   </HBox>
+    <Label layoutX="14.0" layoutY="84.0" text="Users:" textFill="#5c0e63" underline="true">
+      <font>
+         <Font name="Cambria" size="25.0" />
+      </font>
+      <effect>
+         <DropShadow radius="11.17" width="25.68">
+            <color>
+               <Color red="1.0" green="1.0" blue="1.0" />
+            </color>
+         </DropShadow>
+      </effect></Label>
+    <ListView fx:id="listView" layoutY="126.0" prefHeight="386.0" prefWidth="600.0" style="-fx-background-color: #ccccff;" />
+</AnchorPane>

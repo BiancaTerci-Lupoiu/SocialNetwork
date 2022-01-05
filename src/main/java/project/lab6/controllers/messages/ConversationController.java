@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,10 +12,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
@@ -174,7 +174,9 @@ public class ConversationController extends Controller implements Observer<ChatD
         private void alignComponentsToLeft() {
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             verticalBox.setAlignment(Pos.CENTER_LEFT);
-            hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton, replyInPrivateButton);
+            hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton);
+            if(!message.getChat().isPrivateChat())
+                hBoxButtonsReply.getChildren().add(replyInPrivateButton);
             messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
         }
 

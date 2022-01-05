@@ -1,23 +1,22 @@
-package project.lab6.controllers;
+package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.User;
 import project.lab6.domain.chat.Chat;
 import project.lab6.domain.dtos.ChatDTO;
-import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
 
-import java.io.IOException;
 import java.util.List;
 
 public class OpenPrivateChatController extends Controller {

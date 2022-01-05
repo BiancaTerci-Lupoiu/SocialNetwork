@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="397.0" prefWidth="478.0" style="-fx-background-color: #bb99ff;" stylesheets="@../css/friendsTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.FriendsController">
+<BorderPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="397.0" prefWidth="478.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/friendsTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.friends.FriendsController">
     <top>
         <Label prefHeight="59.0" prefWidth="166.0" text="Friends" textAlignment="CENTER" textFill="#5c0e63" BorderPane.alignment="CENTER">
             <font>

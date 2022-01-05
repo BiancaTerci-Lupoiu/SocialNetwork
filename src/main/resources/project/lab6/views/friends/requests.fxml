@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;" stylesheets="@../css/requestsTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.RequestsController">
+<AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/requestsTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.friends.RequestsController">
     <children>
         <Label layoutX="40.0" layoutY="28.0" prefHeight="26.0" prefWidth="162.0" text="Request status:" textFill="#5c0e63">
             <font>

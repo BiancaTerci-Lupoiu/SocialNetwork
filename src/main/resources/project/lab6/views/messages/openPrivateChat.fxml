@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" stylesheets="@../css/createChatTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.OpenPrivateChatController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/createChatTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.OpenPrivateChatController">
    <children>
       <TableView fx:id="usersTable" layoutX="29.0" layoutY="157.0" prefHeight="214.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;">
           <placeholder>

@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.login;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import project.lab6.controllers.AlertMessage;
+import project.lab6.controllers.Controller;
+import project.lab6.controllers.MainViewController;
 import project.lab6.domain.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.factory.Factory;

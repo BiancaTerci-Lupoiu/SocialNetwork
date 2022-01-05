@@ -158,8 +158,7 @@ public class User extends Entity<Long> {
 
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User that = (User) o;
+        if (!(o instanceof User that)) return false;
         return getFirstName().equals(that.getFirstName()) &&
                 getLastName().equals(that.getLastName()) &&
                 getFriends().equals(that.getFriends());

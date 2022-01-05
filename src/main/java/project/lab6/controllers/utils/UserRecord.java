@@ -1,4 +1,4 @@
-package project.lab6.controllers;
+package project.lab6.controllers.utils;
 
 import javafx.scene.control.Button;
 

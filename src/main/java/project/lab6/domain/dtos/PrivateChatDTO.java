@@ -1,12 +1,13 @@
 package project.lab6.domain.dtos;
 
 import javafx.scene.paint.Color;
+import project.lab6.utils.Lazy;
 
 import java.util.List;
 
 public class PrivateChatDTO extends ChatDTO {
-    public PrivateChatDTO(Long idChat, Color color) {
-        super(idChat, color, true);
+    protected PrivateChatDTO(Long idChat, Color color, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
+        super(idChat, color, true, messages, users);
     }
 
     /**
