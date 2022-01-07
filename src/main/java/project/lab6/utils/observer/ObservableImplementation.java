@@ -5,10 +5,11 @@ import java.util.Set;
 
 public class ObservableImplementation<T> implements Observable<T> {
     private final Set<Observer<T>> observers;
-    public ObservableImplementation()
-    {
+
+    public ObservableImplementation() {
         observers = new HashSet<>();
     }
+
     @Override
     public void addObserver(Observer<T> observer) {
         observers.add(observer);
@@ -21,7 +22,7 @@ public class ObservableImplementation<T> implements Observable<T> {
 
     @Override
     public void notifyObservers(T newValue) {
-        for(Observer<T> observer : observers)
+        for (Observer<T> observer : observers)
             observer.update(newValue);
     }
 }

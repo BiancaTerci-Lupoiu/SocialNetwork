@@ -57,19 +57,20 @@ public class RequestsController extends Controller {
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
 
         comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
-                (x,y,z)->initializeCombo(z.toString())
+                (x, y, z) -> initializeCombo(z)
         );
         tableViewRequests.getStylesheets().add(RequestsController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
 
     }
+
     @FXML
-    public void initializeCombo(String status){
+    public void initializeCombo(String status) {
         if (Objects.equals(status, "Sent")) {
             buttonCancel.setCellValueFactory(new PropertyValueFactory<UserFriend, Button>("button1"));
             modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_SEND));
 
         }
-        if(Objects.equals(status, "Received")){
+        if (Objects.equals(status, "Received")) {
             buttonCancel.setCellValueFactory(new PropertyValueFactory<>("button1"));
             buttonAccept.setCellValueFactory(new PropertyValueFactory<>("button2"));
             modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
@@ -96,34 +97,36 @@ public class RequestsController extends Controller {
                             n.getUser().getFirstName(),
                             n.getUser().getLastName(),
                             n.getDate(),
-                            createDenyButton(n.getUser().getId()),createAcceptButton(n.getUser().getId()))).toList();
+                            createDenyButton(n.getUser().getId()), createAcceptButton(n.getUser().getId()))).toList();
     }
 
     private Button createDenyButton(Long idFriend) {
         Button addDenyButton = new Button();
         addDenyButton.setText("Deny");
         addDenyButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );
         return addDenyButton;
     }
-    private Button createCancelButton(Long idFriend){
-        Button addCancelButton=new Button();
+
+    private Button createCancelButton(Long idFriend) {
+        Button addCancelButton = new Button();
         addCancelButton.setText("Cancel");
         addCancelButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.REJECTED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.REJECTED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_SEND));
                 }
         );
         return addCancelButton;
     }
-    private Button createAcceptButton(Long idFriend){
+
+    private Button createAcceptButton(Long idFriend) {
         Button addAcceptButton = new Button();
         addAcceptButton.setText("Accept");
         addAcceptButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend,this.idLoggedUser, Status.APPROVED);
+                    serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.APPROVED);
                     modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
                 }
         );

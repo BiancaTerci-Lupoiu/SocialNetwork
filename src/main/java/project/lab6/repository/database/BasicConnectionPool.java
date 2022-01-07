@@ -23,15 +23,13 @@ public class BasicConnectionPool implements ConnectionPool {
 
     @Override
     public Connection getConnection() throws SQLException {
-        if(connectionPool.size()==0)
-        {
+        if (connectionPool.size() == 0) {
             Connection newConnection = createConnection();
             connectionPool.add(newConnection);
         }
         Connection connection = connectionPool
                 .remove(connectionPool.size() - 1);
-        if(!connection.isValid(1))
-        {
+        if (!connection.isValid(1)) {
             connection.close();
             connection = createConnection();
         }
@@ -41,7 +39,7 @@ public class BasicConnectionPool implements ConnectionPool {
 
     @Override
     public boolean releaseConnection(Connection connection) {
-        if(connection == null)
+        if (connection == null)
             return false;
         connectionPool.add(connection);
         return usedConnections.remove(connection);
@@ -54,11 +52,11 @@ public class BasicConnectionPool implements ConnectionPool {
 
     @Override
     public void close() throws SQLException {
-        for(Connection connection: connectionPool)
+        for (Connection connection : connectionPool)
             connection.close();
-        if(usedConnections.size()!= 0)
+        if (usedConnections.size() != 0)
             System.out.println("Warning! There are some connections still open!");
-        for(Connection connection: usedConnections)
+        for (Connection connection : usedConnections)
             connection.close();
     }
 }

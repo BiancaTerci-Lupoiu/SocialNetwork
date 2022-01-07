@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'project'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'project.lab6'
-    mainClass = 'project.lab6.HelloApplication'
+    mainModule = 'project.lab'
+    mainClass = 'project.lab6.SocialNetworkApplication'
 }
 
 javafx {
@@ -44,6 +44,10 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
+
+    // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
+    //implementation 'org.apache.pdfbox:pdfbox:3.0.0-RC1'
 }
 
 test {

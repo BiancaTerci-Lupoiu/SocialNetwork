@@ -20,6 +20,9 @@ import java.util.List;
 
 public class AddFriendsController extends Controller {
 
+    private final ObservableList<UserRecord> userRecordList = FXCollections.observableArrayList();
+    private final Long idLoggedUser;
+    private final ServiceFriends serviceFriends;
     @FXML
     private TextField userNameTextField;
     @FXML
@@ -28,10 +31,6 @@ public class AddFriendsController extends Controller {
     private TableColumn<UserRecord, String> nameColumn;
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
-
-    private ObservableList<UserRecord> userRecordList = FXCollections.observableArrayList();
-    private final Long idLoggedUser;
-    private final ServiceFriends serviceFriends;
 
     public AddFriendsController(Long idLoggedUser, ServiceFriends serviceFriends) {
         this.idLoggedUser = idLoggedUser;

@@ -3,7 +3,6 @@ package project.lab6.controllers;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.stage.StageStyle;
-import project.lab6.SocialNetworkApplication;
 
 public class AlertMessage {
     //TODO: sa stilizam aceste ferestre

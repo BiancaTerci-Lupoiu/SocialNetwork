@@ -19,7 +19,6 @@ import project.lab6.utils.Lazy;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ServiceMessages {
     private final RepositoryUser repoUsers;
@@ -165,16 +164,17 @@ public class ServiceMessages {
      */
     public ChatDTO getChatDTO(Long idChat) {
         Chat chat = repoChats.findOne(idChat);
-        Lazy<List<MessageDTO>> messages = new Lazy<>(()-> getMessagesSortedForChat(idChat));
-        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(()-> getUserChatInfoDTOForChat(idChat));
+        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(idChat));
+        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(idChat));
 
-        return ChatDTO.createChatDTO(chat.getId(),chat.getName(), chat.getColor(), chat.isPrivateChat(),
+        return ChatDTO.createChatDTO(chat.getId(), chat.getName(), chat.getColor(), chat.isPrivateChat(),
                 messages, userInfos);
     }
 
 
     /**
      * Returns all the chat of the logged user
+     *
      * @param idLoggedUser the id of the logged user
      */
     public List<ChatDTO> getChatsDTO(Long idLoggedUser) {
@@ -187,7 +187,8 @@ public class ServiceMessages {
 
     /**
      * Creates a Group Chat
-     * @param name the name of the group
+     *
+     * @param name    the name of the group
      * @param idUsers the id of the users who are initially in the group
      * @return The ChatDTO created
      */
@@ -205,7 +206,8 @@ public class ServiceMessages {
 
     /**
      * Changes the color of a chat
-     * @param idChat the id of the chat
+     *
+     * @param idChat   the id of the chat
      * @param newColor the new color of the chat
      */
     public void changeChatColor(Long idChat, Color newColor) {
@@ -219,10 +221,10 @@ public class ServiceMessages {
 
     /**
      * Adds the specified user to the group chat
+     *
      * @param idChat the group chat id
      * @param idUser the id of the user
-     * @exception ServiceException
-     *      If the chat doesn't exist or if the chat is a private one
+     * @throws ServiceException If the chat doesn't exist or if the chat is a private one
      */
     public void addUserToChat(Long idChat, Long idUser) {
         Chat chat = repoChats.findOne(idChat);
@@ -241,10 +243,10 @@ public class ServiceMessages {
 
     /**
      * Removes the specified user from the group chat
+     *
      * @param idChat the group chat id
      * @param idUser the id of the user
-     * @exception ServiceException
-     *      If the chat doesn't exist or if the chat is a private one
+     * @throws ServiceException If the chat doesn't exist or if the chat is a private one
      */
     public void removeUserFromChat(Long idChat, Long idUser) {
         Chat chat = repoChats.findOne(idChat);
@@ -258,8 +260,9 @@ public class ServiceMessages {
 
     /**
      * Changes the nickname of a user in in chat
-     * @param idChat the chat the user is into
-     * @param idUser the id of the user
+     *
+     * @param idChat      the chat the user is into
+     * @param idUser      the id of the user
      * @param newNickname the new nickname of the user
      */
     public void changeNickname(Long idChat, Long idUser, String newNickname) {
@@ -278,14 +281,15 @@ public class ServiceMessages {
 
     /**
      * Filters the chat the user is into by the chatName
+     *
      * @param idLoggedUser id of the logged user
-     * @param chatName the search pattern of the user
+     * @param chatName     the search pattern of the user
      * @return a list of all valid Chats
      */
-    public List<ChatDTO> findChatByName(Long idLoggedUser,String chatName){
+    public List<ChatDTO> findChatByName(Long idLoggedUser, String chatName) {
         String chatNameWithoutExtraSpaces = chatName.trim().replaceAll("[ ]+", " ").toLowerCase();
-        return getChatsDTO(idLoggedUser).stream().filter(chatDTO->{
-            String name=chatDTO.getName(idLoggedUser).toLowerCase();
+        return getChatsDTO(idLoggedUser).stream().filter(chatDTO -> {
+            String name = chatDTO.getName(idLoggedUser).toLowerCase();
             return name.startsWith(chatNameWithoutExtraSpaces);
         }).toList();
     }

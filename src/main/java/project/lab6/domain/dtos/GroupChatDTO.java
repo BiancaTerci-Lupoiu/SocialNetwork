@@ -9,7 +9,7 @@ public class GroupChatDTO extends ChatDTO {
 
     private final String chatName;
 
-    public GroupChatDTO(Long idChat, String chatName, Color color,  Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
+    public GroupChatDTO(Long idChat, String chatName, Color color, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
         super(idChat, color, false, messages, users);
         this.chatName = chatName;
     }

@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObservableChatDTO extends ObservableImplementation<ChatDTO> {
-    private ChatDTO chat;
     private final List<ObservableList<ChatDTO>> observers;
+    private ChatDTO chat;
 
     public ObservableChatDTO(ChatDTO chat) {
         this.chat = chat;
@@ -18,6 +18,7 @@ public class ObservableChatDTO extends ObservableImplementation<ChatDTO> {
 
     /**
      * Adds an observableList in which this chatDTO is observed
+     *
      * @param observableList the ObservableList in which the chat is observed
      */
     public void addObservableList(ObservableList<ChatDTO> observableList) {

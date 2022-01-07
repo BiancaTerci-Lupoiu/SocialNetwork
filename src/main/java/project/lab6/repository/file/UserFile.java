@@ -3,7 +3,6 @@ package project.lab6.repository.file;
 import project.lab6.domain.User;
 import project.lab6.domain.validators.Validator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserFile extends AbstractFileRepository<Long, User> {
@@ -19,8 +18,8 @@ public class UserFile extends AbstractFileRepository<Long, User> {
      */
     @Override
     protected User extractEntity(List<String> attributes) {
-        return new User(Long.parseLong(attributes.get(0)), attributes.get(1), attributes.get(2),attributes.get(3),
-                attributes.get(4),attributes.get(5));
+        return new User(Long.parseLong(attributes.get(0)), attributes.get(1), attributes.get(2), attributes.get(3),
+                attributes.get(4), attributes.get(5));
     }
 
     /**
@@ -29,7 +28,7 @@ public class UserFile extends AbstractFileRepository<Long, User> {
      */
     @Override
     protected String createEntityAsString(User entity) {
-        return String.format("%s;%s;%s;%s;%s;%s",entity.getId(),
+        return String.format("%s;%s;%s;%s;%s;%s", entity.getId(),
                 entity.getEmail(),
                 entity.getFirstName(),
                 entity.getLastName(),

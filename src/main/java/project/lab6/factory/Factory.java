@@ -1,7 +1,6 @@
 package project.lab6.factory;
 
 import javafx.fxml.FXMLLoader;
-import project.lab6.SocialNetworkApplication;
 import project.lab6.config.ApplicationContext;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.Friendship;
@@ -79,21 +78,20 @@ public class Factory implements AutoCloseable {
     /**
      * @return the friendship validator
      */
-    public Validator<Friendship> getFriendshipValidator()
-    {
-        if(friendshipValidator == null)
+    public Validator<Friendship> getFriendshipValidator() {
+        if (friendshipValidator == null)
             friendshipValidator = new FriendshipValidator();
         return friendshipValidator;
     }
 
     public Validator<Chat> getChatValidator() {
-        if(chatValidator == null)
+        if (chatValidator == null)
             chatValidator = new ChatValidator();
         return chatValidator;
     }
 
     public Validator<UserChatInfo> getUserChatInfoValidator() {
-        if(userChatInfoValidator == null) userChatInfoValidator = new UserChatInfoValidator();
+        if (userChatInfoValidator == null) userChatInfoValidator = new UserChatInfoValidator();
         return userChatInfoValidator;
     }
 
@@ -130,29 +128,27 @@ public class Factory implements AutoCloseable {
     }
 
     public Repository<TupleWithIdChatUser, UserChatInfo> getUserChatInfoRepository() {
-        if(userChatInfoRepository == null) userChatInfoRepository = new UserChatInfoDbRepository(getConnectionPool());
+        if (userChatInfoRepository == null) userChatInfoRepository = new UserChatInfoDbRepository(getConnectionPool());
         return userChatInfoRepository;
     }
 
     public Repository<Long, Message> getMessageRepository() {
-        if(messageRepository == null) messageRepository = new MessageDbRepository(getConnectionPool());
+        if (messageRepository == null) messageRepository = new MessageDbRepository(getConnectionPool());
         return messageRepository;
     }
 
     /**
      * @return the ServiceFriends
      */
-    public ServiceFriends getServiceFriends()
-    {
-        if(serviceFriends == null)
+    public ServiceFriends getServiceFriends() {
+        if (serviceFriends == null)
             serviceFriends = new ServiceFriends(getUserRepository(),
                     getFriendshipRepository());
         return serviceFriends;
     }
 
-    public ServiceMessages getServiceMessages()
-    {
-        if(serviceMessages == null)
+    public ServiceMessages getServiceMessages() {
+        if (serviceMessages == null)
             serviceMessages = new ServiceMessages(
                     getUserRepository(),
                     getRepositoryChat(),

@@ -1,6 +1,5 @@
 package project.lab6.repository.repointerface;
 
-import project.lab6.domain.Tuple;
 import project.lab6.domain.TupleWithIdChatUser;
 import project.lab6.domain.chat.UserChatInfo;
 

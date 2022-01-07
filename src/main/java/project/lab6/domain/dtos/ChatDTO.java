@@ -21,6 +21,21 @@ public abstract class ChatDTO {
     }
 
     /**
+     * Creates a PrivateChatDTO or a GroupChatDTO and returns it
+     *
+     * @param name          The name of the chat. This argument will be ignored if isPrivateChat is true
+     * @param color         The color of the chat
+     * @param isPrivateChat True if the chat is private and false otherwise
+     * @return ChatDTO
+     */
+    public static ChatDTO createChatDTO(Long idChat, String name, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
+        if (isPrivateChat)
+            return new PrivateChatDTO(idChat, color, messages, users);
+        else
+            return new GroupChatDTO(idChat, name, color, messages, users);
+    }
+
+    /**
      * @param idLoggedUser
      * @return the name of the chat, according to the logged user
      */
@@ -59,20 +74,5 @@ public abstract class ChatDTO {
      */
     public List<UserChatInfoDTO> getUsersInfo() {
         return users.get();
-    }
-
-    /**
-     * Creates a PrivateChatDTO or a GroupChatDTO and returns it
-     *
-     * @param name          The name of the chat. This argument will be ignored if isPrivateChat is true
-     * @param color         The color of the chat
-     * @param isPrivateChat True if the chat is private and false otherwise
-     * @return ChatDTO
-     */
-    public static ChatDTO createChatDTO(Long idChat, String name, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
-        if (isPrivateChat)
-            return new PrivateChatDTO(idChat, color, messages, users);
-        else
-            return new GroupChatDTO(idChat, name, color, messages, users);
     }
 }

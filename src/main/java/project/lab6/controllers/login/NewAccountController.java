@@ -1,6 +1,5 @@
 package project.lab6.controllers.login;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +20,8 @@ import java.io.IOException;
 
 public class NewAccountController extends Controller {
 
+    private final ServiceFriends serviceFriends;
+    private final ServiceMessages serviceMessages;
     @FXML
     private TextField firstNameTextField;
     @FXML
@@ -29,9 +30,6 @@ public class NewAccountController extends Controller {
     private TextField emailTextField;
     @FXML
     private PasswordField passwordTextField;
-
-    private final ServiceFriends serviceFriends;
-    private final ServiceMessages serviceMessages;
 
     public NewAccountController(ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
         this.serviceFriends = serviceFriends;
@@ -50,7 +48,7 @@ public class NewAccountController extends Controller {
      * @param actionEvent
      * @throws IOException
      */
-    public void registerUser(ActionEvent actionEvent) throws IOException {
+    public void registerUser() throws IOException {
         try {
             boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
             if (result) {
@@ -70,7 +68,7 @@ public class NewAccountController extends Controller {
         }
     }
 
-    public void backToLogIn(ActionEvent actionEvent) throws IOException {
+    public void backToLogIn() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new LoginController(serviceFriends, serviceMessages));
         Stage loginStage = new Stage();
 

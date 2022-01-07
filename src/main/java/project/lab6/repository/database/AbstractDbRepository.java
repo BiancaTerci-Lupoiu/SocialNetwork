@@ -119,15 +119,14 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
         return genericDeleteAndUpdate(query);
     }
 
-    private boolean genericDeleteAndUpdate(Query query)
-    {
+    private boolean genericDeleteAndUpdate(Query query) {
         String sql = query.getSqlString();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 query.setStatementParameters(statement);
-                if(statement.executeUpdate() == 1)
+                if (statement.executeUpdate() == 1)
                     return true;
             }
         } catch (SQLException e) {

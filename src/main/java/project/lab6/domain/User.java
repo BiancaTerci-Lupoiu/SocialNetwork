@@ -7,22 +7,21 @@ import java.util.Objects;
 
 public class User extends Entity<Long> {
     private final String email;
-    private String firstName;
-    private String lastName;
     private final Map<Long, Friend> friends;
-
     private final String hashPassword;
     private final String salt;
+    private String firstName;
+    private String lastName;
 
     /**
      * constructor
      *
-     * @param id Long of the user
-     * @param email String of the user
-     * @param firstName String of the user
-     * @param lastName String  of the user
+     * @param id           Long of the user
+     * @param email        String of the user
+     * @param firstName    String of the user
+     * @param lastName     String  of the user
      * @param hashPassword String of the user
-     * @param salt String of the user
+     * @param salt         String of the user
      */
     public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt) {
         this(email, firstName, lastName, hashPassword, salt);
@@ -31,11 +30,12 @@ public class User extends Entity<Long> {
 
     /**
      * constructor
-     * @param email String of the user
-     * @param firstName String of the user
-     * @param lastName String  of the user
+     *
+     * @param email        String of the user
+     * @param firstName    String of the user
+     * @param lastName     String  of the user
      * @param hashPassword String of the user
-     * @param salt String of the user
+     * @param salt         String of the user
      */
     public User(String email, String firstName, String lastName, String hashPassword, String salt) {
         this.email = email;
@@ -55,6 +55,7 @@ public class User extends Entity<Long> {
 
     /**
      * sets the firstName of the user to firstName
+     *
      * @param firstName
      */
     public void setFirstName(String firstName) {
@@ -70,6 +71,7 @@ public class User extends Entity<Long> {
 
     /**
      * sets the lastName of the user to lastName
+     *
      * @param lastName
      */
     public void setLastName(String lastName) {
@@ -105,19 +107,14 @@ public class User extends Entity<Long> {
     }
 
     /**
-     *
      * @param idUser
      * @return true if the user has the friend with id=idUser, false otherwise
      */
-    public boolean findFriend(Long idUser)
-    {
-        if(friends.get(idUser)==null)
-            return false;
-        return true;
+    public boolean findFriend(Long idUser) {
+        return friends.get(idUser) != null;
     }
 
     /**
-     *
      * @param status
      * @return the friends of the user with some status=status
      */
@@ -153,7 +150,7 @@ public class User extends Entity<Long> {
     }
 
     public String toStringWithFriends() {
-        return String.format("%s, friends=%s", toString(), getFriends());
+        return String.format("%s, friends=%s", this, getFriends());
     }
 
     public boolean equals(Object o) {

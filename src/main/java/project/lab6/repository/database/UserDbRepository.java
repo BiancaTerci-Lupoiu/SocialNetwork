@@ -7,7 +7,10 @@ import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.RepositoryUser;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class UserDbRepository extends AbstractDbRepository<Long, User> implements RepositoryUser {

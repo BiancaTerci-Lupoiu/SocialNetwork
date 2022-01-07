@@ -3,7 +3,6 @@ package project.lab6.controllers.utils;
 import javafx.scene.control.Button;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * entity for the friends and requests table from the GUI

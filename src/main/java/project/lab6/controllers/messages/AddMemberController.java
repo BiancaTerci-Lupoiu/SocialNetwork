@@ -20,19 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddMemberController extends Controller {
-    private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
+    private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private final ServiceFriends serviceFriends;
     private final ServiceMessages serviceMessages;
     private final ObservableChatDTO observableChatDTO;
     private final Long idLoggedUser;
-
-    public AddMemberController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableChatDTO observableChatDTO) {
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
-        this.idLoggedUser = idLoggedUser;
-        this.observableChatDTO = observableChatDTO;
-    }
-
     @FXML
     private TextField searchField;
     @FXML
@@ -43,6 +35,12 @@ public class AddMemberController extends Controller {
     private TableView<UserRecord> addMembersTableView;
     @FXML
     private Button backButton;
+    public AddMemberController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableChatDTO observableChatDTO) {
+        this.serviceMessages = serviceMessages;
+        this.serviceFriends = serviceFriends;
+        this.idLoggedUser = idLoggedUser;
+        this.observableChatDTO = observableChatDTO;
+    }
 
     @FXML
     public void initialize() {
@@ -54,8 +52,7 @@ public class AddMemberController extends Controller {
         searchField.textProperty().addListener((obs, oldText, newText) -> findUserByName());
         addMembersTableView.setItems(usersRecord);
         updateTableAtSearch("");
-        backButton.setOnAction(event->getStage().close());
-
+        backButton.setOnAction(event -> getStage().close());
     }
 
     private Button createAddParticipantsButton(Long id) {
@@ -79,7 +76,7 @@ public class AddMemberController extends Controller {
         List<UserRecord> userRecordObservableList = new ArrayList<>();
         Long idChat = observableChatDTO.getChat().getIdChat();
         for (User user : usersList) {
-            if (!(serviceMessages.getChatDTO(idChat).getUsersInfo().stream().map(x->x.getUser().getId()).toList().contains(user.getId()))) {
+            if (!(serviceMessages.getChatDTO(idChat).getUsersInfo().stream().map(x -> x.getUser().getId()).toList().contains(user.getId()))) {
                 String name = user.getLastName() + " " + user.getFirstName();
                 Button addParticipantButton = createAddParticipantsButton(user.getId());
                 UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);

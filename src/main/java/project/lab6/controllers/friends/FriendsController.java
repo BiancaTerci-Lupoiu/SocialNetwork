@@ -16,10 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 public class FriendsController extends Controller {
-    ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
     private final ServiceFriends serviceFriends;
     private final Long idLoggedUser;
-
+    ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
     @FXML
     TableColumn<UserFriend, String> firstName;
     @FXML
@@ -64,8 +63,8 @@ public class FriendsController extends Controller {
         Button addUnfriendButton = new Button();
         addUnfriendButton.setText("Unfriend");
         addUnfriendButton.setOnAction(event -> {
-            serviceFriends.deleteFriendship(this.idLoggedUser, idFriend);
-            modelFriends.setAll(getFriendsList());
+                    serviceFriends.deleteFriendship(this.idLoggedUser, idFriend);
+                    modelFriends.setAll(getFriendsList());
                 }
         );
         return addUnfriendButton;

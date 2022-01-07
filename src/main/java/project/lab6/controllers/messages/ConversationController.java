@@ -2,7 +2,6 @@ package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -22,14 +21,21 @@ import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.Observer;
 import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 public class ConversationController extends Controller implements Observer<ChatDTO> {
+    private final ObservableChatDTO observableChatDTO;
+    private final ServiceMessages serviceMessages;
+    private final Long idLoggedUser;
+    private final MainChatController mainChatController;
+    private final ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
+    private final MessageDTO messageToReply;
+    private final ServiceFriends serviceFriends;
     @FXML
     public Label groupNameLabel;
     @FXML
@@ -48,14 +54,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     public HBox hBoxReplyBar;
     @FXML
     public Button cancelReplyButton;
-
-    private final ObservableChatDTO observableChatDTO;
-    private final ServiceMessages serviceMessages;
-    private final Long idLoggedUser;
-    private final MainChatController mainChatController;
-    private ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
-    private final MessageDTO messageToReply;
-    private final ServiceFriends serviceFriends;
+    boolean isVisibleReplyBar = true;
 
     /**
      * Creates a conversation controller and it opens for replying to the message specified
@@ -88,12 +87,75 @@ public class ConversationController extends Controller implements Observer<ChatD
         return Constants.View.CONVERSATION;
     }
 
-    public void chatInfoButtonClick(ActionEvent actionEvent) throws IOException {
+    public void chatInfoButtonClick() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceFriends, serviceMessages, observableChatDTO));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
+    }
+
+    public void initialize() {
+        ChatDTO chatDTO = observableChatDTO.getChat();
+        String chatColor = convertColorToString(chatDTO.getColor());
+        cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
+        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
+        listViewMessages.setStyle("-fx-background-color:" + chatColor);
+        mainVBox.setStyle("-fx-background-color:" + chatColor);
+        typeMessageTextField.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                sendMessageAction();
+            }
+        });
+        hBoxReplyBar.setSpacing(10);
+        hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
+        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+        listViewMessages.setItems(messageDTOList);
+        if (messageToReply != null) {
+            labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
+            labelMessageToReply.setId(messageToReply.getId().toString());
+        } else {
+            setReplyBarVisible(false);
+        }
+        update(chatDTO);
+    }
+
+    private String convertColorToString(Color color) {
+        int r = (int) (255 * color.getRed());
+        int g = (int) (255 * color.getGreen());
+        int b = (int) (255 * color.getBlue());
+        int a = (int) (255 * color.getOpacity());
+        return String.format("#%02x%02x%02x%02x", r, g, b, a);
+    }
+
+    public void sendMessageAction() {
+        if (!typeMessageTextField.getText().isEmpty()) {
+            Long idChat = observableChatDTO.getChat().getIdChat();
+            if (!isVisibleReplyBar) {
+                serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
+            } else {
+                Long idMessageToReply = Long.parseLong(labelMessageToReply.getId());
+                serviceMessages.replyToMessage(idChat, idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
+                cancelReplyAction();
+            }
+            messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
+            typeMessageTextField.setText("");
+        }
+    }
+
+    private void setReplyBarVisible(boolean visible) {
+        if (visible == isVisibleReplyBar)
+            return;
+        isVisibleReplyBar = visible;
+        if (visible) {
+            mainVBox.getChildren().add(2, hBoxReplyBar);
+        } else {
+            mainVBox.getChildren().remove(2);
+        }
+    }
+
+    public void cancelReplyAction() {
+        setReplyBarVisible(false);
     }
 
     public static class CustomCellMessage extends ListCell<MessageDTO> {
@@ -175,7 +237,7 @@ public class ConversationController extends Controller implements Observer<ChatD
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             verticalBox.setAlignment(Pos.CENTER_LEFT);
             hBoxButtonsReply.getChildren().setAll(dateLabel, replyInChatButton);
-            if(!message.getChat().isPrivateChat())
+            if (!message.getChat().isPrivateChat())
                 hBoxButtonsReply.getChildren().add(replyInPrivateButton);
             messageText.setStyle("-fx-background-color: #aa80ff;-fx-font-size: 18;-fx-font-family: Cambria;-fx-border-radius: 10 10 10 10;-fx-background-radius: 10 10 10 10;-fx-padding: 2px 15px 2px 15px");
         }
@@ -207,72 +269,6 @@ public class ConversationController extends Controller implements Observer<ChatD
                 setGraphic(horizontalBox);
             }
         }
-    }
-
-
-    public void initialize() {
-        ChatDTO chatDTO = observableChatDTO.getChat();
-        String chatColor = convertColorToString(chatDTO.getColor());
-        cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
-        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
-        listViewMessages.setStyle("-fx-background-color:" + chatColor);
-        mainVBox.setStyle("-fx-background-color:" + chatColor);
-        typeMessageTextField.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.ENTER)) {
-                sendMessageAction(new ActionEvent());
-            }
-        });
-        hBoxReplyBar.setSpacing(10);
-        hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
-        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
-        listViewMessages.setItems(messageDTOList);
-        if (messageToReply != null) {
-            labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
-            labelMessageToReply.setId(messageToReply.getId().toString());
-        } else {
-            setReplyBarVisible(false);
-        }
-        update(chatDTO);
-    }
-
-    private String convertColorToString(Color color) {
-        int r = (int) (255 * color.getRed());
-        int g = (int) (255 * color.getGreen());
-        int b = (int) (255 * color.getBlue());
-        int a = (int) (255 * color.getOpacity());
-        return String.format("#%02x%02x%02x%02x", r, g, b, a);
-    }
-
-    public void sendMessageAction(ActionEvent actionEvent) {
-        if (!typeMessageTextField.getText().isEmpty()) {
-            Long idChat = observableChatDTO.getChat().getIdChat();
-            if (!isVisibleReplyBar) {
-                serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
-            } else {
-                Long idMessageToReply = Long.parseLong(labelMessageToReply.getId());
-                serviceMessages.replyToMessage(idChat, idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
-                cancelReplyAction(new ActionEvent());
-            }
-            messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
-            typeMessageTextField.setText("");
-        }
-    }
-
-    boolean isVisibleReplyBar = true;
-
-    private void setReplyBarVisible(boolean visible) {
-        if (visible == isVisibleReplyBar)
-            return;
-        isVisibleReplyBar = visible;
-        if (visible) {
-            mainVBox.getChildren().add(2, hBoxReplyBar);
-        } else {
-            mainVBox.getChildren().remove(2);
-        }
-    }
-
-    public void cancelReplyAction(ActionEvent actionEvent) {
-        setReplyBarVisible(false);
     }
 
 }

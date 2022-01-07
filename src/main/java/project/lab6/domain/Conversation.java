@@ -9,6 +9,7 @@ public class Conversation {
 
     /**
      * constructor
+     *
      * @param messagesList the list with messages
      */
     public Conversation(List<MessageDTO> messagesList) {
@@ -16,7 +17,6 @@ public class Conversation {
     }
 
     /**
-     *
      * @return the list of messages
      */
     public List<MessageDTO> getMessagesList() {
@@ -28,7 +28,6 @@ public class Conversation {
     }
 
     /**
-     *
      * @return the list of messages as a String (conversation between 2 users)
      */
     @Override

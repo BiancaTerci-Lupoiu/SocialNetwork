@@ -2,7 +2,6 @@ package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,29 +21,79 @@ import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.Observer;
 import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO> {
+    private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
+    private final Long idLoggerUser;
+    private final ServiceMessages serviceMessages;
+    private final ServiceFriends serviceFriends;
+    private final ObservableChatDTO observableChatDTO;
+    @FXML
+    private HBox hboxButtons;
+    @FXML
+    private ListView<UserChatInfoDTO> listView;
+    @FXML
+    private Label chatNameLabel;
+    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
+        this.idLoggerUser = idLoggerUser;
+        this.serviceMessages = serviceMessages;
+        this.serviceFriends = serviceFriends;
+        this.observableChatDTO = observableChatDTO;
+        observableChatDTO.addObserver(this);
+    }
+
     @Override
     public String getViewPath() {
         return Constants.View.CHAT_DETAILS;
     }
 
+    @Override
+    public void update(ChatDTO newValue) {
+        updateChat(newValue);
+    }
+
+    private void updateChat(ChatDTO newChat) {
+        chatNameLabel.setText(newChat.getName(idLoggerUser));
+        userChatInfos.setAll(newChat.getUsersInfo());
+        listView.setItems(userChatInfos);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
+        if (observableChatDTO.getChat().isPrivateChat())
+            hboxButtons.getChildren().remove(0);
+        updateChat(observableChatDTO.getChat());
+
+    }
+
+    public void addUserToChat() throws IOException {
+        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observableChatDTO));
+        Stage stage = new Stage();
+        Scene scene = new Scene(loader.load(), 600, 400);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    public void changeColor() {
+    }
+
     public static class CustomCellChat extends ListCell<UserChatInfoDTO> {
-        private AnchorPane rootAnchor = new AnchorPane();
-        private HBox horizontalBox = new HBox();
-        private Label nicknameLabel = new Label();
-        private TextField changeTextField = new TextField();
-        private ImageView userImage = new ImageView();
-        private Button changeNickname = new Button("Change nickname");
+        private final AnchorPane rootAnchor = new AnchorPane();
+        private final HBox horizontalBox = new HBox();
+        private final Label nicknameLabel = new Label();
+        private final TextField changeTextField = new TextField();
+        private final ImageView userImage = new ImageView();
+        private final Button changeNickname = new Button("Change nickname");
         private final ServiceMessages serviceMessages;
-        private UserChatInfoDTO userInfo = null;
         private final ObservableChatDTO observableChatDTO;
+        private UserChatInfoDTO userInfo = null;
 
         public CustomCellChat(ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
             this.serviceMessages = serviceMessages;
@@ -58,7 +107,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             rootAnchor.getChildren().addAll(horizontalBox, changeNickname);
             AnchorPane.setRightAnchor(changeNickname, 20d);
-            AnchorPane.setTopAnchor(changeNickname,25d);
+            AnchorPane.setTopAnchor(changeNickname, 25d);
             changeTextField.setOnKeyPressed(keyEvent ->
             {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -99,58 +148,5 @@ public class ChatDetailsController extends Controller implements Initializable, 
                 setGraphic(rootAnchor);
             }
         }
-    }
-
-    private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
-
-    @FXML
-    private HBox hboxButtons;
-    @FXML
-    private ListView<UserChatInfoDTO> listView;
-    @FXML
-    private Label chatNameLabel;
-
-    private final Long idLoggerUser;
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
-    private final ObservableChatDTO observableChatDTO;
-
-    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
-        this.idLoggerUser = idLoggerUser;
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
-        this.observableChatDTO = observableChatDTO;
-        observableChatDTO.addObserver(this);
-    }
-
-    @Override
-    public void update(ChatDTO newValue) {
-        updateChat(newValue);
-    }
-
-    private void updateChat(ChatDTO newChat) {
-        chatNameLabel.setText(newChat.getName(idLoggerUser));
-        userChatInfos.setAll(newChat.getUsersInfo());
-        listView.setItems(userChatInfos);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
-        if(observableChatDTO.getChat().isPrivateChat())
-            hboxButtons.getChildren().remove(0);
-        updateChat(observableChatDTO.getChat());
-
-    }
-
-    public void addUserToChat(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observableChatDTO));
-        Stage stage = new Stage();
-        Scene scene = new Scene(loader.load(), 600, 400);
-        stage.setScene(scene);
-        stage.showAndWait();
-    }
-
-    public void changeColor(ActionEvent actionEvent) {
     }
 }

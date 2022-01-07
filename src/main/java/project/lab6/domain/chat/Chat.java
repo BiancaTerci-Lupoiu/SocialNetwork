@@ -5,8 +5,8 @@ import project.lab6.domain.Entity;
 
 public class Chat extends Entity<Long> {
     private final String name;
-    private Color color;
     private final boolean isPrivateChat;
+    private Color color;
 
     /**
      * constructor with id

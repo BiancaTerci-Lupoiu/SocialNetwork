@@ -2,7 +2,6 @@ package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -27,6 +26,9 @@ import java.io.IOException;
 
 
 public class MainChatController extends Controller {
+    private final ServiceMessages serviceMessages;
+    private final ServiceFriends serviceFriends;
+    private final Long idLoggedUser;
     @FXML
     public TextField searchChatTextField;
     @FXML
@@ -35,11 +37,7 @@ public class MainChatController extends Controller {
     public HBox mainHorizontalBox;
     @FXML
     public ListView<ChatDTO> listViewChats;
-
     ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
-    private final Long idLoggedUser;
 
 
     public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages, ServiceFriends serviceFriends) {
@@ -57,7 +55,7 @@ public class MainChatController extends Controller {
         return Constants.View.MAIN_CHAT;
     }
 
-    public void createGroupAction(ActionEvent actionEvent) throws IOException {
+    public void createGroupAction() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends, idLoggedUser, chatDTOList, this));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
@@ -65,45 +63,12 @@ public class MainChatController extends Controller {
         stage.showAndWait();
     }
 
-    public void createPrivateChatAction(ActionEvent actionEvent) throws IOException {
+    public void createPrivateChatAction() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends, serviceMessages, idLoggedUser, this, chatDTOList));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.showAndWait();
-    }
-
-    public static class CustomCellChat extends ListCell<ChatDTO> {
-        HBox horizontalBox = new HBox();
-        Label chatName = new Label();
-        ImageView groupImage = new ImageView();
-        ChatDTO chat;
-        Long idLoggedUser;
-
-        public CustomCellChat(Long idLoggedUser) {
-            super();
-            this.idLoggedUser = idLoggedUser;
-            groupImage.setFitWidth(24);
-            groupImage.setFitHeight(24);
-            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
-            horizontalBox.getChildren().addAll(groupImage, chatName);
-            horizontalBox.setAlignment(Pos.TOP_LEFT);
-        }
-
-        @Override
-        protected void updateItem(ChatDTO item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty) {
-                chat = null;
-                setGraphic(null);
-            } else {
-                chat = item;
-                chatName.setText(chat.getName(idLoggedUser));
-                groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
-                setGraphic(horizontalBox);
-            }
-        }
     }
 
     public void initialize() {
@@ -160,5 +125,38 @@ public class MainChatController extends Controller {
         else
             mainHorizontalBox.getChildren().add(region);
         HBox.setHgrow(region, Priority.ALWAYS);
+    }
+
+    public static class CustomCellChat extends ListCell<ChatDTO> {
+        HBox horizontalBox = new HBox();
+        Label chatName = new Label();
+        ImageView groupImage = new ImageView();
+        ChatDTO chat;
+        Long idLoggedUser;
+
+        public CustomCellChat(Long idLoggedUser) {
+            super();
+            this.idLoggedUser = idLoggedUser;
+            groupImage.setFitWidth(24);
+            groupImage.setFitHeight(24);
+            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
+            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
+            horizontalBox.getChildren().addAll(groupImage, chatName);
+            horizontalBox.setAlignment(Pos.TOP_LEFT);
+        }
+
+        @Override
+        protected void updateItem(ChatDTO item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                chat = null;
+                setGraphic(null);
+            } else {
+                chat = item;
+                chatName.setText(chat.getName(idLoggedUser));
+                groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+                setGraphic(horizontalBox);
+            }
+        }
     }
 }

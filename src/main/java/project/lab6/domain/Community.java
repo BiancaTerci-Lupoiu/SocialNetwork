@@ -34,9 +34,9 @@ public class Community {
     /**
      * Calculates the longest path of friends starting from the given user
      *
-     * @param visited    Un hashSet containing users who have already been visited. Initially it must be empty
-     *                   and in the end it will remain empty
-     * @param user       The user from whom the road calculation will start
+     * @param visited Un hashSet containing users who have already been visited. Initially it must be empty
+     *                and in the end it will remain empty
+     * @param user    The user from whom the road calculation will start
      * @return the length of this road
      */
     private int findLongestPath(HashSet<Long> visited, User user) {

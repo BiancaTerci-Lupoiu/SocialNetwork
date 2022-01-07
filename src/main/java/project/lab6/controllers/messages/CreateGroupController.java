@@ -23,21 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGroupController extends Controller {
-    private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
+    private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private final ServiceMessages serviceMessages;
     private final ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     private final ObservableList<ChatDTO> observableList;
     private final MainChatController mainChatController;
-
-    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableList<ChatDTO> observableList, MainChatController mainChatController) {
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
-        this.idLoggedUser = idLoggedUser;
-        this.observableList = observableList;
-        this.mainChatController = mainChatController;
-    }
-
+    private final List<Long> participants = new ArrayList<>();
     @FXML
     private TableColumn<UserRecord, String> name;
     @FXML
@@ -50,7 +42,13 @@ public class CreateGroupController extends Controller {
     private TextField groupName;
     @FXML
     private Button done;
-    private List<Long> participants=new ArrayList<>() ;
+    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableList<ChatDTO> observableList, MainChatController mainChatController) {
+        this.serviceMessages = serviceMessages;
+        this.serviceFriends = serviceFriends;
+        this.idLoggedUser = idLoggedUser;
+        this.observableList = observableList;
+        this.mainChatController = mainChatController;
+    }
 
     /*todo trebuie setat numele chat-ului(constructor?)--done
      *  trebuie adaugat userul logat in grup pe langa userii pe care doreste sa ii adauge--done
@@ -91,8 +89,8 @@ public class CreateGroupController extends Controller {
             participants.add(id);
             addParticipantButton.setText("Added");
             addParticipantButton.disabledProperty();
-            usersRecord.remove(new UserRecord(id,serviceFriends.getUserWithFriends(id).getLastName() + " "
-                    + serviceFriends.getUserWithFriends(id).getFirstName(),addParticipantButton));
+            usersRecord.remove(new UserRecord(id, serviceFriends.getUserWithFriends(id).getLastName() + " "
+                    + serviceFriends.getUserWithFriends(id).getFirstName(), addParticipantButton));
 
         });
         return addParticipantButton;
@@ -102,12 +100,13 @@ public class CreateGroupController extends Controller {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
         List<UserRecord> userRecordObservableList = new ArrayList<>();
         for (User user : usersList) {
-            if(!(participants.contains(user.getId())))
-            {String name = user.getLastName() + " " + user.getFirstName();
-            Button addParticipantButton = createAddParticipantsButton(user.getId());
-            UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);
+            if (!(participants.contains(user.getId()))) {
+                String name = user.getLastName() + " " + user.getFirstName();
+                Button addParticipantButton = createAddParticipantsButton(user.getId());
+                UserRecord userRecord = new UserRecord(user.getId(), name, addParticipantButton);
 
-            userRecordObservableList.add(userRecord);}
+                userRecordObservableList.add(userRecord);
+            }
         }
         return userRecordObservableList;
     }

@@ -34,12 +34,12 @@ public class Friendship extends Entity<Tuple<Long, Long>> {
         return date;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     public void setStatus(Status status) {

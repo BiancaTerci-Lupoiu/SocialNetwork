@@ -1,9 +1,10 @@
-module project.lab6 {
+module project.lab {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-
+    requires org.apache.pdfbox;
     exports project.lab6;
+    opens project.lab6 to javafx.fxml;
     exports project.lab6.controllers;
     opens project.lab6.controllers to javafx.fxml;
     exports project.lab6.factory;

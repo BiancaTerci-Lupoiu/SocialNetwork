@@ -20,21 +20,12 @@ import project.lab6.utils.Constants;
 import java.util.List;
 
 public class OpenPrivateChatController extends Controller {
-    private ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
+    private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private final ServiceFriends serviceFriends;
     private final ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private final ObservableList<ChatDTO> observableList;
-
-    public OpenPrivateChatController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idLoggedUser,MainChatController mainChatController,ObservableList<ChatDTO> observableList) {
-        this.serviceFriends = serviceFriends;
-        this.serviceMessages = serviceMessages;
-        this.idLoggedUser = idLoggedUser;
-        this.mainChatController=mainChatController;
-        this.observableList=observableList;
-    }
-
     @FXML
     private TextField searchField;
     @FXML
@@ -43,6 +34,13 @@ public class OpenPrivateChatController extends Controller {
     private TableColumn<UserRecord, Button> addButton;
     @FXML
     private TableView<UserRecord> usersTable;
+    public OpenPrivateChatController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idLoggedUser, MainChatController mainChatController, ObservableList<ChatDTO> observableList) {
+        this.serviceFriends = serviceFriends;
+        this.serviceMessages = serviceMessages;
+        this.idLoggedUser = idLoggedUser;
+        this.mainChatController = mainChatController;
+        this.observableList = observableList;
+    }
 
     @FXML
     public void initialize() {
@@ -61,8 +59,9 @@ public class OpenPrivateChatController extends Controller {
         Button addParticipantButton = new Button();
         addParticipantButton.setText("Open Chat");
         addParticipantButton.setOnAction(event ->
-        {   Chat chat=serviceMessages.getOrCreatePrivateChatBetweenUsers(idLoggedUser,id);
-            observableList.add(0,serviceMessages.getChatDTO(chat.getId()));
+        {
+            Chat chat = serviceMessages.getOrCreatePrivateChatBetweenUsers(idLoggedUser, id);
+            observableList.add(0, serviceMessages.getChatDTO(chat.getId()));
             mainChatController.setConversationView(chat.getId());
             //todo
             getStage().close();

@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProfileController extends Controller implements Initializable {
+    private final Long idLoggedUser;
+    private final ServiceFriends serviceFriends;
     @FXML
     Label labelHello;
     @FXML
@@ -19,9 +21,6 @@ public class ProfileController extends Controller implements Initializable {
     Label labelLastName;
     @FXML
     Label labelEmail;
-
-    private final Long idLoggedUser;
-    private final ServiceFriends serviceFriends;
 
     public ProfileController(Long idLoggeduser, ServiceFriends serviceFriends) {
         this.idLoggedUser = idLoggeduser;

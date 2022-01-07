@@ -35,6 +35,7 @@ public class MessageDTO {
     public Chat getChat() {
         return chat;
     }
+
     /**
      * @return the text of the MessageDTO
      */

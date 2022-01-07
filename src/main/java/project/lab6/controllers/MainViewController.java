@@ -25,12 +25,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainViewController extends Controller implements Initializable {
-    @FXML
-    private HBox horizontalBox;
-
     private final Long idLoggedUser;
     private final ServiceFriends serviceFriends;
     private final ServiceMessages serviceMessages;
+    @FXML
+    private HBox horizontalBox;
+    private boolean messagesOpen = false;
+    private Stage messagesStage = null;
 
     public MainViewController(Long idLoggedUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
         this.idLoggedUser = idLoggedUser;
@@ -81,15 +82,12 @@ public class MainViewController extends Controller implements Initializable {
         stage.setScene(scene);
     }
 
-    private boolean messagesOpen = false;
-    private Stage messagesStage = null;
-
     public void openMessagesView(ActionEvent actionEvent) throws IOException {
         if (messagesOpen) {
             messagesStage.toFront();
             return;
         }
-        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser, serviceMessages,serviceFriends));
+        FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser, serviceMessages, serviceFriends));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 600, 500);
         Stage stage = new Stage();
