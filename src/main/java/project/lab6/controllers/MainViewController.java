@@ -44,7 +44,7 @@ public class MainViewController extends Controller implements Initializable {
         setView(new ProfileController(idLoggedUser, serviceFriends));
     }
 
-    private void setView(Controller controller) {
+    public void setView(Controller controller) {
         FXMLLoader loader = Factory.getInstance().getLoader(controller);
         Region region = null;
         try {
@@ -95,7 +95,9 @@ public class MainViewController extends Controller implements Initializable {
         messagesOpen = true;
         messagesStage = stage;
         stage.setOnCloseRequest(handle -> messagesOpen = false);
-        stage.show();
+        getStage().hide();
+        stage.showAndWait();
+        getStage().show();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package project.lab6.domain.dtos;
 
-import project.lab6.domain.User;
+import project.lab6.domain.entities.User;
 
 public class UserChatInfoDTO {
     private final User user;

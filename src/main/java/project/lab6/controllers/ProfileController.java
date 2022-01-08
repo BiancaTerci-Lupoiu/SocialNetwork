@@ -3,7 +3,7 @@ package project.lab6.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import project.lab6.domain.User;
+import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceFriends;
 import project.lab6.utils.Constants;
 

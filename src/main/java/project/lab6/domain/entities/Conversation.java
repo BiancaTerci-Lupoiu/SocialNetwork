@@ -1,4 +1,4 @@
-package project.lab6.domain;
+package project.lab6.domain.entities;
 
 import project.lab6.domain.dtos.MessageDTO;
 

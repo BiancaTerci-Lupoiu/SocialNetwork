@@ -1,4 +1,4 @@
-package project.lab6.domain;
+package project.lab6.domain.entities;
 
 import java.io.Serializable;
 

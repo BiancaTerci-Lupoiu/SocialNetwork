@@ -1,5 +1,6 @@
 package project.lab6.domain;
 
+import project.lab6.domain.entities.User;
 import project.lab6.utils.Constants;
 
 import java.time.LocalDate;

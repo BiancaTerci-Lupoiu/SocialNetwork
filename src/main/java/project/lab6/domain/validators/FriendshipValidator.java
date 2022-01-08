@@ -1,6 +1,6 @@
 package project.lab6.domain.validators;
 
-import project.lab6.domain.Friendship;
+import project.lab6.domain.entities.Friendship;
 
 public class FriendshipValidator implements Validator<Friendship> {
 

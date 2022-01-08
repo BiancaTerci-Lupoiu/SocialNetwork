@@ -1,7 +1,7 @@
-package project.lab6.domain.chat;
+package project.lab6.domain.entities.chat;
 
 import javafx.scene.paint.Color;
-import project.lab6.domain.Entity;
+import project.lab6.domain.entities.Entity;
 
 public class Chat extends Entity<Long> {
     private final String name;
@@ -17,8 +17,11 @@ public class Chat extends Entity<Long> {
      * @param isPrivateChat boolean
      */
     public Chat(Long id, String name, Color color, boolean isPrivateChat) {
-        this(name, color, isPrivateChat);
         setId(id);
+        this.name = name;
+        this.color = color;
+        this.isPrivateChat = isPrivateChat;
+
     }
 
     /**
@@ -29,9 +32,7 @@ public class Chat extends Entity<Long> {
      * @param isPrivateChat boolean
      */
     public Chat(String name, Color color, boolean isPrivateChat) {
-        this.name = name;
-        this.color = color;
-        this.isPrivateChat = isPrivateChat;
+        this(null, name, color, isPrivateChat);
     }
 
     /**

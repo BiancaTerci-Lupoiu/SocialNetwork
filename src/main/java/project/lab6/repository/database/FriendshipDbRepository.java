@@ -1,8 +1,8 @@
 package project.lab6.repository.database;
 
-import project.lab6.domain.Friendship;
 import project.lab6.domain.Status;
 import project.lab6.domain.Tuple;
+import project.lab6.domain.entities.Friendship;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.database.query.Query;
@@ -10,6 +10,7 @@ import project.lab6.repository.database.query.SaveQuery;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Long>, Friendship> {
     private final Validator<Friendship> validator;
@@ -17,6 +18,11 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
     public FriendshipDbRepository(ConnectionPool pool, Validator<Friendship> validator) {
         super(pool);
         this.validator = validator;
+    }
+
+    @Override
+    public List<Friendship> findAll() {
+        return genericFindAll("select * from friendships");
     }
 
     /**
@@ -139,14 +145,6 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
                 statement.setLong(4, idUser2);
             }
         });
-    }
-
-    /**
-     * @return a String with a sql statement that returns all the users from database
-     */
-    @Override
-    protected String getFindAllSqlStatement() {
-        return "select * from friendships";
     }
 
     /**

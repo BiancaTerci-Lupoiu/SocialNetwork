@@ -1,7 +1,7 @@
 package project.lab6.repository.database;
 
 import project.lab6.domain.TupleWithIdChatUser;
-import project.lab6.domain.chat.UserChatInfo;
+import project.lab6.domain.entities.chat.UserChatInfo;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 
@@ -9,10 +9,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class UserChatInfoDbRepository extends AbstractDbRepository<TupleWithIdChatUser, UserChatInfo> {
     public UserChatInfoDbRepository(ConnectionPool connectionPool) {
         super(connectionPool);
+    }
+
+    @Override
+    public List<UserChatInfo> findAll() {
+        return genericFindAll("select * from user_infos");
     }
 
     @Override
@@ -91,11 +97,6 @@ public class UserChatInfoDbRepository extends AbstractDbRepository<TupleWithIdCh
                 statement.setLong(3, userInfo.getIdUser());
             }
         });
-    }
-
-    @Override
-    protected String getFindAllSqlStatement() {
-        return "select * from user_infos";
     }
 
     @Override

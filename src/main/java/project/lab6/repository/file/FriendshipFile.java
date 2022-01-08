@@ -1,8 +1,8 @@
 package project.lab6.repository.file;
 
-import project.lab6.domain.Friendship;
 import project.lab6.domain.Status;
 import project.lab6.domain.Tuple;
+import project.lab6.domain.entities.Friendship;
 import project.lab6.domain.validators.Validator;
 import project.lab6.utils.Constants;
 

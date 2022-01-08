@@ -1,6 +1,6 @@
 package project.lab6.domain.validators;
 
-import project.lab6.domain.chat.Message;
+import project.lab6.domain.entities.chat.Message;
 
 public class MessageValidator implements Validator<Message> {
     /**

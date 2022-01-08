@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.MainViewController;
-import project.lab6.domain.User;
+import project.lab6.domain.entities.User;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;

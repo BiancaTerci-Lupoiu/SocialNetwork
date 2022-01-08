@@ -1,6 +1,6 @@
 package project.lab6.domain.dtos;
 
-import project.lab6.domain.chat.Chat;
+import project.lab6.domain.entities.chat.Chat;
 import project.lab6.utils.Lazy;
 
 import java.time.LocalDateTime;

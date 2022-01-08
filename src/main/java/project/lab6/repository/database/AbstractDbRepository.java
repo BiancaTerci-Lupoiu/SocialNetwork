@@ -1,6 +1,6 @@
 package project.lab6.repository.database;
 
-import project.lab6.domain.Entity;
+import project.lab6.domain.entities.Entity;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.Repository;
@@ -30,21 +30,14 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
     }
 
     /**
-     * @return a String with a sql statement that returns all the entities from database
-     */
-    protected abstract String getFindAllSqlStatement();
-
-    /**
      * @return all entities
      */
-    @Override
-    public List<E> findAll() {
-        String sql = getFindAllSqlStatement();
+    protected List<E> genericFindAll(String getAllSqlStatement) {
         List<E> entities = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            try (PreparedStatement statement = connection.prepareStatement(getAllSqlStatement); ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     entities.add(getEntityFromSet(resultSet));
                 }

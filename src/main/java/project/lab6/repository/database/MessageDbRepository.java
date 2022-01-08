@@ -1,11 +1,12 @@
 package project.lab6.repository.database;
 
-import project.lab6.domain.chat.Message;
+import project.lab6.domain.entities.chat.Message;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
     public MessageDbRepository(ConnectionPool connectionPool) {
@@ -13,8 +14,8 @@ public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
     }
 
     @Override
-    protected String getFindAllSqlStatement() {
-        return "select * from messages";
+    public List<Message> findAll() {
+        return genericFindAll("select * from messages");
     }
 
     @Override

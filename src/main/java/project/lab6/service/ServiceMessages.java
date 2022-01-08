@@ -2,13 +2,13 @@ package project.lab6.service;
 
 import javafx.scene.paint.Color;
 import project.lab6.domain.TupleWithIdChatUser;
-import project.lab6.domain.User;
-import project.lab6.domain.chat.Chat;
-import project.lab6.domain.chat.Message;
-import project.lab6.domain.chat.UserChatInfo;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
+import project.lab6.domain.entities.User;
+import project.lab6.domain.entities.chat.Chat;
+import project.lab6.domain.entities.chat.Message;
+import project.lab6.domain.entities.chat.UserChatInfo;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryChat;

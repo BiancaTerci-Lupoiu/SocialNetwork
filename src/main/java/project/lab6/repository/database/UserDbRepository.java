@@ -1,6 +1,6 @@
 package project.lab6.repository.database;
 
-import project.lab6.domain.User;
+import project.lab6.domain.entities.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.database.query.Query;
@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 
 public class UserDbRepository extends AbstractDbRepository<Long, User> implements RepositoryUser {
@@ -19,6 +20,11 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     public UserDbRepository(ConnectionPool connectionPool, Validator<User> validator) {
         super(connectionPool);
         this.validator = validator;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return genericFindAll("SELECT * FROM users");
     }
 
     /**
@@ -41,14 +47,6 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
                 statement.setLong(1, id);
             }
         });
-    }
-
-    /**
-     * @return a String with a sql statement that returns all the users from database
-     */
-    @Override
-    protected String getFindAllSqlStatement() {
-        return "SELECT * FROM users";
     }
 
     /**

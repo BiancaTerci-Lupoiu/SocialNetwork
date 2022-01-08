@@ -1,4 +1,7 @@
-package project.lab6.domain;
+package project.lab6.domain.entities;
+
+import project.lab6.domain.DirectedStatus;
+import project.lab6.domain.Friend;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +27,12 @@ public class User extends Entity<Long> {
      * @param salt         String of the user
      */
     public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt) {
-        this(email, firstName, lastName, hashPassword, salt);
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.hashPassword = hashPassword;
+        this.salt = salt;
+        friends = new HashMap<>();
         setId(id);
     }
 
@@ -38,12 +46,7 @@ public class User extends Entity<Long> {
      * @param salt         String of the user
      */
     public User(String email, String firstName, String lastName, String hashPassword, String salt) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.hashPassword = hashPassword;
-        this.salt = salt;
-        friends = new HashMap<>();
+        this(null, email, firstName, lastName, hashPassword, salt);
     }
 
     /**

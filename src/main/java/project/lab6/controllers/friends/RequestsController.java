@@ -8,10 +8,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.utils.UserFriend;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Status;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.utils.Constants;
 
@@ -104,8 +106,12 @@ public class RequestsController extends Controller {
         Button addDenyButton = new Button();
         addDenyButton.setText("Deny");
         addDenyButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.REJECTED);
-                    modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
+                    try {
+                        serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.REJECTED);
+                        modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
+                    } catch (ServiceException ex) {
+                        AlertMessage.showErrorMessage(ex.getMessage());
+                    }
                 }
         );
         return addDenyButton;
@@ -126,8 +132,12 @@ public class RequestsController extends Controller {
         Button addAcceptButton = new Button();
         addAcceptButton.setText("Accept");
         addAcceptButton.setOnAction(event -> {
-                    serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.APPROVED);
-                    modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
+                    try {
+                        serviceFriends.modifyFriendRequestStatus(idFriend, this.idLoggedUser, Status.APPROVED);
+                        modelFriends.setAll(getFriendsList(DirectedStatus.PENDING_RECEIVED));
+                    } catch (ServiceException ex) {
+                        AlertMessage.showErrorMessage(ex.getMessage());
+                    }
                 }
         );
         return addAcceptButton;

@@ -1,7 +1,7 @@
 package project.lab6.repository.repointerface;
 
 import project.lab6.domain.TupleWithIdChatUser;
-import project.lab6.domain.chat.UserChatInfo;
+import project.lab6.domain.entities.chat.UserChatInfo;
 
 import java.util.List;
 

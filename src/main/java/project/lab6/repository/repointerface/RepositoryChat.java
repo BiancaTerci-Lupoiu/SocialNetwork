@@ -1,6 +1,6 @@
 package project.lab6.repository.repointerface;
 
-import project.lab6.domain.chat.Chat;
+import project.lab6.domain.entities.chat.Chat;
 
 public interface RepositoryChat extends Repository<Long, Chat> {
     /**

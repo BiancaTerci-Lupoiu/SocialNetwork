@@ -1,6 +1,9 @@
-package project.lab6.domain;
+package project.lab6.domain.entities;
 
 // id-ul prieteniei este un tuplu format din <id_user1,id_user2>
+
+import project.lab6.domain.Status;
+import project.lab6.domain.Tuple;
 
 import java.time.LocalDate;
 

@@ -1,7 +1,7 @@
-package project.lab6.domain.chat;
+package project.lab6.domain.entities.chat;
 
-import project.lab6.domain.Entity;
 import project.lab6.domain.TupleWithIdChatUser;
+import project.lab6.domain.entities.Entity;
 
 public class UserChatInfo extends Entity<TupleWithIdChatUser> {
     private final String nickname;

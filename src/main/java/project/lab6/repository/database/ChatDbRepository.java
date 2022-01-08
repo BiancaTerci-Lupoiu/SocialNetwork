@@ -1,7 +1,7 @@
 package project.lab6.repository.database;
 
 import javafx.scene.paint.Color;
-import project.lab6.domain.chat.Chat;
+import project.lab6.domain.entities.chat.Chat;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.RepositoryChat;
@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implements RepositoryChat {
 
@@ -99,8 +100,8 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
     }
 
     @Override
-    protected String getFindAllSqlStatement() {
-        return "select * from chats";
+    public List<Chat> findAll() {
+        return genericFindAll("select * from chats");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package project.lab6.domain;
 
+import project.lab6.domain.entities.User;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -12,7 +12,9 @@ module project.lab {
     exports project.lab6.service;
     exports project.lab6.repository.repointerface;
     exports project.lab6.domain;
-    exports project.lab6.domain.chat;
+    exports project.lab6.domain.entities;
+    exports project.lab6.domain.entities.chat;
+    exports project.lab6.domain.entities.events;
     exports project.lab6.domain.validators;
     exports project.lab6.domain.dtos;
     exports project.lab6.repository.database;

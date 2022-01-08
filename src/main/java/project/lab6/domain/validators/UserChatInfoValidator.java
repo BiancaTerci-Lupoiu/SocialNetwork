@@ -1,6 +1,6 @@
 package project.lab6.domain.validators;
 
-import project.lab6.domain.chat.UserChatInfo;
+import project.lab6.domain.entities.chat.UserChatInfo;
 
 public class UserChatInfoValidator implements Validator<UserChatInfo> {
     /**

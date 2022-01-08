@@ -1,6 +1,6 @@
-package project.lab6.domain.chat;
+package project.lab6.domain.entities.chat;
 
-import project.lab6.domain.Entity;
+import project.lab6.domain.entities.Entity;
 
 import java.time.LocalDateTime;
 
@@ -10,23 +10,6 @@ public class Message extends Entity<Long> {
     private final Long idUserFrom;
     private final Long idChat;
     private final Long idReplyMessage;
-
-    /**
-     * constructor
-     *
-     * @param text
-     * @param date
-     * @param idUserFrom
-     * @param idChat
-     * @param idReplyMessage
-     */
-    public Message(String text, LocalDateTime date, Long idUserFrom, Long idChat, Long idReplyMessage) {
-        this.text = text;
-        this.date = date;
-        this.idUserFrom = idUserFrom;
-        this.idChat = idChat;
-        this.idReplyMessage = idReplyMessage;
-    }
 
     /**
      * constructor with id
@@ -45,6 +28,19 @@ public class Message extends Entity<Long> {
         this.idUserFrom = idUserFrom;
         this.idChat = idChat;
         this.idReplyMessage = idReplyMessage;
+    }
+
+    /**
+     * constructor
+     *
+     * @param text
+     * @param date
+     * @param idUserFrom
+     * @param idChat
+     * @param idReplyMessage
+     */
+    public Message(String text, LocalDateTime date, Long idUserFrom, Long idChat, Long idReplyMessage) {
+        this(null, text, date, idUserFrom, idChat, idReplyMessage);
     }
 
     /**
@@ -87,12 +83,6 @@ public class Message extends Entity<Long> {
      */
     @Override
     public String toString() {
-        return "Message{" +
-                "text='" + text + '\'' +
-                ", date=" + date +
-                ", idUserFrom=" + idUserFrom +
-                ", idChat=" + idChat +
-                ", idReplyMessage=" + idReplyMessage +
-                '}';
+        return "Message{" + "text='" + text + '\'' + ", date=" + date + ", idUserFrom=" + idUserFrom + ", idChat=" + idChat + ", idReplyMessage=" + idReplyMessage + '}';
     }
 }

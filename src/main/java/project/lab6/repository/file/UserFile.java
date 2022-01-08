@@ -1,6 +1,6 @@
 package project.lab6.repository.file;
 
-import project.lab6.domain.User;
+import project.lab6.domain.entities.User;
 import project.lab6.domain.validators.Validator;
 
 import java.util.List;

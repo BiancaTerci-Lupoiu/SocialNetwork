@@ -1,6 +1,8 @@
 package project.lab6.service;
 
 import project.lab6.domain.*;
+import project.lab6.domain.entities.Friendship;
+import project.lab6.domain.entities.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryUser;
