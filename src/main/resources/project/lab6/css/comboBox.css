@@ -1,0 +1,16 @@
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box-base .text {
+    -fx-fill: white;
+    -fx-font-family: Cambria;
+    -fx-font-size: 14;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #5c0e63;
+    -fx-text-fill: white;
+    -fx-font-family: Cambria;
+    -fx-font-size: 14;
+}
