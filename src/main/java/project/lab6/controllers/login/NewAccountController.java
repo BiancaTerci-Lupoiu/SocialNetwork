@@ -45,12 +45,12 @@ public class NewAccountController extends Controller {
     /**
      * Creates a new account for the user and logs it in
      *
-     * @param actionEvent
      * @throws IOException
      */
     public void registerUser() throws IOException {
         try {
-            boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
+            //TODO: Poate ar trebui sa poti alege poza aici?
+            boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText(),null);
             if (result) {
                 User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
                 FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId(), serviceFriends, serviceMessages));

@@ -110,7 +110,9 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         String name = set.getString("name");
         Color color = Color.valueOf(set.getString("color"));
         boolean isPrivateChat = set.getBoolean("is_private");
-        return new Chat(id, name, color, isPrivateChat);
+        byte[] image = set.getBytes("image");
+        set.getb
+        return new Chat(id, name, color, isPrivateChat,image);
     }
 
     @Override

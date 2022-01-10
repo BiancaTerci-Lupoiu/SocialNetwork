@@ -7,6 +7,7 @@ import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
 import project.lab6.repository.repointerface.RepositoryUser;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,7 +70,7 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
 
             @Override
             public String getSqlString() {
-                return "insert into users(first_name, last_name, hash_password, email, salt) values (?,?,?,?,?)";
+                return "insert into users(first_name, last_name, hash_password, email, salt, image) values (?,?,?,?,?,?)";
             }
 
             @Override
@@ -79,6 +80,7 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
                 statement.setString(3, user.getHashPassword());
                 statement.setString(4, user.getEmail());
                 statement.setString(5, user.getSalt());
+                statement.setBytes(6, user.getImage());
             }
         });
     }
@@ -167,6 +169,12 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         String lastName = set.getString("last_name");
         String hashPassword = set.getString("hash_password");
         String salt = set.getString("salt");
-        return new User(id, email, firstName, lastName, hashPassword, salt);
+        byte[] image = set.getBytes("image");
+        try {
+            return new User(id, email, firstName, lastName, hashPassword, salt, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

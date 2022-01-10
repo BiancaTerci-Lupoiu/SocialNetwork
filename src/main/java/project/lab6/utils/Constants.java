@@ -11,7 +11,8 @@ public class Constants {
     public static DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     public static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static Color DEFAULT_CHAT_COLOR = Color.MAGENTA;
-
+    public static String PATH_DEFAULT_USER_IMAGE = "project/lab6/images/person-icon.png";
+    public static String PATH_DEFAULT_GROUP_CHAT_IMAGE = "project/lab6/images/person-icon.png";
     public static class View {
         public static String ADD_FRIENDS = "views/friends/addFriends.fxml";
         public static String FRIENDS = "views/friends/friends.fxml";

@@ -135,7 +135,6 @@ public class MainChatController extends Controller {
         Long idLoggedUser;
 
         public CustomCellChat(Long idLoggedUser) {
-            super();
             this.idLoggedUser = idLoggedUser;
             groupImage.setFitWidth(24);
             groupImage.setFitHeight(24);

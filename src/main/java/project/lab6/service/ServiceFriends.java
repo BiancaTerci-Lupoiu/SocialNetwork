@@ -7,6 +7,8 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryUser;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -141,10 +143,15 @@ public class ServiceFriends {
      * @throws ValidationException      if the entity is not valid
      * @throws IllegalArgumentException if the given entity is null.
      */
-    public boolean addUser(String email, String firstName, String lastName, String password) {
+    public boolean addUser(String email, String firstName, String lastName, String password, InputStream image) throws IOException {
         String salt = generateSalt(); //generam un salt random pentru acest user
         String hashPassword = generateHashPassword(password, salt);
-        User user = new User(email, firstName, lastName, hashPassword, salt);
+        byte[] imageBytes;
+        if(image == null)
+            imageBytes=null;
+        else
+            imageBytes=image.readAllBytes();
+        User user = new User(email, firstName, lastName, hashPassword, salt, imageBytes);
         user = repoUsers.save(user);
         return user != null;
     }
@@ -152,13 +159,13 @@ public class ServiceFriends {
     /**
      * @return all the users
      */
-    public Map<Long, User> getAllUsers() {
+    public Map<Long, User> getAllUsers() throws IOException {
         // trebuie sa completam si listele de prietenie
         Map<Long, User> usersWithFriends = new HashMap<>();
         // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
         for (User user : repoUsers.findAll()) {
             User newUser = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
-                    user.getHashPassword(), user.getSalt());
+                    user.getHashPassword(), user.getSalt(), user.getImage());
             usersWithFriends.put(newUser.getId(), newUser);
         }
         for (Friendship friendship : repoFriendships.findAll()) {
@@ -309,7 +316,7 @@ public class ServiceFriends {
      * @param currentNode the node at the current step
      * @param community   the current community
      */
-    private void dfsVisit(Map<Long, Boolean> nodes, Long currentNode, Community community) {
+    private void dfsVisit(Map<Long, Boolean> nodes, Long currentNode, Community community) throws IOException {
         Map<Long, User> usersWithFriends = getAllUsers();
         nodes.put(currentNode, true);
         User currentUser = usersWithFriends.get(currentNode);
@@ -327,7 +334,7 @@ public class ServiceFriends {
      *
      * @return a list with all the communities
      */
-    private List<Community> findAllCommunities() {
+    private List<Community> findAllCommunities() throws IOException {
         // pastram toti userii si marcam daca i am vizitat sau nu
         Map<Long, Boolean> nodes = new HashMap<>();
 
@@ -349,14 +356,14 @@ public class ServiceFriends {
     /**
      * @return the number of communities (int)
      */
-    public int numberOfCommunities() {
+    public int numberOfCommunities() throws IOException {
         return findAllCommunities().size();
     }
 
     /**
      * @return the most sociable community
      */
-    public Community theMostSociableCommunity() {
+    public Community theMostSociableCommunity() throws IOException {
         List<Community> allCommunities = findAllCommunities();
         Community sociableCommunity = new Community();
         int longestPath = -1;

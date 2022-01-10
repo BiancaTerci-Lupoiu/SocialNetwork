@@ -3,6 +3,8 @@ package project.lab6.domain.dtos;
 import javafx.scene.paint.Color;
 import project.lab6.utils.Lazy;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 public abstract class ChatDTO {
@@ -26,13 +28,14 @@ public abstract class ChatDTO {
      * @param name          The name of the chat. This argument will be ignored if isPrivateChat is true
      * @param color         The color of the chat
      * @param isPrivateChat True if the chat is private and false otherwise
+     * @param image         The image of the chat. This argument wii=ll be ignored if isPrivateChat is true
      * @return ChatDTO
      */
-    public static ChatDTO createChatDTO(Long idChat, String name, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
+    public static ChatDTO createChatDTO(Long idChat, String name, Color color, boolean isPrivateChat, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users, byte[] image) {
         if (isPrivateChat)
             return new PrivateChatDTO(idChat, color, messages, users);
         else
-            return new GroupChatDTO(idChat, name, color, messages, users);
+            return new GroupChatDTO(idChat, name, color, messages, users, image);
     }
 
     /**
@@ -40,6 +43,17 @@ public abstract class ChatDTO {
      * @return the name of the chat, according to the logged user
      */
     public abstract String getName(Long idLoggedUser);
+
+    /**
+     * @param idLoggedUser
+     * @return the image of the chat, according to the logged user
+     */
+    public abstract byte[] getImage(Long idLoggedUser);
+
+    public InputStream getImageStream(Long idLoggedUser) {
+        byte[] image = getImage(idLoggedUser);
+        return new ByteArrayInputStream(image);
+    }
 
     /**
      * @return the idChat of the ChatDTO
