@@ -57,7 +57,9 @@ public class ProfileController extends Controller implements Initializable {
         labelLastName.setText(String.format("Last name: %s", user.getLastName()));
         labelEmail.setText(String.format("Email: %s", user.getEmail()));
         comboBoxReports.setItems(FXCollections.observableArrayList("Full Report", "Friend Messages Report"));
+        eventsListView.setCellFactory(param->new CustomCellEvent());
         eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
+        eventsListView.setItems(eventsForUserDTOList);
     }
 
     @Override
@@ -77,10 +79,11 @@ public class ProfileController extends Controller implements Initializable {
 
         public CustomCellEvent() {
             super();
-            horizontalBox.setSpacing(100);
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
-            eventTitle.setStyle("-fx-font-family: Cambria; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 16");
-            eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
+            horizontalBox.setSpacing(50);
+            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
+            eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
+            eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");
+            horizontalBox.getChildren().addAll(eventTitle,eventDate);
         }
 
         @Override

@@ -57,12 +57,14 @@
                 </DropShadow>
             </effect>
         </Label>
-        <Button fx:id="backToProfileButton" layoutX="21.0" layoutY="389.0" mnemonicParsing="false" onAction="#backToProfileAction" style="-fx-background-color: transparent;" />
-          <ImageView fitHeight="40.0" fitWidth="74.0" layoutX="19.0" layoutY="438.0" pickOnBounds="true" preserveRatio="true">
-             <image>
-                <Image url="@../../images/back.png" />
-             </image>
-          </ImageView>
+        <Button fx:id="backToProfileButton" layoutX="40.0" layoutY="438.0" mnemonicParsing="false" onAction="#backToProfileAction" style="-fx-background-color: transparent;">
+         <graphic>
+                <ImageView fitHeight="32.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                   <image>
+                      <Image url="@../../images/back.png" />
+                   </image>
+                </ImageView>
+         </graphic></Button>
       <DatePicker fx:id="datePicker" layoutX="79.0" layoutY="165.0" prefHeight="26.0" prefWidth="125.0" />
       <Spinner fx:id="minutesSpinner" editable="true" layoutX="352.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" />
       <Spinner fx:id="hoursSpinner" editable="true" layoutX="282.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" />
