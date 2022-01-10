@@ -14,6 +14,14 @@
                 </ImageView>
             </graphic>
         </Button>
+        <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openEventsView" text="Events" VBox.vgrow="ALWAYS"
+                alignment="CENTER_LEFT">
+            <graphic>
+                <ImageView preserveRatio="true" fitWidth="30" fitHeight="30">
+                    <Image url="@../images/events-icon.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
         <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openAddFriendsView" text="Add friends"
                 VBox.vgrow="ALWAYS" alignment="CENTER_LEFT">
             <graphic>

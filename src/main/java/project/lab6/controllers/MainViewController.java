@@ -104,4 +104,9 @@ public class MainViewController extends Controller implements Initializable {
     public String getViewPath() {
         return Constants.View.MAIN_VIEW;
     }
+
+    public void openEventsView() {
+        //TODO:Open events view
+        //setView(controller events);
+    }
 }
