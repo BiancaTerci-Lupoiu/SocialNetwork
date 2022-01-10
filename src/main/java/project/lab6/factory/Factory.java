@@ -161,7 +161,7 @@ public class Factory implements AutoCloseable {
     }
 
     public FXMLLoader getLoader(Controller controller) {
-        return new CustomLoader(controller);
+        return new CustomLoader(this, controller);
     }
 
     @Override

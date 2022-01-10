@@ -164,8 +164,16 @@ public class ServiceMessages {
      */
     public ChatDTO getChatDTO(Long idChat) {
         Chat chat = repoChats.findOne(idChat);
-        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(idChat));
-        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(idChat));
+        return getChatDTO(chat);
+    }
+
+    /**
+     * Creates a chatDTO from the specified chat
+     */
+    public ChatDTO getChatDTO(Chat chat)
+    {
+        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(chat.getId()));
+        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(chat.getId()));
 
         return ChatDTO.createChatDTO(chat.getId(), chat.getName(), chat.getColor(), chat.isPrivateChat(),
                 messages, userInfos);
