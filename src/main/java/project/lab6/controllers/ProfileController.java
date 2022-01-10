@@ -2,20 +2,29 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import project.lab6.controllers.events.CreateEventController;
 import project.lab6.domain.entities.User;
+import project.lab6.factory.Factory;
+import project.lab6.service.ServiceEvents;
 import project.lab6.service.ServiceFriends;
 import project.lab6.utils.Constants;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProfileController extends Controller implements Initializable {
     private final Long idLoggedUser;
     private final ServiceFriends serviceFriends;
+    private final ServiceEvents serviceEvents;
+    private final MainViewController mainViewController;
 
     @FXML
     public Button notificationsButton;
@@ -32,9 +41,11 @@ public class ProfileController extends Controller implements Initializable {
     @FXML
     Label labelEmail;
 
-    public ProfileController(Long idLoggeduser, ServiceFriends serviceFriends) {
+    public ProfileController(Long idLoggeduser, ServiceFriends serviceFriends,ServiceEvents serviceEvents,MainViewController mainViewController) {
         this.idLoggedUser = idLoggeduser;
         this.serviceFriends = serviceFriends;
+        this.serviceEvents=serviceEvents;
+        this.mainViewController=mainViewController;
     }
 
     @Override
@@ -50,5 +61,9 @@ public class ProfileController extends Controller implements Initializable {
     @Override
     public String getViewPath() {
         return Constants.View.PROFILE;
+    }
+
+    public void createEvent() throws IOException {
+        mainViewController.setView(new CreateEventController(serviceEvents,idLoggedUser,mainViewController));
     }
 }
