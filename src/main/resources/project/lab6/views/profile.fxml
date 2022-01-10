@@ -69,7 +69,7 @@
    <Region prefHeight="12.0" prefWidth="483.0" />
    <VBox prefHeight="26.0" prefWidth="483.0" style="-fx-padding: 0 10 3 20;">
       <children>
-         <Button fx:id="createEventButton" mnemonicParsing="false" prefHeight="28.0" prefWidth="102.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Create event" textFill="WHITE">
+         <Button fx:id="createEventButton" mnemonicParsing="false" onAction="#createEvent" prefHeight="28.0" prefWidth="102.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Create event" textFill="WHITE">
             <font>
                <Font name="Cambria" size="14.0" />
             </font>
@@ -83,7 +83,7 @@
                <Font name="Cambria" size="18.0" />
             </font>
          </Label>
-         <ListView layoutX="22.0" layoutY="18.0" prefHeight="93.0" prefWidth="407.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-width: 2;" />
+         <ListView fx:id="eventsListView" layoutX="22.0" layoutY="18.0" prefHeight="93.0" prefWidth="407.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-width: 2; -fx-padding: 0 0 5 0;" />
       </children>
    </AnchorPane>
 </VBox>
