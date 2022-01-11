@@ -39,6 +39,7 @@ public class ServiceEvents {
         event = repoEvents.save(event);
         if (event == null)
             throw new ServiceException("The event could not be saved!");
+        subscribe(idLoggedUser, event.getId(), date);
     }
 
     public void modifyEvent(Long idEvent, String newTitle, String newDescription, LocalDateTime newDate) {
