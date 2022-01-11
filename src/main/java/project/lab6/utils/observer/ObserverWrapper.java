@@ -23,6 +23,10 @@ public class ObserverWrapper {
         };
     }
 
+    /**
+     * Creates a Observer<ChatDTO> from the specified ObservableList.
+     * This Observer will be notified when an element changes within the list and will make the ObservableList to update accordingly
+     */
     public static Observer<ChatDTO> fromObservableList(ObservableList<ChatDTO> chatObservableList) {
         return fromObservableListGeneric(chatObservableList, Comparator.comparing(ChatDTO::getIdChat));
     }

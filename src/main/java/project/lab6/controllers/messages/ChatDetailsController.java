@@ -21,7 +21,7 @@ import project.lab6.factory.Factory;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.ObservableResource;
 import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
     private ServiceMessages serviceMessages;
-    private final ObservableChatDTO observableChatDTO;
+    private final ObservableResource<ChatDTO> observableChatDTO;
     @FXML
     private HBox hboxButtons;
     @FXML
@@ -40,7 +40,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @FXML
     private Label chatNameLabel;
 
-    public ChatDetailsController(Long idLoggerUser, ObservableChatDTO observableChatDTO) {
+    public ChatDetailsController(Long idLoggerUser, ObservableResource<ChatDTO> observableChatDTO) {
         this.idLoggerUser = idLoggerUser;
         this.observableChatDTO = observableChatDTO;
         observableChatDTO.addObserver(this);
@@ -65,9 +65,9 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
-        if (observableChatDTO.getChat().isPrivateChat())
+        if (observableChatDTO.getResource().isPrivateChat())
             hboxButtons.getChildren().remove(0);
-        updateChat(observableChatDTO.getChat());
+        updateChat(observableChatDTO.getResource());
 
     }
 
@@ -95,10 +95,10 @@ public class ChatDetailsController extends Controller implements Initializable, 
         private final ImageView userImage = new ImageView();
         private final Button changeNickname = new Button("Change nickname");
         private final ServiceMessages serviceMessages;
-        private final ObservableChatDTO observableChatDTO;
+        private final ObservableResource<ChatDTO> observableChatDTO;
         private UserChatInfoDTO userInfo = null;
 
-        public CustomCellChat(ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
+        public CustomCellChat(ServiceMessages serviceMessages, ObservableResource<ChatDTO> observableChatDTO) {
             this.serviceMessages = serviceMessages;
             this.observableChatDTO = observableChatDTO;
             userImage.setFitWidth(50);
@@ -119,8 +119,8 @@ public class ChatDetailsController extends Controller implements Initializable, 
                             changeTextField.getText());
                     nicknameLabel.setText(changeTextField.getText());
                     horizontalBox.getChildren().set(1, nicknameLabel);
-                    Long id = observableChatDTO.getChat().getIdChat();
-                    observableChatDTO.setChat(serviceMessages.getChatDTO(id));
+                    Long id = observableChatDTO.getResource().getIdChat();
+                    observableChatDTO.setResource(serviceMessages.getChatDTO(id));
                 }
                 if (keyEvent.getCode() == KeyCode.ESCAPE) {
                     horizontalBox.getChildren().set(1, nicknameLabel);

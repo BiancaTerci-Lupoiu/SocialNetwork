@@ -23,20 +23,19 @@ import project.lab6.service.ServiceMessages;
 import project.lab6.setter.SetterServiceFriends;
 import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.ObservableResource;
 import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-public class ConversationController extends Controller implements Observer<ChatDTO>, SetterServiceFriends, SetterServiceMessages {
-    private final ObservableChatDTO observableChatDTO;
+public class ConversationController extends Controller implements Observer<ChatDTO>, SetterServiceMessages {
+    private final ObservableResource<ChatDTO> observableChatDTO;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private final ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
     private final MessageDTO messageToReply;
-    private ServiceFriends serviceFriends;
     private ServiceMessages serviceMessages;
     @FXML
     public Label groupNameLabel;
@@ -61,7 +60,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and it opens for replying to the message specified
      */
-    public ConversationController(ObservableChatDTO observableChatDTO, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
+    public ConversationController(ObservableResource<ChatDTO> observableChatDTO, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
         this.observableChatDTO = observableChatDTO;
         observableChatDTO.addObserver(this);
         this.idLoggedUser = idLoggedUser;
@@ -72,7 +71,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and doesn't show a message to reply to
      */
-    public ConversationController(ObservableChatDTO observableChatDTO, Long idLoggedUser, MainChatController mainChatController) {
+    public ConversationController(ObservableResource<ChatDTO> observableChatDTO, Long idLoggedUser, MainChatController mainChatController) {
         this(observableChatDTO, idLoggedUser, mainChatController, null);
     }
 
@@ -96,7 +95,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     }
 
     public void initialize() {
-        ChatDTO chatDTO = observableChatDTO.getChat();
+        ChatDTO chatDTO = observableChatDTO.getResource();
         String chatColor = convertColorToString(chatDTO.getColor());
         cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
         listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
@@ -130,7 +129,7 @@ public class ConversationController extends Controller implements Observer<ChatD
 
     public void sendMessageAction() {
         if (!typeMessageTextField.getText().isEmpty()) {
-            Long idChat = observableChatDTO.getChat().getIdChat();
+            Long idChat = observableChatDTO.getResource().getIdChat();
             if (!isVisibleReplyBar) {
                 serviceMessages.sendMessageInChat(idChat, idLoggedUser, typeMessageTextField.getText(), LocalDateTime.now());
             } else {
@@ -156,11 +155,6 @@ public class ConversationController extends Controller implements Observer<ChatD
 
     public void cancelReplyAction() {
         setReplyBarVisible(false);
-    }
-
-    @Override
-    public void setServiceFriends(ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
     }
 
     @Override

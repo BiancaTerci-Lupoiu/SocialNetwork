@@ -20,7 +20,7 @@ import project.lab6.factory.Factory;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.ObservableResource;
 import project.lab6.utils.observer.ObserverWrapper;
 
 import java.io.IOException;
@@ -108,7 +108,7 @@ public class MainChatController extends Controller implements SetterServiceMessa
     }
 
     public void setConversationView(Long idChat, MessageDTO messageToReply) {
-        ObservableChatDTO observableChatDTO = new ObservableChatDTO(serviceMessages.getChatDTO(idChat));
+        ObservableResource<ChatDTO> observableChatDTO = new ObservableResource<>(serviceMessages.getChatDTO(idChat));
         observableChatDTO.addObserver(ObserverWrapper.fromObservableList(chatDTOList));
         FXMLLoader loader = Factory.getInstance().getLoader(new ConversationController(observableChatDTO, idLoggedUser, this, messageToReply));
         Region region = null;
