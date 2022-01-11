@@ -17,6 +17,7 @@ import project.lab6.repository.repointerface.RepositoryChat;
 import project.lab6.repository.repointerface.RepositoryUser;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.service.ServiceReports;
 import project.lab6.utils.CustomLoader;
 
 /**
@@ -46,6 +47,7 @@ public class Factory implements AutoCloseable {
 
     private ServiceFriends serviceFriends = null;
     private ServiceMessages serviceMessages = null;
+    private ServiceReports serviceReports = null;
 
     /**
      * constructor
@@ -158,6 +160,13 @@ public class Factory implements AutoCloseable {
                     getUserChatInfoRepository(),
                     getUserChatInfoValidator());
         return serviceMessages;
+    }
+
+    public ServiceReports getServiceReports()
+    {
+        if(serviceReports == null)
+            serviceReports = new ServiceReports(getRepositoryChat(), getMessageRepository(), getUserRepository());
+        return serviceReports;
     }
 
     public FXMLLoader getLoader(Controller controller) {

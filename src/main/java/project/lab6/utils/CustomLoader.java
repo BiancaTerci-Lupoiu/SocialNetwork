@@ -5,10 +5,8 @@ import javafx.scene.Parent;
 import project.lab6.SocialNetworkApplication;
 import project.lab6.controllers.Controller;
 import project.lab6.factory.Factory;
-import project.lab6.service.ServiceEvents;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
-import project.lab6.service.ServiceReports;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +20,6 @@ public class CustomLoader extends FXMLLoader {
         setControllerFactory(controllerClass -> controller);
         this.controller = controller;
         Pattern servicePattern = Pattern.compile("Service*");
-
         try {
             for (var field : controller.getClass().getDeclaredFields()) {
                 var type = field.getType();
