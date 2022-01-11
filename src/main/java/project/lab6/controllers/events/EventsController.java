@@ -38,6 +38,19 @@ public class EventsController extends Controller {
         );
         eventDetailsLabel.setVisible(false);
         eventsListView.setItems(eventsForUserDTOList);
+        eventsListView.setCellFactory(param -> {
+            CustomCellEvent cell = new CustomCellEvent(serviceEvents, idLoggedUser,  this::updateEventsList);
+            cell.setOnMouseClicked(someEvent -> {
+                if (!cell.isEmpty()) {
+                    String details = cell.getItem().getTitle() + "\n" + "Date and time: " + cell.getItem().getDate().format(Constants.DATETIME_FORMATTER) + "\n" + cell.getItem().getDescription();
+                    eventDetailsLabel.setVisible(true);
+                    eventDetailsLabel.setText(details);
+                    someEvent.consume();
+                }
+            });
+
+            return cell;
+        });
     }
 
     @Override
@@ -55,14 +68,12 @@ public class EventsController extends Controller {
 
         ServiceEvents serviceEvents;
         Long idLoggedUser;
-        boolean isSubscribed;
         Consumer<Boolean> updateEventsList;
 
-        public CustomCellEvent(ServiceEvents serviceEvents, Long idLoggedUser, boolean isSubscribed, Consumer<Boolean> updateEventsList) {
+        public CustomCellEvent(ServiceEvents serviceEvents, Long idLoggedUser,  Consumer<Boolean> updateEventsList) {
             super();
             this.serviceEvents = serviceEvents;
             this.idLoggedUser = idLoggedUser;
-            this.isSubscribed = isSubscribed;
             this.updateEventsList = updateEventsList;
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
             horizontalBox.setSpacing(70);
@@ -79,10 +90,6 @@ public class EventsController extends Controller {
                 updateEventsList.accept(true);
             });
 
-            if (isSubscribed)
-                horizontalBox.getChildren().setAll(eventTitle, unsubscribeButton);
-            else
-                horizontalBox.getChildren().setAll(eventTitle, subscribeButton);
         }
 
         @Override
@@ -93,6 +100,10 @@ public class EventsController extends Controller {
                 setGraphic(null);
             } else {
                 event = item;
+                if (event.isSubscribed())
+                    horizontalBox.getChildren().setAll(eventTitle, unsubscribeButton);
+                else
+                    horizontalBox.getChildren().setAll(eventTitle, subscribeButton);
                 eventTitle.setText(event.getTitle());
                 setGraphic(horizontalBox);
             }
@@ -103,35 +114,11 @@ public class EventsController extends Controller {
     private void setEventsList(String status) {
         if (status.equals("Subscribed")) {
             eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(true));
-            eventsListView.setCellFactory(param -> {
-                CustomCellEvent cell = new CustomCellEvent(serviceEvents, idLoggedUser, true, this::updateEventsList);
-                cell.setOnMouseClicked(someEvent -> {
-                    if (!cell.isEmpty()) {
-                        String details = cell.getItem().getTitle() + "\n" + "Date and time: " + cell.getItem().getDate().format(Constants.DATETIME_FORMATTER) + "\n" + cell.getItem().getDescription();
-                        eventDetailsLabel.setVisible(true);
-                        eventDetailsLabel.setText(details);
-                        someEvent.consume();
-                    }
-                });
 
-                return cell;
-            });
         }
         if (status.equals("Discover Events")) {
             eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(false));
-            eventsListView.setCellFactory(param -> {
-                CustomCellEvent cell = new CustomCellEvent(serviceEvents, idLoggedUser, false, this::updateEventsList);
-                cell.setOnMouseClicked(someEvent -> {
-                    if (!cell.isEmpty()) {
-                        String details = cell.getItem().getTitle() + "\n" + "Date and time: " + cell.getItem().getDate().format(Constants.DATETIME_FORMATTER) + "\n" + cell.getItem().getDescription();
-                        eventDetailsLabel.setVisible(true);
-                        eventDetailsLabel.setText(details);
-                        someEvent.consume();
-                    }
-                });
 
-                return cell;
-            });
         }
     }
 
