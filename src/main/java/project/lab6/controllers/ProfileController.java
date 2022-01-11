@@ -55,7 +55,13 @@ public class ProfileController extends Controller implements Initializable, Sett
         labelLastName.setText(String.format("Last name: %s", user.getLastName()));
         labelEmail.setText(String.format("Email: %s", user.getEmail()));
         comboBoxReports.setItems(FXCollections.observableArrayList("Full Report", "Friend Messages Report"));
-        eventsListView.setCellFactory(param -> new CustomCellEvent());
+        eventsListView.setCellFactory(listView ->{
+            ListCell<EventForUserDTO> cell =new CustomCellEvent();
+            cell.setOnMouseClicked(someEvent->{
+                editEvent(cell.getItem());
+            });
+            return cell;
+        });
         eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
         eventsListView.setItems(eventsForUserDTOList);
     }
@@ -65,8 +71,11 @@ public class ProfileController extends Controller implements Initializable, Sett
         return Constants.View.PROFILE;
     }
 
+    public void editEvent(EventForUserDTO event){
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,event));
+    }
     public void createEvent() {
-        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController));
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,null));
     }
 
     @Override

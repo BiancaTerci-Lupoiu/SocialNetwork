@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.MainViewController;
+import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.service.ServiceEvents;
 import project.lab6.setter.SetterServiceEvents;
@@ -16,6 +17,9 @@ import java.time.LocalTime;
 public class CreateEventController extends Controller implements SetterServiceEvents {
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
+    private ServiceEvents serviceEvents;
+    private final EventForUserDTO event;
+
     @FXML
     public TextArea descriptionTextArea;
     @FXML
@@ -30,11 +34,12 @@ public class CreateEventController extends Controller implements SetterServiceEv
     public Spinner<Integer> hoursSpinner;
     @FXML
     public Button backToProfileButton;
-    private ServiceEvents serviceEvents;
 
-    public CreateEventController(Long idLoggedUser, MainViewController mainViewController) {
+
+    public CreateEventController(Long idLoggedUser, MainViewController mainViewController, EventForUserDTO event) {
         this.idLoggedUser = idLoggedUser;
         this.mainViewController = mainViewController;
+        this.event = event;
     }
 
     public void initialize() {
@@ -44,6 +49,18 @@ public class CreateEventController extends Controller implements SetterServiceEv
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
         minutesSpinner.setValueFactory(valueFactoryMinutes);
         hoursSpinner.setValueFactory(valueFactoryHours);
+        if (event != null) {
+            titleTextField.setText(event.getTitle());
+            descriptionTextArea.setText(event.getDescription());
+            datePicker.setValue(event.getDate().toLocalDate());
+            minutesSpinner.getValueFactory().setValue(event.getDate().getMinute());
+            hoursSpinner.getValueFactory().setValue(event.getDate().getHour());
+            createEventButton.setText("Edit");
+            createEventButton.setOnAction(someEvent -> {
+                editEvent();
+            });
+
+        }
     }
 
     @Override
@@ -56,6 +73,17 @@ public class CreateEventController extends Controller implements SetterServiceEv
             LocalTime time = LocalTime.of(hoursSpinner.getValue(), minutesSpinner.getValue());
             LocalDateTime dateTime = LocalDateTime.of(datePicker.getValue(), time);
             serviceEvents.createEvent(idLoggedUser, titleTextField.getText(), descriptionTextArea.getText(), dateTime);
+            mainViewController.openProfileView();
+        } catch (ValidationException validationException) {
+            AlertMessage.showErrorMessage(validationException.getMessage());
+        }
+    }
+
+    public void editEvent() {
+        try {
+            LocalTime time = LocalTime.of(hoursSpinner.getValue(), minutesSpinner.getValue());
+            LocalDateTime dateTime = LocalDateTime.of(datePicker.getValue(), time);
+            serviceEvents.modifyEvent(event.getId(), titleTextField.getText(), descriptionTextArea.getText(), dateTime);
             mainViewController.openProfileView();
         } catch (ValidationException validationException) {
             AlertMessage.showErrorMessage(validationException.getMessage());
