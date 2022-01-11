@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import project.lab6.controllers.events.EventsController;
 import project.lab6.controllers.friends.AddFriendsController;
 import project.lab6.controllers.friends.FriendsController;
 import project.lab6.controllers.friends.RequestsController;
@@ -109,7 +110,6 @@ public class MainViewController extends Controller implements Initializable {
     }
 
     public void openEventsView() {
-        //TODO:Open events view
-        //setView(controller events);
+        setView(new EventsController(idLoggedUser,serviceEvents));
     }
 }

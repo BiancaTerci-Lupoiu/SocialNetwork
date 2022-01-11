@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="464.0" prefWidth="392.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.events.EventsController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="504.0" prefWidth="462.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/comboBox.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.events.EventsController">
    <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 50; -fx-padding: 20 0 10;">
          <children>
@@ -29,9 +29,9 @@
             <ComboBox fx:id="comboBoxEvents" prefHeight="10.0" prefWidth="132.0" style="-fx-background-color: #5c0e63;" />
          </children>
       </HBox>
-      <AnchorPane prefHeight="155.0" prefWidth="392.0">
+      <AnchorPane prefHeight="169.0" prefWidth="462.0">
          <children>
-            <ListView fx:id="eventsListView" layoutX="30.0" layoutY="14.0" prefHeight="118.0" prefWidth="330.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
+            <ListView fx:id="eventsListView" layoutX="30.0" layoutY="14.0" prefHeight="125.0" prefWidth="394.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
          </children>
       </AnchorPane>
       <Label fx:id="eventDetailsLabel" prefHeight="208.0" prefWidth="270.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-width: 2;" wrapText="true">
