@@ -17,17 +17,17 @@ import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
-import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.ObserverWrapper;
 
 import java.io.IOException;
 
 
-public class MainChatController extends Controller {
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
+public class MainChatController extends Controller implements SetterServiceMessages {
+    private ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     @FXML
     public TextField searchChatTextField;
@@ -40,10 +40,8 @@ public class MainChatController extends Controller {
     ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
 
 
-    public MainChatController(Long idLoggedUser, ServiceMessages serviceMessages, ServiceFriends serviceFriends) {
+    public MainChatController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
     }
 
     public ServiceMessages getServiceMessages() {
@@ -56,7 +54,7 @@ public class MainChatController extends Controller {
     }
 
     public void createGroupAction() throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(serviceMessages, serviceFriends, idLoggedUser, chatDTOList, this));
+        FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(idLoggedUser, chatDTOList, this));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -64,7 +62,7 @@ public class MainChatController extends Controller {
     }
 
     public void createPrivateChatAction() throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(serviceFriends, serviceMessages, idLoggedUser, this, chatDTOList));
+        FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(idLoggedUser, this, chatDTOList));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -111,8 +109,8 @@ public class MainChatController extends Controller {
 
     public void setConversationView(Long idChat, MessageDTO messageToReply) {
         ObservableChatDTO observableChatDTO = new ObservableChatDTO(serviceMessages.getChatDTO(idChat));
-        observableChatDTO.addObservableList(chatDTOList);
-        FXMLLoader loader = Factory.getInstance().getLoader(new ConversationController(observableChatDTO, serviceMessages, serviceFriends, idLoggedUser, this, messageToReply));
+        observableChatDTO.addObserver(ObserverWrapper.fromObservableList(chatDTOList));
+        FXMLLoader loader = Factory.getInstance().getLoader(new ConversationController(observableChatDTO, idLoggedUser, this, messageToReply));
         Region region = null;
         try {
             region = loader.load();
@@ -125,6 +123,11 @@ public class MainChatController extends Controller {
         else
             mainHorizontalBox.getChildren().add(region);
         HBox.setHgrow(region, Priority.ALWAYS);
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 
     public static class CustomCellChat extends ListCell<ChatDTO> {

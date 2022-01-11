@@ -18,8 +18,8 @@ import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.factory.Factory;
-import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableChatDTO;
 import project.lab6.utils.observer.Observer;
@@ -28,11 +28,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO> {
+public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages {
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     private final ObservableChatDTO observableChatDTO;
     @FXML
     private HBox hboxButtons;
@@ -40,10 +39,9 @@ public class ChatDetailsController extends Controller implements Initializable, 
     private ListView<UserChatInfoDTO> listView;
     @FXML
     private Label chatNameLabel;
-    public ChatDetailsController(Long idLoggerUser, ServiceFriends serviceFriends, ServiceMessages serviceMessages, ObservableChatDTO observableChatDTO) {
+
+    public ChatDetailsController(Long idLoggerUser, ObservableChatDTO observableChatDTO) {
         this.idLoggerUser = idLoggerUser;
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
         this.observableChatDTO = observableChatDTO;
         observableChatDTO.addObserver(this);
     }
@@ -74,7 +72,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
     }
 
     public void addUserToChat() throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(serviceMessages, serviceFriends, idLoggerUser, observableChatDTO));
+        FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(idLoggerUser, observableChatDTO));
         Stage stage = new Stage();
         Scene scene = new Scene(loader.load(), 600, 400);
         stage.setScene(scene);
@@ -82,6 +80,11 @@ public class ChatDetailsController extends Controller implements Initializable, 
     }
 
     public void changeColor() {
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 
     public static class CustomCellChat extends ListCell<UserChatInfoDTO> {

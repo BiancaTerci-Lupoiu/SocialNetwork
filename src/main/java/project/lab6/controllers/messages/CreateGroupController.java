@@ -17,15 +17,17 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateGroupController extends Controller {
+public class CreateGroupController extends Controller implements SetterServiceMessages, SetterServiceFriends {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private final ServiceMessages serviceMessages;
-    private final ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
+    private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     private final ObservableList<ChatDTO> observableList;
     private final MainChatController mainChatController;
@@ -42,9 +44,8 @@ public class CreateGroupController extends Controller {
     private TextField groupName;
     @FXML
     private Button done;
-    public CreateGroupController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableList<ChatDTO> observableList, MainChatController mainChatController) {
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
+
+    public CreateGroupController(Long idLoggedUser, ObservableList<ChatDTO> observableList, MainChatController mainChatController) {
         this.idLoggedUser = idLoggedUser;
         this.observableList = observableList;
         this.mainChatController = mainChatController;
@@ -122,5 +123,15 @@ public class CreateGroupController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.CREATE_NEW_GROUP;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 }

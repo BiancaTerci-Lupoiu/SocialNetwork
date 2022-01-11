@@ -5,16 +5,20 @@ import project.lab6.config.ApplicationContext;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.Tuple;
 import project.lab6.domain.TupleWithIdChatUser;
+import project.lab6.domain.TupleWithIdUserEvent;
 import project.lab6.domain.entities.Friendship;
 import project.lab6.domain.entities.User;
 import project.lab6.domain.entities.chat.Chat;
 import project.lab6.domain.entities.chat.Message;
 import project.lab6.domain.entities.chat.UserChatInfo;
+import project.lab6.domain.entities.events.Event;
+import project.lab6.domain.entities.events.Subscription;
 import project.lab6.domain.validators.*;
 import project.lab6.repository.database.*;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryChat;
 import project.lab6.repository.repointerface.RepositoryUser;
+import project.lab6.service.ServiceEvents;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.service.ServiceReports;
@@ -35,6 +39,8 @@ public class Factory implements AutoCloseable {
     private Validator<Chat> chatValidator = null;
     private Validator<UserChatInfo> userChatInfoValidator = null;
     private Validator<Message> messageValidator = null;
+    private Validator<Event> eventValidator = null;
+    private Validator<Subscription> subscriptionValidator = null;
 
     private ConnectionPool connectionPool = null;
 
@@ -43,11 +49,14 @@ public class Factory implements AutoCloseable {
     private RepositoryChat repositoryChat = null;
     private Repository<TupleWithIdChatUser, UserChatInfo> userChatInfoRepository = null;
     private Repository<Long, Message> messageRepository = null;
+    private Repository<Long, Event> eventRepository = null;
+    private Repository<TupleWithIdUserEvent, Subscription> subscriptionRepository = null;
 
 
     private ServiceFriends serviceFriends = null;
     private ServiceMessages serviceMessages = null;
     private ServiceReports serviceReports = null;
+    private ServiceEvents serviceEvents = null;
 
     /**
      * constructor
@@ -102,6 +111,17 @@ public class Factory implements AutoCloseable {
         return messageValidator;
     }
 
+    public Validator<Event> getEventValidator() {
+        if (eventValidator == null)
+            eventValidator = new EventValidator();
+        return eventValidator;
+    }
+
+    public Validator<Subscription> getSubscriptionValidator() {
+        if (subscriptionValidator == null) subscriptionValidator = new SubscriptionValidator();
+        return subscriptionValidator;
+    }
+
     public ConnectionPool getConnectionPool() {
         if (connectionPool == null) connectionPool = new BasicConnectionPool(url, username, password);
         return connectionPool;
@@ -139,6 +159,16 @@ public class Factory implements AutoCloseable {
         return messageRepository;
     }
 
+    public Repository<Long, Event> getEventRepository() {
+        if (eventRepository == null) eventRepository = new EventDbRepository(getConnectionPool());
+        return eventRepository;
+    }
+
+    public Repository<TupleWithIdUserEvent, Subscription> getSubscriptionRepository() {
+        if (subscriptionRepository == null) subscriptionRepository = new SubscriptionDbRepository(getConnectionPool());
+        return subscriptionRepository;
+    }
+
     /**
      * @return the ServiceFriends
      */
@@ -162,11 +192,16 @@ public class Factory implements AutoCloseable {
         return serviceMessages;
     }
 
-    public ServiceReports getServiceReports()
-    {
-        if(serviceReports == null)
+    public ServiceReports getServiceReports() {
+        if (serviceReports == null)
             serviceReports = new ServiceReports(getRepositoryChat(), getMessageRepository(), getUserRepository());
         return serviceReports;
+    }
+
+    public ServiceEvents getServiceEvents() {
+        if (serviceEvents == null)
+            serviceEvents = new ServiceEvents(getUserRepository(), getEventRepository(), getSubscriptionRepository(), getEventValidator(), getSubscriptionValidator());
+        return serviceEvents;
     }
 
     public FXMLLoader getLoader(Controller controller) {

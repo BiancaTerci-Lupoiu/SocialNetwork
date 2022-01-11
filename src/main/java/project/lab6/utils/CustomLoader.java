@@ -5,12 +5,13 @@ import javafx.scene.Parent;
 import project.lab6.SocialNetworkApplication;
 import project.lab6.controllers.Controller;
 import project.lab6.factory.Factory;
-import project.lab6.service.ServiceFriends;
-import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceEvents;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
+import project.lab6.setter.SetterServiceReports;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
 
 public class CustomLoader extends FXMLLoader {
     private final Controller controller;
@@ -19,38 +20,18 @@ public class CustomLoader extends FXMLLoader {
         super(SocialNetworkApplication.class.getResource(controller.getViewPath()));
         setControllerFactory(controllerClass -> controller);
         this.controller = controller;
-        Pattern servicePattern = Pattern.compile("Service*");
-        try {
-            for (var field : controller.getClass().getDeclaredFields()) {
-                var type = field.getType();
-                String typeName = field.getType().getTypeName();
-                if (servicePattern.matcher(typeName).find()) {
-                    if (type.isAssignableFrom(ServiceFriends.class)) {
-                        field.setAccessible(true);
-                        field.set(controller, factory.getServiceFriends());
-                        System.out.println("Am setat service friends");
-                    } else if (type.isAssignableFrom(ServiceMessages.class)) {
-                        field.setAccessible(true);
-                        field.set(controller, factory.getServiceMessages());
-                        System.out.println("Am setat service messages");
-                    }
-//                    else if (type.isAssignableFrom(ServiceEvents.class)) {
-//                        field.setAccessible(true);
-//                        field.set(controller, factory.getServiceMessages());
-//                    }
-//                    else if (type.isAssignableFrom(ServiceReports.class)) {
-//                        field.setAccessible(true);
-//                        field.set(controller, factory.getServiceReports());
-//                    }
-                    else {
-                        throw new RuntimeException("Nu a fost tratat service-ul " + typeName);
-                    }
-                }
-            }
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException("Nu se poate initializa un field!");
-        }
+        setServices(factory);
+    }
 
+    private void setServices(Factory factory) {
+        if (controller instanceof SetterServiceFriends setter)
+            setter.setServiceFriends(factory.getServiceFriends());
+        if (controller instanceof SetterServiceMessages setter)
+            setter.setServiceMessages(factory.getServiceMessages());
+        if (controller instanceof SetterServiceEvents setter)
+            setter.setServiceEvents(factory.getServiceEvents());
+        if (controller instanceof SetterServiceReports setter)
+            setter.setServiceReports(factory.getServiceReports());
     }
 
     @Override

@@ -13,16 +13,18 @@ import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableChatDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMemberController extends Controller {
+public class AddMemberController extends Controller implements SetterServiceFriends, SetterServiceMessages {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private final ServiceFriends serviceFriends;
-    private final ServiceMessages serviceMessages;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     private final ObservableChatDTO observableChatDTO;
     private final Long idLoggedUser;
     @FXML
@@ -35,9 +37,8 @@ public class AddMemberController extends Controller {
     private TableView<UserRecord> addMembersTableView;
     @FXML
     private Button backButton;
-    public AddMemberController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableChatDTO observableChatDTO) {
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
+
+    public AddMemberController(Long idLoggedUser, ObservableChatDTO observableChatDTO) {
         this.idLoggedUser = idLoggedUser;
         this.observableChatDTO = observableChatDTO;
     }
@@ -97,5 +98,15 @@ public class AddMemberController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.ADD_GROUP_MEMBER;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 }

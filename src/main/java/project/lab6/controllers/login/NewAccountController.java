@@ -13,15 +13,13 @@ import project.lab6.domain.entities.User;
 import project.lab6.domain.validators.ValidationException;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
-import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class NewAccountController extends Controller {
-
-    private final ServiceFriends serviceFriends;
-    private final ServiceMessages serviceMessages;
+public class NewAccountController extends Controller implements SetterServiceFriends {
+    private ServiceFriends serviceFriends;
     @FXML
     private TextField firstNameTextField;
     @FXML
@@ -31,12 +29,6 @@ public class NewAccountController extends Controller {
     @FXML
     private PasswordField passwordTextField;
 
-    public NewAccountController(ServiceFriends serviceFriends, ServiceMessages serviceMessages) {
-        this.serviceFriends = serviceFriends;
-        this.serviceMessages = serviceMessages;
-    }
-
-
     private void closeWindow() {
         Stage stage = (Stage) emailTextField.getScene().getWindow();
         stage.close();
@@ -45,7 +37,6 @@ public class NewAccountController extends Controller {
     /**
      * Creates a new account for the user and logs it in
      *
-     * @param actionEvent
      * @throws IOException
      */
     public void registerUser() throws IOException {
@@ -53,7 +44,7 @@ public class NewAccountController extends Controller {
             boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
             if (result) {
                 User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
-                FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId(), serviceFriends, serviceMessages));
+                FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId()));
                 Stage mainStage = new Stage();
                 Scene scene = new Scene(loader.load(), 600, 500);
                 mainStage.setScene(scene);
@@ -69,7 +60,7 @@ public class NewAccountController extends Controller {
     }
 
     public void backToLogIn() throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new LoginController(serviceFriends, serviceMessages));
+        FXMLLoader loader = Factory.getInstance().getLoader(new LoginController());
         Stage loginStage = new Stage();
 
         Scene scene = new Scene(loader.load(), 600, 400);
@@ -82,5 +73,10 @@ public class NewAccountController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.CREATE_NEW_ACCOUNT;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 }

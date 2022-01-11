@@ -15,14 +15,16 @@ import project.lab6.domain.entities.User;
 import project.lab6.domain.entities.chat.Chat;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 
 import java.util.List;
 
-public class OpenPrivateChatController extends Controller {
+public class OpenPrivateChatController extends Controller implements SetterServiceFriends, SetterServiceMessages {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private final ServiceFriends serviceFriends;
-    private final ServiceMessages serviceMessages;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private final ObservableList<ChatDTO> observableList;
@@ -34,9 +36,8 @@ public class OpenPrivateChatController extends Controller {
     private TableColumn<UserRecord, Button> addButton;
     @FXML
     private TableView<UserRecord> usersTable;
-    public OpenPrivateChatController(ServiceFriends serviceFriends, ServiceMessages serviceMessages, Long idLoggedUser, MainChatController mainChatController, ObservableList<ChatDTO> observableList) {
-        this.serviceFriends = serviceFriends;
-        this.serviceMessages = serviceMessages;
+
+    public OpenPrivateChatController(Long idLoggedUser, MainChatController mainChatController, ObservableList<ChatDTO> observableList) {
         this.idLoggedUser = idLoggedUser;
         this.mainChatController = mainChatController;
         this.observableList = observableList;
@@ -94,5 +95,15 @@ public class OpenPrivateChatController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.OPEN_PRIVATE_CHAT;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 }

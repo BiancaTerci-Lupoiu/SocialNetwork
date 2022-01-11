@@ -20,6 +20,8 @@ import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableChatDTO;
 import project.lab6.utils.observer.Observer;
@@ -28,14 +30,14 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
-public class ConversationController extends Controller implements Observer<ChatDTO> {
+public class ConversationController extends Controller implements Observer<ChatDTO>, SetterServiceFriends, SetterServiceMessages {
     private final ObservableChatDTO observableChatDTO;
-    private final ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private final ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
     private final MessageDTO messageToReply;
-    private final ServiceFriends serviceFriends;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     @FXML
     public Label groupNameLabel;
     @FXML
@@ -59,11 +61,9 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and it opens for replying to the message specified
      */
-    public ConversationController(ObservableChatDTO observableChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
+    public ConversationController(ObservableChatDTO observableChatDTO, Long idLoggedUser, MainChatController mainChatController, MessageDTO messageToReply) {
         this.observableChatDTO = observableChatDTO;
         observableChatDTO.addObserver(this);
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
         this.idLoggedUser = idLoggedUser;
         this.mainChatController = mainChatController;
         this.messageToReply = messageToReply;
@@ -72,8 +72,8 @@ public class ConversationController extends Controller implements Observer<ChatD
     /**
      * Creates a conversation controller and doesn't show a message to reply to
      */
-    public ConversationController(ObservableChatDTO observableChatDTO, ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, MainChatController mainChatController) {
-        this(observableChatDTO, serviceMessages, serviceFriends, idLoggedUser, mainChatController, null);
+    public ConversationController(ObservableChatDTO observableChatDTO, Long idLoggedUser, MainChatController mainChatController) {
+        this(observableChatDTO, idLoggedUser, mainChatController, null);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ConversationController extends Controller implements Observer<ChatD
     }
 
     public void chatInfoButtonClick() throws IOException {
-        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, serviceFriends, serviceMessages, observableChatDTO));
+        FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, observableChatDTO));
         Scene scene = new Scene(loader.load(), 600, 400);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -156,6 +156,16 @@ public class ConversationController extends Controller implements Observer<ChatD
 
     public void cancelReplyAction() {
         setReplyBarVisible(false);
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 
     public static class CustomCellMessage extends ListCell<MessageDTO> {
