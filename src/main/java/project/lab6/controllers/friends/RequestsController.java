@@ -52,14 +52,12 @@ public class RequestsController extends Controller implements SetterServiceFrien
     public void initialize() {
         comboBoxStatus.setPromptText("Select status");
         comboBoxStatus.setItems(FXCollections.observableArrayList("Sent", "Received"));
-
-        comboBoxStatus.getSelectionModel().selectedItemProperty().addListener((x) -> initializeCombo(x.toString()));
         firstName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("firstName")));
         lastName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("lastName")));
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
 
         comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
-                (x, y, z) -> initializeCombo(z)
+                (observable, oldValue, newValue) -> initializeCombo(newValue)
         );
         tableViewRequests.getStylesheets().add(RequestsController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
 

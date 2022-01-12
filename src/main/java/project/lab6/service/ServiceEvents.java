@@ -46,7 +46,8 @@ public class ServiceEvents {
         Event event = repoEvents.findOne(idEvent);
         if (event == null)
             throw new ServiceException("Can't find specified event!");
-        if (!repoEvents.update(event))
+        Event newEvent = new Event(idEvent, event.getIdUserOwner(), newTitle, newDescription, newDate);
+        if (!repoEvents.update(newEvent))
             throw new ServiceException("Can't modify the event!");
     }
 
@@ -109,7 +110,7 @@ public class ServiceEvents {
             for (var notifyTime : NotifyTime.values()) {
                 LocalDateTime notifyDate = event.getDate()
                         .minus(notifyTime.getDifferenceInTime());
-                if(notifyDate.isBefore(subscription.getDate()))
+                if (notifyDate.isAfter(subscription.getDate()))
                     continue;
                 if (notifyDate.isBefore(now)) {
                     Notification notification = new Notification(getEventDTO(event, true), notifyTime);
@@ -123,7 +124,7 @@ public class ServiceEvents {
                     LocalDateTime timeB = b.getTimeOfNotifying();
                     if (timeA.isAfter(timeB))
                         return 1;
-                    if(timeB.isAfter(timeA))
+                    if (timeB.isAfter(timeA))
                         return -1;
                     return 0;
                 })
