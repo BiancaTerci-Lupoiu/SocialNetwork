@@ -1,54 +1,59 @@
 package project.lab6.utils.components;
 
 import javafx.collections.FXCollections;
-import javafx.scene.control.*;
+import javafx.collections.ObservableSet;
+import javafx.event.EventHandler;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
+import project.lab6.utils.Constants;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import static java.time.temporal.ChronoUnit.DAYS;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import javafx.collections.ObservableSet;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import project.lab6.utils.Constants;
 
-public class MultiDatePicker extends DatePicker
-{
+import static java.time.temporal.ChronoUnit.DAYS;
+
+public class MultiDatePicker extends DatePicker {
     private static final DateTimeFormatter DATE_FORMAT = Constants.DATE_FORMATTER;
     private final ObservableSet<LocalDate> selectedDates;
 
-    public MultiDatePicker()
-    {
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean firstDatePicked = false;
+
+    public MultiDatePicker() {
         this.selectedDates = FXCollections.observableSet(new TreeSet<>());
         setUpDatePicker();
         withRangeSelectionMode();
     }
 
-    private void withRangeSelectionMode()
-    {
-        EventHandler<MouseEvent> mouseClickedEventHandler = (MouseEvent clickEvent) ->
-        {
-            if (clickEvent.getButton() == MouseButton.PRIMARY)
-            {
-                if (!this.selectedDates.contains(super.getValue()))
-                {
-                    this.selectedDates.add(super.getValue());
+    private void withRangeSelectionMode() {
+        EventHandler<MouseEvent> mouseClickedEventHandler = (MouseEvent clickEvent) -> {
+            if (clickEvent.getButton() == MouseButton.PRIMARY) {
+                if (firstDatePicked) {
+                    if (!this.selectedDates.contains(super.getValue())) {
+                        this.selectedDates.add(super.getValue());
 
-                    this.selectedDates.addAll(getRangeGaps((LocalDate) this.selectedDates.toArray()[0], (LocalDate) this.selectedDates.toArray()[this.selectedDates.size() - 1]));
+                        this.selectedDates.addAll(getRangeGaps(getStartDate(), getEndDate()));
+                    } else {
+                        this.selectedDates.remove(super.getValue());
+                        this.selectedDates.removeAll(getTailEndDatesToRemove(this.selectedDates, super.getValue()));
 
-                } else
-                {
-                    this.selectedDates.remove(super.getValue());
-                    this.selectedDates.removeAll(getTailEndDatesToRemove(this.selectedDates, super.getValue()));
+                        super.setValue(getClosestDateInTree(new TreeSet<>(this.selectedDates), super.getValue()));
 
-                    super.setValue(getClosestDateInTree(new TreeSet<>(this.selectedDates), super.getValue()));
-
+                    }
+                } else {
+                    selectedDates.clear();
+                    selectedDates.add(getValue());
                 }
-
+                firstDatePicked = !firstDatePicked;
             }
             super.show();
             clickEvent.consume();
@@ -63,27 +68,21 @@ public class MultiDatePicker extends DatePicker
                 super.updateItem(item, empty);
 
                 //...
-                if (item != null && !empty)
-                {
+                if (item != null && !empty) {
                     //...
                     addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
-                } else
-                {
+                } else {
                     //...
                     removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
                 }
 
-                if (!selectedDates.isEmpty() && selectedDates.contains(item))
-                {
-                    if (Objects.equals(item, selectedDates.toArray()[0]) || Objects.equals(item, selectedDates.toArray()[selectedDates.size() - 1]))
-                    {
+                if (!selectedDates.isEmpty() && selectedDates.contains(item)) {
+                    if (Objects.equals(item, selectedDates.toArray()[0]) || Objects.equals(item, selectedDates.toArray()[selectedDates.size() - 1])) {
                         setStyle("-fx-background-color: rgba(3, 169, 1, 0.7);");
-                    } else
-                    {
+                    } else {
                         setStyle("-fx-background-color: rgba(3, 169, 244, 0.7);");
                     }
-                } else
-                {
+                } else {
                     setStyle(null);
                 }
 
@@ -91,22 +90,43 @@ public class MultiDatePicker extends DatePicker
         });
     }
 
-    public ObservableSet<LocalDate> getSelectedDates()
-    {
-        return this.selectedDates;
+    public LocalDate getStartDate() {
+        var result = selectedDates.stream().findFirst();
+        if (result.isPresent()) return selectedDates.stream().findFirst().get();
+        else return null;
     }
 
-    private void setUpDatePicker()
-    {
-        super.setConverter(new StringConverter<>() {
+    public LocalDate getEndDate() {
+        var array = selectedDates.toArray();
+        if (array.length == 0) return null;
+        return (LocalDate) array[selectedDates.size() - 1];
+    }
+
+    private void setUpDatePicker() {
+        setConverter(new StringConverter<>() {
             @Override
-            public String toString(LocalDate date) {
-                return (date == null) ? "" : DATE_FORMAT.format(date);
+            public String toString(LocalDate object) {
+                if (startDate != null && endDate != null) {
+                    return startDate.format(DATE_FORMAT) + " - " + endDate.format(DATE_FORMAT);
+                }
+                if (object == null) {
+                    return "";
+                }
+                return object.format(DATE_FORMAT);
             }
 
             @Override
             public LocalDate fromString(String string) {
-                return ((string == null) || string.isEmpty()) ? null : LocalDate.parse(string, DATE_FORMAT);
+                if (string.contains("-")) {
+                    try {
+                        startDate = LocalDate.parse(string.split("-")[0].trim(), DATE_FORMAT);
+                        endDate = LocalDate.parse(string.split("-")[1].trim(), DATE_FORMAT);
+                    } catch (DateTimeParseException dte) {
+                        return LocalDate.parse(string, DATE_FORMAT);
+                    }
+                    return startDate;
+                }
+                return LocalDate.parse(string, DATE_FORMAT);
             }
         });
 
