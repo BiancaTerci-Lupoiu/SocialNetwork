@@ -30,10 +30,11 @@ public class Constants {
         public static final String MAIN_VIEW = "views/main-view.fxml";
         public static final String PROFILE = "views/profile.fxml";
 
-
         public static String CREATE_EVENT = "views/events/createEvent.fxml";
         public static String EVENTS = "views/events/events.fxml";
         public static String NOTIFICATIONS="views/events/notifications.fxml";
+
+        public static String ACTIVITY_REPORT="views/reports/activityReport.fxml";
 
 
     }
