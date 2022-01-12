@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import project.lab6.controllers.events.CreateEventController;
 import project.lab6.controllers.events.NotificationsController;
 import project.lab6.controllers.reports.ActivityReportController;
+import project.lab6.controllers.reports.FriendMessagesReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
@@ -86,11 +87,10 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
     public void openReportsView(String reportType){
         if(reportType.equals("Activity Report")){
-            System.out.println(reportType);
             mainViewController.setView(new ActivityReportController(idLoggedUser));
         }
         if(reportType.equals("Friend Messages Report")){
-
+            mainViewController.setView(new FriendMessagesReportController(idLoggedUser));
         }
     }
 
