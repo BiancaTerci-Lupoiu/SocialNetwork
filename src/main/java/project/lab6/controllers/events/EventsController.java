@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.EventForUserDTO;
@@ -78,7 +79,7 @@ public class EventsController extends Controller implements SetterServiceEvents 
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
-        HBox horizontalBox = new HBox();
+        AnchorPane anchorPane = new AnchorPane();
         Label eventTitle = new Label();
         EventForUserDTO event;
         Button subscribeButton = new Button("Subscribe");
@@ -89,12 +90,10 @@ public class EventsController extends Controller implements SetterServiceEvents 
         Consumer<Boolean> updateEventsList;
 
         public CustomCellEvent(ServiceEvents serviceEvents, Long idLoggedUser, Consumer<Boolean> updateEventsList) {
-            super();
             this.serviceEvents = serviceEvents;
             this.idLoggedUser = idLoggedUser;
             this.updateEventsList = updateEventsList;
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
-            horizontalBox.setSpacing(70);
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             subscribeButton.setStyle("-fx-background-color: #5c0e63; -fx-text-fill: #ffffff;-fx-font-family: Cambria Bold;-fx-font-size: 14;");
             unsubscribeButton.setStyle("-fx-background-color: #5c0e63; -fx-text-fill: #ffffff;-fx-font-family: Cambria Bold;-fx-font-size: 14;");
@@ -107,7 +106,8 @@ public class EventsController extends Controller implements SetterServiceEvents 
                 serviceEvents.unsubscribe(idLoggedUser, event.getId());
                 updateEventsList.accept(true);
             });
-
+            AnchorPane.setRightAnchor(subscribeButton, 20D);
+            AnchorPane.setRightAnchor(unsubscribeButton, 20D);
         }
 
         @Override
@@ -119,11 +119,11 @@ public class EventsController extends Controller implements SetterServiceEvents 
             } else {
                 event = item;
                 if (event.isSubscribed())
-                    horizontalBox.getChildren().setAll(eventTitle, unsubscribeButton);
+                    anchorPane.getChildren().setAll(eventTitle, unsubscribeButton);
                 else
-                    horizontalBox.getChildren().setAll(eventTitle, subscribeButton);
+                    anchorPane.getChildren().setAll(eventTitle, subscribeButton);
                 eventTitle.setText(event.getTitle());
-                setGraphic(horizontalBox);
+                setGraphic(anchorPane);
             }
         }
     }

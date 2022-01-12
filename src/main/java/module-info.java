@@ -30,4 +30,5 @@ module project.lab {
     opens project.lab6.controllers.login to javafx.fxml;
     exports project.lab6.controllers.events;
     opens project.lab6.controllers.events to javafx.fxml;
+    exports project.lab6.utils.components;
 }

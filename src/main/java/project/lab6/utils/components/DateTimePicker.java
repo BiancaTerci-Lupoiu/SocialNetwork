@@ -1,4 +1,4 @@
-package project.lab6.utils;
+package project.lab6.utils.components;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

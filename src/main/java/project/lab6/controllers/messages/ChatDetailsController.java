@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
@@ -108,9 +109,13 @@ public class ChatDetailsController extends Controller implements Initializable, 
             changeNickname.setStyle("-fx-background-color: #5c0e63;-fx-font-family: Cambria;-fx-font-size: 14;-fx-text-fill: white;-fx-background-radius: 10;-fx-border-radius: 10");
             horizontalBox.getChildren().addAll(userImage, nicknameLabel);
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
-            rootAnchor.getChildren().addAll(horizontalBox, changeNickname);
-            AnchorPane.setRightAnchor(changeNickname, 20d);
-            AnchorPane.setTopAnchor(changeNickname, 25d);
+            VBox box = new VBox();
+            box.setAlignment(Pos.CENTER_RIGHT);
+            box.getChildren().add(changeNickname);
+            rootAnchor.getChildren().addAll(horizontalBox, box);
+            box.setPrefHeight(50);
+            AnchorPane.setRightAnchor(box, 20d);
+            //AnchorPane.setTopAnchor(changeNickname, 25d);
             changeTextField.setOnKeyPressed(keyEvent ->
             {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
