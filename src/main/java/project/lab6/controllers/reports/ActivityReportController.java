@@ -1,5 +1,6 @@
 package project.lab6.controllers.reports;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -7,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.MainViewController;
 import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceReports;
 import project.lab6.setter.SetterServiceReports;
@@ -20,6 +22,7 @@ public class ActivityReportController extends Controller implements SetterServic
 
     private ServiceReports serviceReports;
     private final Long idLoggedUser;
+    private final MainViewController mainViewController;
 
     @FXML
     public AnchorPane mainAnchorPane;
@@ -30,8 +33,9 @@ public class ActivityReportController extends Controller implements SetterServic
     @FXML
     public MultiDatePicker multiDatePicker;
 
-    public ActivityReportController(Long idLoggedUser) {
+    public ActivityReportController(Long idLoggedUser,MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
+        this.mainViewController=mainViewController;
     }
 
     @Override
@@ -58,5 +62,9 @@ public class ActivityReportController extends Controller implements SetterServic
             }
         }
 
+    }
+
+    public void backToProfileAction() {
+        mainViewController.openProfileView();
     }
 }

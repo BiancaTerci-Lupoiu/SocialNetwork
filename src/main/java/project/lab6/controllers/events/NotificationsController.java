@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.MainViewController;
+import project.lab6.controllers.ProfileController;
 import project.lab6.domain.dtos.Notification;
 import project.lab6.service.ServiceEvents;
 import project.lab6.setter.SetterServiceEvents;
@@ -22,6 +24,7 @@ public class NotificationsController extends Controller implements SetterService
 
     private ServiceEvents serviceEvents;
     private final Long idLoggedUser;
+    private final MainViewController mainViewController;
     ObservableList<Notification> notificationsObservableList= FXCollections.observableArrayList();
 
     @FXML
@@ -29,8 +32,9 @@ public class NotificationsController extends Controller implements SetterService
     @FXML
     public Button refreshButton;
 
-    public NotificationsController(Long idLoggedUser){
+    public NotificationsController(Long idLoggedUser,MainViewController mainViewController){
         this.idLoggedUser=idLoggedUser;
+        this.mainViewController=mainViewController;
     }
 
     @Override
@@ -51,6 +55,10 @@ public class NotificationsController extends Controller implements SetterService
 
     public void refreshNotifications() {
         notificationsObservableList.setAll(serviceEvents.getNotification(idLoggedUser));
+    }
+
+    public void backToProfileAction() {
+        mainViewController.openProfileView();
     }
 
     public static class CustomCellNotification extends ListCell<Notification>{

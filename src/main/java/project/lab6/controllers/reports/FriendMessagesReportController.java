@@ -10,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.MainViewController;
 import project.lab6.domain.Friend;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.service.ServiceException;
@@ -28,6 +29,7 @@ public class FriendMessagesReportController extends Controller implements Setter
     private ServiceReports serviceReports;
     private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
+    private final MainViewController mainViewController;
     ObservableList<Friend> friendsObservableList = FXCollections.observableArrayList();
 
     @FXML
@@ -39,8 +41,9 @@ public class FriendMessagesReportController extends Controller implements Setter
     @FXML
     public MultiDatePicker multiDatePicker;
 
-    public FriendMessagesReportController(Long idLoggedUser) {
+    public FriendMessagesReportController(Long idLoggedUser,MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
+        this.mainViewController=mainViewController;
     }
 
     public void initialize() {
@@ -84,13 +87,17 @@ public class FriendMessagesReportController extends Controller implements Setter
         friendsObservableList.setAll(serviceFriends.searchFriendsByName(idLoggedUser, searchFriendsTextField.getText()));
     }
 
+    public void backToProfileAction() {
+        mainViewController.openProfileView();
+    }
+
     public static class CustomCellFriend extends ListCell<Friend> {
         HBox mainHBox = new HBox();
         Label friendName = new Label();
         Friend friend;
 
         public CustomCellFriend() {
-            friendName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
+            friendName.setStyle("-fx-font-family: Cambria;-fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 16");
             mainHBox.getChildren().setAll(friendName);
             this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent");
         }

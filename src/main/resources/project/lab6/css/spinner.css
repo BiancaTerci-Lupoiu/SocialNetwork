@@ -15,7 +15,9 @@
     -fx-fill: white;
 }
 
-.spinner {
-    -fx-base: rgb(152, 120, 216);
-
+.spinner .text-field {
+    -fx-background-color: #ccccff;
+    -fx-border-color: #5c0e63;
+    -fx-border-radius: 5 0 0 5;
+    -fx-background-radius: 8 0 0 8;
 }

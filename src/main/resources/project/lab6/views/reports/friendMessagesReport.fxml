@@ -70,5 +70,14 @@
                 </Button>
             </children>
         </VBox>
+      <Button fx:id="backToProfileButton" layoutX="358.0" layoutY="439.0" mnemonicParsing="false" onAction="#backToProfileAction" prefHeight="46.0" prefWidth="47.0" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../images/back.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
     </children>
 </AnchorPane>

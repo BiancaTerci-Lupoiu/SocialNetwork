@@ -32,6 +32,7 @@ public class MultiDatePicker extends DatePicker {
         this.selectedDates = FXCollections.observableSet(new TreeSet<>());
         setUpDatePicker();
         withRangeSelectionMode();
+        this.getStylesheets().add("project/lab6/css/datePicker.css");
     }
 
     private void withRangeSelectionMode() {

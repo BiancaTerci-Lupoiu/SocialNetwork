@@ -87,10 +87,10 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
     public void openReportsView(String reportType){
         if(reportType.equals("Activity Report")){
-            mainViewController.setView(new ActivityReportController(idLoggedUser));
+            mainViewController.setView(new ActivityReportController(idLoggedUser,mainViewController));
         }
         if(reportType.equals("Friend Messages Report")){
-            mainViewController.setView(new FriendMessagesReportController(idLoggedUser));
+            mainViewController.setView(new FriendMessagesReportController(idLoggedUser,mainViewController));
         }
     }
 
@@ -105,7 +105,7 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
 
     public void openNotifications() {
-        mainViewController.setView(new NotificationsController(idLoggedUser));
+        mainViewController.setView(new NotificationsController(idLoggedUser,mainViewController));
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {

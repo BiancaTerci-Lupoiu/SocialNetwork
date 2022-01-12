@@ -22,11 +22,11 @@
                 <Font name="Cambria Bold" size="30.0" />
             </font>
         </Label>
-        <Button fx:id="backToLogInButton" layoutX="337.0" layoutY="461.0" mnemonicParsing="false" onAction="#backToLogIn" prefHeight="36.0" prefWidth="30.0" style="-fx-background-color: transparent; -fx-background-radius: 50; -fx-border-radius: 80; -fx-border-color: black;">
+        <Button fx:id="backToLogInButton" layoutX="320.0" layoutY="444.0" mnemonicParsing="false" onAction="#backToLogIn" prefHeight="38.0" prefWidth="49.0" style="-fx-background-color: transparent; ">
             <graphic>
-                <ImageView fitHeight="19.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="32.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../images/arrow-back.jpg" />
+                        <Image url="@../../images/back.png" />
                     </image>
                 </ImageView>
             </graphic>
