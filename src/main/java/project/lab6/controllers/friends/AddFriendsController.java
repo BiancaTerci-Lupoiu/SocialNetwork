@@ -13,16 +13,17 @@ import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.Status;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceFriends;
+import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class AddFriendsController extends Controller {
+public class AddFriendsController extends Controller implements SetterServiceFriends {
 
     private final ObservableList<UserRecord> userRecordList = FXCollections.observableArrayList();
     private final Long idLoggedUser;
-    private final ServiceFriends serviceFriends;
+    private ServiceFriends serviceFriends;
     @FXML
     private TextField userNameTextField;
     @FXML
@@ -32,9 +33,8 @@ public class AddFriendsController extends Controller {
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
 
-    public AddFriendsController(Long idLoggedUser, ServiceFriends serviceFriends) {
+    public AddFriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
-        this.serviceFriends = serviceFriends;
     }
 
     @FXML
@@ -86,5 +86,10 @@ public class AddFriendsController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.ADD_FRIENDS;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 }

@@ -7,7 +7,6 @@ public class Chat extends Entity<Long> {
     private final String name;
     private final boolean isPrivateChat;
     private Color color;
-    private final byte[] image;
 
     /**
      * constructor with id
@@ -17,12 +16,11 @@ public class Chat extends Entity<Long> {
      * @param color         Color
      * @param isPrivateChat boolean
      */
-    public Chat(Long id, String name, Color color, boolean isPrivateChat, byte[] image) {
+    public Chat(Long id, String name, Color color, boolean isPrivateChat) {
         setId(id);
         this.name = name;
         this.color = color;
         this.isPrivateChat = isPrivateChat;
-        this.image = image;
     }
 
     /**
@@ -32,8 +30,8 @@ public class Chat extends Entity<Long> {
      * @param color         Color
      * @param isPrivateChat boolean
      */
-    public Chat(String name, Color color, boolean isPrivateChat, byte[] image) {
-        this(null, name, color, isPrivateChat, image);
+    public Chat(String name, Color color, boolean isPrivateChat) {
+        this(null, name, color, isPrivateChat);
     }
 
     /**
@@ -64,9 +62,5 @@ public class Chat extends Entity<Long> {
      */
     public boolean isPrivateChat() {
         return isPrivateChat;
-    }
-
-    public byte[] getImage() {
-        return image;
     }
 }

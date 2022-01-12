@@ -40,7 +40,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         if (chat == null)
             throw new IllegalArgumentException("user must be not null!");
 
-        return genericSave(chat, new SaveQuery<Chat>() {
+        return genericSave(chat, new SaveQuery<>() {
             @Override
             public void setId(Chat entity, Connection connection) throws SQLException {
                 entity.setId(getLongId(connection, "chats", "id"));
@@ -110,9 +110,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         String name = set.getString("name");
         Color color = Color.valueOf(set.getString("color"));
         boolean isPrivateChat = set.getBoolean("is_private");
-        byte[] image = set.getBytes("image");
-        set.getb
-        return new Chat(id, name, color, isPrivateChat,image);
+        return new Chat(id, name, color, isPrivateChat);
     }
 
     @Override

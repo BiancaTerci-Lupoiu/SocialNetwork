@@ -1,5 +1,6 @@
 package project.lab6.domain.dtos;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import project.lab6.utils.Lazy;
 
@@ -25,12 +26,11 @@ public class PrivateChatDTO extends ChatDTO {
      */
     @Override
     public String getName(Long idLoggedUser) {
-
         return getOtherUser(idLoggedUser).getNickname();
     }
 
     @Override
-    public byte[] getImage(Long idLoggedUser) {
+    public Image getImage(Long idLoggedUser) {
         return getOtherUser(idLoggedUser).getUser().getImage();
     }
 }

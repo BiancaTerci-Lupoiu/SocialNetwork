@@ -10,20 +10,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.utils.UserRecord;
+import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
-import project.lab6.utils.observer.ObservableChatDTO;
+import project.lab6.utils.observer.ObservableResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMemberController extends Controller {
+public class AddMemberController extends Controller implements SetterServiceFriends, SetterServiceMessages {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private final ServiceFriends serviceFriends;
-    private final ServiceMessages serviceMessages;
-    private final ObservableChatDTO observableChatDTO;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
+    private final ObservableResource<ChatDTO> observableChatDTO;
     private final Long idLoggedUser;
     @FXML
     private TextField searchField;
@@ -35,9 +38,8 @@ public class AddMemberController extends Controller {
     private TableView<UserRecord> addMembersTableView;
     @FXML
     private Button backButton;
-    public AddMemberController(ServiceMessages serviceMessages, ServiceFriends serviceFriends, Long idLoggedUser, ObservableChatDTO observableChatDTO) {
-        this.serviceMessages = serviceMessages;
-        this.serviceFriends = serviceFriends;
+
+    public AddMemberController(Long idLoggedUser, ObservableResource<ChatDTO> observableChatDTO) {
         this.idLoggedUser = idLoggedUser;
         this.observableChatDTO = observableChatDTO;
     }
@@ -60,13 +62,13 @@ public class AddMemberController extends Controller {
         addParticipantButton.setText("Add");
         addParticipantButton.setOnAction(event ->
         {
-            serviceMessages.addUserToChat(observableChatDTO.getChat().getIdChat(), id);
+            serviceMessages.addUserToChat(observableChatDTO.getResource().getIdChat(), id);
             addParticipantButton.setText("Added");
             addParticipantButton.disabledProperty();
             usersRecord.remove(new UserRecord(id, serviceFriends.getUserWithFriends(id).getLastName() + " "
                     + serviceFriends.getUserWithFriends(id).getFirstName(), addParticipantButton));
-            Long idChat = observableChatDTO.getChat().getIdChat();
-            observableChatDTO.setChat(serviceMessages.getChatDTO(idChat));
+            Long idChat = observableChatDTO.getResource().getIdChat();
+            observableChatDTO.setResource(serviceMessages.getChatDTO(idChat));
         });
         return addParticipantButton;
     }
@@ -74,7 +76,7 @@ public class AddMemberController extends Controller {
     private List<UserRecord> getUserList(String searchName) {
         List<User> usersList = serviceFriends.searchUsersByName(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
         List<UserRecord> userRecordObservableList = new ArrayList<>();
-        Long idChat = observableChatDTO.getChat().getIdChat();
+        Long idChat = observableChatDTO.getResource().getIdChat();
         for (User user : usersList) {
             if (!(serviceMessages.getChatDTO(idChat).getUsersInfo().stream().map(x -> x.getUser().getId()).toList().contains(user.getId()))) {
                 String name = user.getLastName() + " " + user.getFirstName();
@@ -97,5 +99,15 @@ public class AddMemberController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.ADD_GROUP_MEMBER;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 }

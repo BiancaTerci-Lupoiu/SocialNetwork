@@ -10,13 +10,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.utils.UserFriend;
 import project.lab6.service.ServiceFriends;
+import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
 
-public class FriendsController extends Controller {
-    private final ServiceFriends serviceFriends;
+public class FriendsController extends Controller implements SetterServiceFriends {
+    private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
     @FXML
@@ -30,8 +31,7 @@ public class FriendsController extends Controller {
     @FXML
     TableView<UserFriend> tableViewFriends;
 
-    public FriendsController(Long idLoggedUser, ServiceFriends serviceFriends) {
-        this.serviceFriends = serviceFriends;
+    public FriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
     }
 
@@ -73,5 +73,10 @@ public class FriendsController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.FRIENDS;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 }

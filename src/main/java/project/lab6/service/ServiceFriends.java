@@ -140,18 +140,11 @@ public class ServiceFriends {
      * @param lastName  String
      * @return true- if the given entity is saved
      * otherwise returns false (id already exists)
-     * @throws ValidationException      if the entity is not valid
-     * @throws IllegalArgumentException if the given entity is null.
      */
-    public boolean addUser(String email, String firstName, String lastName, String password, InputStream image) throws IOException {
+    public boolean addUser(String email, String firstName, String lastName, String password) {
         String salt = generateSalt(); //generam un salt random pentru acest user
         String hashPassword = generateHashPassword(password, salt);
-        byte[] imageBytes;
-        if(image == null)
-            imageBytes=null;
-        else
-            imageBytes=image.readAllBytes();
-        User user = new User(email, firstName, lastName, hashPassword, salt, imageBytes);
+        User user = new User(email, firstName, lastName, hashPassword, salt);
         user = repoUsers.save(user);
         return user != null;
     }
@@ -165,7 +158,7 @@ public class ServiceFriends {
         // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
         for (User user : repoUsers.findAll()) {
             User newUser = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
-                    user.getHashPassword(), user.getSalt(), user.getImage());
+                    user.getHashPassword(), user.getSalt());
             usersWithFriends.put(newUser.getId(), newUser);
         }
         for (Friendship friendship : repoFriendships.findAll()) {

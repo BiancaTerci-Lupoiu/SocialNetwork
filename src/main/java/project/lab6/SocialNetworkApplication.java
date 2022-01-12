@@ -19,7 +19,7 @@ public class SocialNetworkApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Factory factory = Factory.getInstance();
-        FXMLLoader fxmlLoader = factory.getLoader(new LoginController(factory.getServiceFriends(), factory.getServiceMessages()));
+        FXMLLoader fxmlLoader = factory.getLoader(new LoginController());
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setScene(scene);
         stage.setResizable(false);

@@ -33,7 +33,7 @@ public class SubscriptionDbRepository extends AbstractDbRepository<TupleWithIdUs
             @Override
             public void setStatementParameters(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, id.getIdUser());
-                statement.setLong(1, id.getIdEvent());
+                statement.setLong(2, id.getIdEvent());
             }
         });
     }
@@ -54,7 +54,7 @@ public class SubscriptionDbRepository extends AbstractDbRepository<TupleWithIdUs
 
             @Override
             public String getSqlString() {
-                return "insert into subscriptions(id_user,id_event,date) values (?,?,?)";
+                return "insert into subscriptions (id_user,id_event,date) values (?,?,?)";
             }
 
             @Override

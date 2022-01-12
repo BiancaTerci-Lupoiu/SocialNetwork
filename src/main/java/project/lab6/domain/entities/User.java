@@ -1,12 +1,17 @@
 package project.lab6.domain.entities;
 
-import project.lab6.SocialNetworkApplication;
+import javafx.scene.image.Image;
 import project.lab6.config.Config;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Friend;
 import project.lab6.utils.Constants;
+import project.lab6.utils.Images;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +24,6 @@ public class User extends Entity<Long> {
     private final String salt;
     private String firstName;
     private String lastName;
-    private final byte[] image;
 
     /**
      * constructor
@@ -31,24 +35,13 @@ public class User extends Entity<Long> {
      * @param hashPassword String of the user
      * @param salt         String of the user
      */
-    public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt, InputStream image) {
+    public User(Long id, String email, String firstName, String lastName, String hashPassword, String salt) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hashPassword = hashPassword;
         this.salt = salt;
         friends = new HashMap<>();
-        if (image == null) {
-            try (InputStream stream = getDefaultImage()) {
-                image = stream.readAllBytes();
-            }
-            catch (IOException ex)
-            {
-                ex.printStackTrace();
-                throw new RuntimeException(ex.getMessage());
-            }
-        }
-        this.image = image;
         setId(id);
     }
 
@@ -61,8 +54,8 @@ public class User extends Entity<Long> {
      * @param hashPassword String of the user
      * @param salt         String of the user
      */
-    public User(String email, String firstName, String lastName, String hashPassword, String salt, byte[] image) {
-        this(null, email, firstName, lastName, hashPassword, salt, image);
+    public User(String email, String firstName, String lastName, String hashPassword, String salt) {
+        this(null, email, firstName, lastName, hashPassword, salt);
     }
 
     /**
@@ -185,18 +178,7 @@ public class User extends Entity<Long> {
         return Objects.hash(getFirstName(), getLastName(), getFriends());
     }
 
-    private InputStream getDefaultImage() throws FileNotFoundException {
-        String path = Config.class.getClassLoader()
-                .getResource(Constants.PATH_DEFAULT_USER_IMAGE)
-                .getPath().replace("%20", " ");
-        return new FileInputStream(path);
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public InputStream getImageStream() {
-        return new ByteArrayInputStream(image);
+    public Image getImage() {
+        return Images.getImage("users",Constants.PATH_DEFAULT_USER_IMAGE, getId());
     }
 }

@@ -15,15 +15,16 @@ import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Status;
 import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
+import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class RequestsController extends Controller {
+public class RequestsController extends Controller implements SetterServiceFriends {
     private final Long idLoggedUser;
-    private final ServiceFriends serviceFriends;
+    private ServiceFriends serviceFriends;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
 
     @FXML
@@ -43,23 +44,20 @@ public class RequestsController extends Controller {
     @FXML
     TableView<UserFriend> tableViewRequests;
 
-    public RequestsController(Long idLoggedUser, ServiceFriends serviceFriends) {
+    public RequestsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
-        this.serviceFriends = serviceFriends;
     }
 
     @FXML
     public void initialize() {
         comboBoxStatus.setPromptText("Select status");
         comboBoxStatus.setItems(FXCollections.observableArrayList("Sent", "Received"));
-
-        comboBoxStatus.getSelectionModel().selectedItemProperty().addListener((x) -> initializeCombo(x.toString()));
         firstName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("firstName")));
         lastName.setCellValueFactory((new PropertyValueFactory<UserFriend, String>("lastName")));
         date.setCellValueFactory((new PropertyValueFactory<UserFriend, Date>("date")));
 
         comboBoxStatus.getSelectionModel().selectedItemProperty().addListener(
-                (x, y, z) -> initializeCombo(z)
+                (observable, oldValue, newValue) -> initializeCombo(newValue)
         );
         tableViewRequests.getStylesheets().add(RequestsController.class.getClassLoader().getResource("project/lab6/css/tableViewNoHorizontalScroll.css").toExternalForm());
 
@@ -146,5 +144,10 @@ public class RequestsController extends Controller {
     @Override
     public String getViewPath() {
         return Constants.View.REQUESTS;
+    }
+
+    @Override
+    public void setServiceFriends(ServiceFriends serviceFriends) {
+        this.serviceFriends = serviceFriends;
     }
 }

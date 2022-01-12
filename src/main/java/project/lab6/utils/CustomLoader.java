@@ -4,6 +4,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import project.lab6.SocialNetworkApplication;
 import project.lab6.controllers.Controller;
+import project.lab6.factory.Factory;
+import project.lab6.setter.SetterServiceEvents;
+import project.lab6.setter.SetterServiceFriends;
+import project.lab6.setter.SetterServiceMessages;
+import project.lab6.setter.SetterServiceReports;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +16,22 @@ import java.io.InputStream;
 public class CustomLoader extends FXMLLoader {
     private final Controller controller;
 
-    public CustomLoader(Controller controller) {
+    public CustomLoader(Factory factory, Controller controller) {
         super(SocialNetworkApplication.class.getResource(controller.getViewPath()));
         setControllerFactory(controllerClass -> controller);
         this.controller = controller;
+        setServices(factory);
+    }
+
+    private void setServices(Factory factory) {
+        if (controller instanceof SetterServiceFriends setter)
+            setter.setServiceFriends(factory.getServiceFriends());
+        if (controller instanceof SetterServiceMessages setter)
+            setter.setServiceMessages(factory.getServiceMessages());
+        if (controller instanceof SetterServiceEvents setter)
+            setter.setServiceEvents(factory.getServiceEvents());
+        if (controller instanceof SetterServiceReports setter)
+            setter.setServiceReports(factory.getServiceReports());
     }
 
     @Override

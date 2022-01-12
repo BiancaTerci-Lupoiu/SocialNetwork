@@ -35,7 +35,7 @@ public class EventDbRepository extends AbstractDbRepository<Long, Event> {
 
     @Override
     public Event save(Event event) {
-        return genericSave(event, new SaveQuery<Event>() {
+        return genericSave(event, new SaveQuery<>() {
             @Override
             public void setId(Event entity, Connection connection) throws SQLException {
                 Long id = getLongId(connection, "events", "id");

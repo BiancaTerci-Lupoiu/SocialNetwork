@@ -57,7 +57,7 @@ public class ServiceMessages {
         User user2 = repoUsers.findOne(idUser2);
         if (user1 == null || user2 == null)
             throw new ServiceException("Users not found");
-        chat = new Chat(null, Constants.DEFAULT_CHAT_COLOR, true, null);
+        chat = new Chat(null, Constants.DEFAULT_CHAT_COLOR, true);
         chat = repoChats.save(chat);
         UserChatInfo info1 = new UserChatInfo(chat.getId(), idUser1, createNickname(user1));
         UserChatInfo info2 = new UserChatInfo(chat.getId(), idUser2, createNickname(user2));
@@ -164,11 +164,19 @@ public class ServiceMessages {
      */
     public ChatDTO getChatDTO(Long idChat) {
         Chat chat = repoChats.findOne(idChat);
-        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(idChat));
-        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(idChat));
+        return getChatDTO(chat);
+    }
+
+    /**
+     * Creates a chatDTO from the specified chat
+     */
+    public ChatDTO getChatDTO(Chat chat)
+    {
+        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(chat.getId()));
+        Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(chat.getId()));
 
         return ChatDTO.createChatDTO(chat.getId(), chat.getName(), chat.getColor(), chat.isPrivateChat(),
-                messages, userInfos, chat.getImage());
+                messages, userInfos);
     }
 
 
@@ -193,7 +201,7 @@ public class ServiceMessages {
      * @return The ChatDTO created
      */
     public ChatDTO createChatGroup(String name, List<Long> idUsers) {
-        Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false, null);
+        Chat chat = new Chat(name, Constants.DEFAULT_CHAT_COLOR, false);
         validatorChat.validate(chat);
         chat = repoChats.save(chat);
         Chat finalChat = chat;
