@@ -1,5 +1,6 @@
 package project.lab6.service;
 
+import javafx.scene.image.Image;
 import project.lab6.domain.NotifyTime;
 import project.lab6.domain.TupleWithIdUserEvent;
 import project.lab6.domain.dtos.EventForUserDTO;
@@ -10,7 +11,8 @@ import project.lab6.domain.entities.events.Event;
 import project.lab6.domain.entities.events.Subscription;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.repointerface.Repository;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,10 +80,10 @@ public class ServiceEvents {
                     boolean subscribedA = eventA.isSubscribed();
                     boolean subscribedB = eventB.isSubscribed();
                     if (subscribedA == subscribedB)
-                        return 0;
+                        return eventA.getDate().compareTo(eventB.getDate());
                     if (subscribedA)
-                        return 1;
-                    return -1;
+                        return -1;
+                    return 1;
                 })
                 .toList();
         return new EventsList(idUser, sortedAfterSubscribedFirst);
@@ -122,11 +124,7 @@ public class ServiceEvents {
                 {
                     LocalDateTime timeA = a.getTimeOfNotifying();
                     LocalDateTime timeB = b.getTimeOfNotifying();
-                    if (timeA.isAfter(timeB))
-                        return 1;
-                    if (timeB.isAfter(timeA))
-                        return -1;
-                    return 0;
+                    return timeB.compareTo(timeA);
                 })
                 .toList();
     }

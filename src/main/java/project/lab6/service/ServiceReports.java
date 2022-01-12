@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceReports {
-
     private final RepositoryChat repoChats;
     private final Repository<Long, Message> repoMessages;
     private final Repository<Long, User> repoUsers;

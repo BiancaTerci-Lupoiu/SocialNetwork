@@ -1,8 +1,11 @@
 package project.lab6.domain.dtos;
 
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import project.lab6.utils.Lazy;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 public abstract class ChatDTO {
@@ -75,4 +78,9 @@ public abstract class ChatDTO {
     public List<UserChatInfoDTO> getUsersInfo() {
         return users.get();
     }
+
+    /**
+     * @return the image of the chat, according to the logged user
+     */
+    public abstract Image getImage(Long idLoggedUser);
 }

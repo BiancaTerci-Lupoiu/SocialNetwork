@@ -41,6 +41,7 @@ public class NewAccountController extends Controller implements SetterServiceFri
      */
     public void registerUser() throws IOException {
         try {
+            //TODO: Poate ar trebui sa poti alege poza aici?
             boolean result = serviceFriends.addUser(emailTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), passwordTextField.getText());
             if (result) {
                 User loggedUser = serviceFriends.findUserByEmail(emailTextField.getText());
