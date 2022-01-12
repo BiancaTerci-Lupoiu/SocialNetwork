@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 public class Constants {
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    public static final Color DEFAULT_CHAT_COLOR = Color.MAGENTA;
+    public static final Color DEFAULT_CHAT_COLOR = Color.PLUM;
 
     public static class View {
         public static final String ADD_FRIENDS = "views/friends/addFriends.fxml";

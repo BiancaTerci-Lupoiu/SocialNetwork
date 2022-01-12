@@ -32,14 +32,17 @@ import java.util.ResourceBundle;
 public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages {
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
+
     private ServiceMessages serviceMessages;
     private final ObservableResource<ChatDTO> observableChatDTO;
     @FXML
-    private HBox hboxButtons;
+    private HBox hBoxButtons;
     @FXML
     private ListView<UserChatInfoDTO> listView;
     @FXML
     private Label chatNameLabel;
+    @FXML
+    public ColorPicker colorPicker;
 
     public ChatDetailsController(Long idLoggerUser, ObservableResource<ChatDTO> observableChatDTO) {
         this.idLoggerUser = idLoggerUser;
@@ -67,8 +70,14 @@ public class ChatDetailsController extends Controller implements Initializable, 
     public void initialize(URL location, ResourceBundle resources) {
         listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
         if (observableChatDTO.getResource().isPrivateChat())
-            hboxButtons.getChildren().remove(0);
+            hBoxButtons.getChildren().remove(0);
         updateChat(observableChatDTO.getResource());
+        colorPicker.setValue(observableChatDTO.getResource().getColor());
+        colorPicker.setOnAction(someEvent->{
+            serviceMessages.changeChatColor(observableChatDTO.getResource().getIdChat(),colorPicker.getValue());
+            observableChatDTO.setResource(serviceMessages.getChatDTO(observableChatDTO.getResource().getIdChat()));
+        });
+
 
     }
 
@@ -80,8 +89,6 @@ public class ChatDetailsController extends Controller implements Initializable, 
         stage.showAndWait();
     }
 
-    public void changeColor() {
-    }
 
     @Override
     public void setServiceMessages(ServiceMessages serviceMessages) {

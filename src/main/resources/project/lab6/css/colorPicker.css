@@ -1,0 +1,10 @@
+.color-picker .arrow {
+    -fx-background-color: white;
+}
+
+.color-picker .text {
+    -fx-fill: white;
+    -fx-font-family: Cambria;
+    -fx-font-size: 14;
+}
+
