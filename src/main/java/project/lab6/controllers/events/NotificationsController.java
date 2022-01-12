@@ -72,7 +72,7 @@ public class NotificationsController extends Controller implements SetterService
             HBox.setHgrow(dateHBox, Priority.ALWAYS);
             mainHBox.getChildren().setAll(messageVBox, dateHBox);
 
-            notificationMessage.setMaxWidth(300);
+            notificationMessage.setMaxWidth(256);
             notificationMessage.setWrapText(true);
             notificationMessage.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             notificationDate.setStyle("-fx-font-family: Cambria; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");

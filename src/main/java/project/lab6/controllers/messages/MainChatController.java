@@ -72,12 +72,6 @@ public class MainChatController extends Controller implements SetterServiceMessa
     public void initialize() {
         chatDTOList.setAll(serviceMessages.getChatsDTO(idLoggedUser));
         listViewChats.setItems(chatDTOList);
-        /*listViewChats.setCellFactory(new Callback<ListView<ChatDTO>, ListCell<ChatDTO>>() {
-            @Override
-            public ListCell<ChatDTO> call(ListView<ChatDTO> param) {
-                return new CustomCellChat(idLoggedUser);
-            }
-        });*/
         listViewChats.setCellFactory(listView -> {
             ListCell<ChatDTO> cell = new CustomCellChat(idLoggedUser);
             cell.setOnMouseClicked(event -> {

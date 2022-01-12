@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import project.lab6.controllers.events.CreateEventController;
 import project.lab6.controllers.events.NotificationsController;
+import project.lab6.controllers.reports.ActivityReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
@@ -58,7 +59,9 @@ public class ProfileController extends Controller implements Initializable, Sett
         labelFirstName.setText(String.format("First name: %s", user.getFirstName()));
         labelLastName.setText(String.format("Last name: %s", user.getLastName()));
         labelEmail.setText(String.format("Email: %s", user.getEmail()));
-        comboBoxReports.setItems(FXCollections.observableArrayList("Full Report", "Friend Messages Report"));
+        comboBoxReports.setItems(FXCollections.observableArrayList("Activity Report", "Friend Messages Report"));
+        comboBoxReports.getSelectionModel().selectedItemProperty().addListener(
+                (observable,oldValue,newValue)->openReportsView(newValue));
         eventsListView.setCellFactory(listView ->{
             ListCell<EventForUserDTO> cell =new CustomCellEvent();
             cell.setOnMouseClicked(someEvent->{
@@ -80,6 +83,15 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
     public void createEvent() {
         mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,null));
+    }
+    public void openReportsView(String reportType){
+        if(reportType.equals("Activity Report")){
+            System.out.println(reportType);
+            mainViewController.setView(new ActivityReportController(idLoggedUser));
+        }
+        if(reportType.equals("Friend Messages Report")){
+
+        }
     }
 
     @Override
@@ -105,7 +117,6 @@ public class ProfileController extends Controller implements Initializable, Sett
 
         public CustomCellEvent() {
             super();
-            //horizontalBox.setSpacing(50);
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");

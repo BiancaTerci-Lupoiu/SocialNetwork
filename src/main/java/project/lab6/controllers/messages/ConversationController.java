@@ -76,9 +76,12 @@ public class ConversationController extends Controller implements Observer<ChatD
     }
 
     @Override
-    public void update(ChatDTO newValue) {
-        groupNameLabel.setText(newValue.getName(idLoggedUser));
-        messageDTOList.setAll(newValue.getMessages());
+    public void update(ChatDTO chatDTO) {
+        groupNameLabel.setText(chatDTO.getName(idLoggedUser));
+        messageDTOList.setAll(chatDTO.getMessages());
+        String chatColor = convertColorToString(chatDTO.getColor());
+        listViewMessages.setStyle("-fx-background-color:" + chatColor);
+        mainVBox.setStyle("-fx-background-color:" + chatColor);
     }
 
     @Override
@@ -97,10 +100,10 @@ public class ConversationController extends Controller implements Observer<ChatD
     public void initialize() {
         ChatDTO chatDTO = observableChatDTO.getResource();
         String chatColor = convertColorToString(chatDTO.getColor());
-        cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
-        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
         listViewMessages.setStyle("-fx-background-color:" + chatColor);
         mainVBox.setStyle("-fx-background-color:" + chatColor);
+        cancelReplyButton.setStyle("-fx-text-fill: white;-fx-font-size: 12;-fx-border-radius: 30;-fx-background-radius: 30;-fx-background-color: black;-fx-font-family: Cambria Bold");
+        listViewMessages.setCellFactory(param -> new CustomCellMessage(idLoggedUser, this::setReplyBarVisible, labelMessageToReply, chatColor, mainChatController));
         typeMessageTextField.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 sendMessageAction();
@@ -188,7 +191,7 @@ public class ConversationController extends Controller implements Observer<ChatD
             verticalBox.setMaxWidth(300.0);
             messageText.setWrapText(true);
             repliedMessageText.setWrapText(true);
-            this.setStyle("-fx-background-color: " + cellColor + ";-fx-border-color: transparent");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent");
             hBoxButtonsReply.setSpacing(5);
             horizontalBox.hoverProperty().addListener((observable, oldValue, newValue) -> hBoxButtonsReply.setVisible(newValue));
             hBoxButtonsReply.setVisible(false);
