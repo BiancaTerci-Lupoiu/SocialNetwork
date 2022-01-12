@@ -208,6 +208,30 @@ public class ServiceFriends {
     }
 
     /**
+     * Returns a list with user's friends whose name(last name + first name) matches the string name
+     *
+     * @param idLoggedUser the id of the logged user
+     * @param searchName       string with a name
+     * @return a list with friends whose name(last name + first name) matches the string searchName
+     */
+    public List<Friend> searchFriendsByName(Long idLoggedUser, String searchName) {
+        String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
+        User user=getUserWithFriends(idLoggedUser);
+        List<Friend> friendsWithName = StreamSupport.stream(user.getFriends().spliterator(), false)
+                .filter(friend -> {
+                    User userFriend=friend.getUser();
+                    String lastNameFirstName = (userFriend.getLastName() + " " + userFriend.getFirstName()).toLowerCase();
+                    String firstNameLastName = (userFriend.getFirstName() + " " + userFriend.getLastName()).toLowerCase();
+                    return (lastNameFirstName.startsWith(name)
+                                    || firstNameLastName.startsWith(name));
+                })
+                .collect(Collectors.toList());
+        System.out.println(friendsWithName.size());
+        return friendsWithName;
+
+    }
+
+    /**
      * @param idUser
      * @param month
      * @return a list of friends of the given user for a specific month

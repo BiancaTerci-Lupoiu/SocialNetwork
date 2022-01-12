@@ -13,6 +13,7 @@ import project.lab6.repository.repointerface.RepositoryChat;
 import project.lab6.utils.Constants;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +30,12 @@ public class ServiceReports {
         this.repoUsers = repoUsers;
     }
 
-    private void validatePeriod(LocalDateTime startDate, LocalDateTime endDate) {
+    private void validatePeriod(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate))
             throw new ValidationException("The period is not valid!");
     }
 
-    private List<Message> getFriendMessagesReport(LocalDateTime startDate, LocalDateTime endDate,
+    private List<Message> getFriendMessagesReport(LocalDate startDate, LocalDate endDate,
                                                   Long idLoggedUser, Long idFriend) {
         validatePeriod(startDate, endDate);
         Chat chat = repoChats.getPrivateChatBetweenUsers(idLoggedUser, idFriend);
@@ -49,7 +50,7 @@ public class ServiceReports {
         return messages;
     }
 
-    public void createFriendMessagesReport(String reportPath, LocalDateTime startDate, LocalDateTime endDate,
+    public void createFriendMessagesReport(String reportPath, LocalDate startDate, LocalDate endDate,
                                            Long idLoggedUser, Long idFriend) {
         var messages = getFriendMessagesReport(startDate, endDate, idLoggedUser, idFriend);
         var loggedUser = repoUsers.findOne(idLoggedUser);
@@ -68,7 +69,7 @@ public class ServiceReports {
                 pageContentStream.newLine();
                 pageContentStream.showText(String.format("This is what %s send you",friend.getFirstName()));
                 pageContentStream.newLine();
-                pageContentStream.showText(String.format("from %s to %s.",startDate.format(Constants.DATETIME_FORMATTER),endDate.format(Constants.DATETIME_FORMATTER)));
+                pageContentStream.showText(String.format("from %s to %s.",startDate.format(Constants.DATE_FORMATTER),endDate.format(Constants.DATE_FORMATTER)));
                 pageContentStream.newLine();
                 pageContentStream.setLeading(15);
                 for (var message : messages) {
@@ -87,5 +88,10 @@ public class ServiceReports {
         } catch (IOException e) {
             throw new ServiceException("The report could not be saved!");
         }
+    }
+
+    public void createFullActivityReport(String reportPath, LocalDate startDate, LocalDate endDate,
+                                         Long idLoggedUser){
+
     }
 }

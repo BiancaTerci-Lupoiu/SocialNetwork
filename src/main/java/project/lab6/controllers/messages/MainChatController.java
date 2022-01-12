@@ -89,7 +89,6 @@ public class MainChatController extends Controller implements SetterServiceMessa
     }
 
     private void updateListWithChatsOnSearch(String chatName) {
-        listViewChats.getItems().clear();
         chatDTOList.setAll(serviceMessages.findChatByName(idLoggedUser, chatName));
     }
 

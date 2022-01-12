@@ -31,7 +31,7 @@
         </HBox>
         <AnchorPane prefHeight="169.0" prefWidth="462.0">
             <children>
-                <ListView fx:id="eventsListView" layoutX="28.0" layoutY="36.0" prefHeight="306.0" prefWidth="396.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
+                <ListView fx:id="eventsListView" layoutX="28.0" layoutY="36.0" prefHeight="306.0" prefWidth="407.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
             </children>
         </AnchorPane>
     </children>

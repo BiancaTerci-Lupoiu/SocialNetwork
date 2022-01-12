@@ -5,7 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceReports;
 import project.lab6.setter.SetterServiceReports;
 import project.lab6.utils.Constants;
@@ -43,17 +45,17 @@ public class ActivityReportController extends Controller implements SetterServic
     }
 
 
-    public void initialize() {
-
-    }
-
     public void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pdf", "*.pdf"));
         File selectedFile = fileChooser.showSaveDialog(getStage());
         if (selectedFile != null) {
-            //TODO: sa apelez functia din service
+            try{
+                serviceReports.createFullActivityReport(selectedFile.getPath(),multiDatePicker.getStartDate(),multiDatePicker.getEndDate(),idLoggedUser);
+            }catch(ServiceException serviceException){
+                AlertMessage.showErrorMessage(serviceException.getMessage());
+            }
         }
 
     }

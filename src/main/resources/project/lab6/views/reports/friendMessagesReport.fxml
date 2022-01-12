@@ -2,19 +2,21 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-
-<!--<?import project.lab6.utils.components.MultiDatePicker?>-->
+<?import project.lab6.utils.components.MultiDatePicker?>
 <AnchorPane fx:id="mainAnchorPane" prefHeight="501.0" prefWidth="450.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.reports.FriendMessagesReportController">
     <children>
-        <Label alignment="CENTER" layoutX="33.0" layoutY="41.0" prefHeight="46.0" prefWidth="270.0" style="-fx-border-color: #5c0e63; -fx-border-radius: 10;" text="Activity Report" textFill="#5c0e63">
+        <Label alignment="CENTER" layoutX="14.0" layoutY="39.0" prefHeight="46.0" prefWidth="409.0" style="-fx-border-color: #5c0e63; -fx-border-radius: 10;" text="Friend Messages Report" textFill="#5c0e63">
             <font>
                 <Font name="Cambria Bold" size="34.0" />
             </font>
@@ -26,7 +28,7 @@
                 </DropShadow>
             </effect>
         </Label>
-        <VBox fx:id="componentsVBox" layoutX="60.0" layoutY="124.0" prefHeight="315.0" prefWidth="292.0" spacing="30">
+        <VBox fx:id="componentsVBox" layoutX="60.0" layoutY="124.0" prefHeight="315.0" prefWidth="292.0" spacing="30.0">
             <children>
                 <HBox prefHeight="38.0" prefWidth="292.0" spacing="10.0">
                     <children>
@@ -35,9 +37,32 @@
                                 <Font name="Cambria Bold Italic" size="17.0" />
                             </font>
                         </Label>
-<!--                        <MultiDatePicker fx:id="multiDatePicker"/>-->
+                    <MultiDatePicker fx:id="multiDatePicker"/>
                     </children>
                 </HBox>
+            <AnchorPane prefHeight="230.0" prefWidth="292.0">
+               <children>
+                  <ListView fx:id="friendsListView" layoutY="44.0" prefHeight="158.0" prefWidth="243.0" style="-fx-background-color: #ccccff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #5c0e63; -fx-padding: 0 0 5 0;" />
+                  <HBox prefHeight="40.0" prefWidth="292.0">
+                     <children>
+                        <TextField fx:id="searchFriendsTextField" prefHeight="40.0" prefWidth="204.0" promptText="Search and select friend..." style="-fx-background-color: #e0ccff; -fx-border-color: #5c0e63; -fx-border-radius: 5; -fx-background-radius: 5;">
+                           <font>
+                              <Font name="Cambria" size="14.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="searchFriendsButton" minWidth="38.0" mnemonicParsing="false" onAction="#searchFriendsByName" prefHeight="34.0" prefWidth="38.0" style="-fx-background-color: #5c0e63;">
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" rotate="-27.5">
+                                 <image>
+                                    <Image url="@../../images/lupa.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
                 <Button fx:id="chooseFileButton" mnemonicParsing="false" onAction="#openFileChooser" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Choose file location" textFill="WHITE">
                     <font>
                         <Font name="Cambria" size="14.0" />

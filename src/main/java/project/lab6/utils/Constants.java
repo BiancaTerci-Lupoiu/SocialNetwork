@@ -35,7 +35,7 @@ public class Constants {
         public static String NOTIFICATIONS="views/events/notifications.fxml";
 
         public static String ACTIVITY_REPORT="views/reports/activityReport.fxml";
-        public static String FRIEND_MESSAGES_REPORT="views/reports/friendMessagesReport";
+        public static String FRIEND_MESSAGES_REPORT="views/reports/friendMessagesReport.fxml";
 
 
     }
