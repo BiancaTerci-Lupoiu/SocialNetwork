@@ -1,36 +1,37 @@
 package project.lab6.controllers.reports;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import project.lab6.controllers.Controller;
 import project.lab6.service.ServiceReports;
 import project.lab6.setter.SetterServiceReports;
 import project.lab6.utils.Constants;
+import project.lab6.utils.components.MultiDatePicker;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.File;
 
-public class ActivityReportController extends Controller implements Initializable, SetterServiceReports {
+public class ActivityReportController extends Controller implements SetterServiceReports {
+
+
     private ServiceReports serviceReports;
     private final Long idLoggedUser;
 
     @FXML
     public AnchorPane mainAnchorPane;
+    @FXML
+    public VBox componentsVBox;
+    @FXML
+    public Button chooseFileButton;
+    @FXML
+    public MultiDatePicker multiDatePicker;
 
-    public ActivityReportController(Long idLoggedUser){
-        this.idLoggedUser=idLoggedUser;
+    public ActivityReportController(Long idLoggedUser) {
+        this.idLoggedUser = idLoggedUser;
     }
+
     @Override
     public String getViewPath() {
         return Constants.View.ACTIVITY_REPORT;
@@ -38,32 +39,22 @@ public class ActivityReportController extends Controller implements Initializabl
 
     @Override
     public void setServiceReports(ServiceReports serviceReports) {
-        this.serviceReports=serviceReports;
+        this.serviceReports = serviceReports;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Menu file = new Menu("File");
-        MenuItem item = new MenuItem("Save");
-        file.getItems().addAll(item);
-        //Creating a File chooser
+
+    public void initialize() {
+
+    }
+
+    public void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        //Adding action on the menu item
-        item.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                //Opening a dialog box
-                fileChooser.showSaveDialog(getStage());
-            }
-        });
-        //Creating a menu bar and adding menu to it.
-        MenuBar menuBar = new MenuBar(file);
-        Group root = new Group(menuBar);
-        Stage stage=new Stage();
-        Scene scene = new Scene(root, 595, 355, Color.BEIGE);
-        stage.setTitle("File Chooser Example");
-        stage.setScene(scene);
-        stage.show();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pdf", "*.pdf"));
+        File selectedFile = fileChooser.showSaveDialog(getStage());
+        if (selectedFile != null) {
+            //TODO: sa apelez functia din service
+        }
+
     }
 }
