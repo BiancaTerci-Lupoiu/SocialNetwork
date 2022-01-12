@@ -74,11 +74,11 @@ public class ChatDetailsController extends Controller implements Initializable, 
         updateChat(observableChatDTO.getResource());
         colorPicker.setValue(observableChatDTO.getResource().getColor());
         colorPicker.setOnAction(someEvent->{
-            serviceMessages.changeChatColor(observableChatDTO.getResource().getIdChat(),colorPicker.getValue());
-            observableChatDTO.setResource(serviceMessages.getChatDTO(observableChatDTO.getResource().getIdChat()));
+            ChatDTO oldChat = observableChatDTO.getResource();
+            serviceMessages.changeChatColor(oldChat.getIdChat(),colorPicker.getValue());
+            ChatDTO newChat = serviceMessages.getChatDTO(oldChat.getIdChat());
+            observableChatDTO.setResource(newChat);
         });
-
-
     }
 
     public void addUserToChat() throws IOException {
