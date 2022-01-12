@@ -2,11 +2,15 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import project.lab6.controllers.events.CreateEventController;
+import project.lab6.controllers.events.NotificationsController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
@@ -88,19 +92,28 @@ public class ProfileController extends Controller implements Initializable, Sett
         this.serviceFriends = serviceFriends;
     }
 
+    public void openNotifications() {
+        mainViewController.setView(new NotificationsController(idLoggedUser));
+    }
+
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
         HBox horizontalBox = new HBox();
+        HBox dateHBox=new HBox();
         Label eventTitle = new Label();
         Label eventDate = new Label();
         EventForUserDTO event;
 
         public CustomCellEvent() {
             super();
-            horizontalBox.setSpacing(50);
+            //horizontalBox.setSpacing(50);
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");
-            horizontalBox.getChildren().addAll(eventTitle, eventDate);
+            dateHBox.getChildren().add(eventDate);
+            dateHBox.setAlignment(Pos.CENTER_RIGHT);
+            dateHBox.setStyle("-fx-padding: 0 70 0 0");
+            HBox.setHgrow(dateHBox, Priority.ALWAYS);
+            horizontalBox.getChildren().addAll(eventTitle, dateHBox);
         }
 
         @Override

@@ -10,7 +10,7 @@
 <VBox alignment="TOP_CENTER" maxHeight="Infinity" maxWidth="Infinity" prefHeight="455.0" prefWidth="483.0" spacing="10" style="-fx-background-color: #bb99ff;" stylesheets="@../css/comboBox.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.ProfileController">
    <AnchorPane prefHeight="80.0" prefWidth="474.0">
       <children>
-         <Button fx:id="notificationsButton" layoutX="22.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="102.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Notifications" textFill="WHITE">
+         <Button fx:id="notificationsButton" onAction="#openNotifications" layoutX="22.0" layoutY="13.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="102.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Notifications" textFill="WHITE">
             <font>
                <Font name="Cambria" size="14.0" />
             </font>

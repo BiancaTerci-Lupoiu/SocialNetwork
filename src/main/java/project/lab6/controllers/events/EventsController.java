@@ -3,8 +3,10 @@ package project.lab6.controllers.events;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.EventForUserDTO;
@@ -72,6 +74,7 @@ public class EventsController extends Controller implements SetterServiceEvents 
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
         HBox titleButtonHBox = new HBox();
+        HBox buttonHBox=new HBox();
         Label eventTitle = new Label();
         EventForUserDTO event;
         Button subscribeButton = new Button("Subscribe");
@@ -106,6 +109,10 @@ public class EventsController extends Controller implements SetterServiceEvents 
                 serviceEvents.unsubscribe(idLoggedUser, event.getId());
                 updateEventsList.accept(true);
             });
+
+            buttonHBox.setAlignment(Pos.CENTER_RIGHT);
+            buttonHBox.setStyle("-fx-padding: 0 40 0 0");
+            HBox.setHgrow(buttonHBox, Priority.ALWAYS);
 
             eventDetailsHBox.getChildren().addAll(descriptionTag, description, dateTag, date);
             eventDetailsHBox.setSpacing(5);
@@ -142,10 +149,13 @@ public class EventsController extends Controller implements SetterServiceEvents 
                 setGraphic(null);
             } else {
                 event = item;
-                if (event.isSubscribed())
-                    titleButtonHBox.getChildren().setAll(eventTitle, unsubscribeButton);
-                else
-                    titleButtonHBox.getChildren().setAll(eventTitle, subscribeButton);
+                if (event.isSubscribed()) {
+                    buttonHBox.getChildren().setAll(unsubscribeButton);
+                    titleButtonHBox.getChildren().setAll(eventTitle, buttonHBox);
+                }else {
+                    buttonHBox.getChildren().setAll(subscribeButton);
+                    titleButtonHBox.getChildren().setAll(eventTitle, buttonHBox);
+                }
                 eventTitle.setText(event.getTitle());
                 setGraphic(mainVBox);
             }

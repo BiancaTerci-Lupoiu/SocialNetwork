@@ -32,6 +32,7 @@ public class Constants {
 
         public static String CREATE_EVENT = "views/events/createEvent.fxml";
         public static String EVENTS = "views/events/events.fxml";
+        public static String NOTIFICATIONS="views/events/notifications.fxml";
 
     }
 }

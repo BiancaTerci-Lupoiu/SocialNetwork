@@ -110,7 +110,7 @@ public class ServiceEvents {
             for (var notifyTime : NotifyTime.values()) {
                 LocalDateTime notifyDate = event.getDate()
                         .minus(notifyTime.getDifferenceInTime());
-                if (notifyDate.isBefore(subscription.getDate()))
+                if (notifyDate.isAfter(subscription.getDate()))
                     continue;
                 if (notifyDate.isBefore(now)) {
                     Notification notification = new Notification(getEventDTO(event, true), notifyTime);
