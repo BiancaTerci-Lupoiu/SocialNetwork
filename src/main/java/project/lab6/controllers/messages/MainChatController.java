@@ -140,8 +140,6 @@ public class MainChatController extends Controller implements SetterServiceMessa
 
         public CustomCellChat(Long idLoggedUser) {
             this.idLoggedUser = idLoggedUser;
-            //groupImage.setFitWidth(35);
-            //groupImage.setFitHeight(35);
             circle.setRadius(25);
             circle.setStroke(Color.web("#5c0e63"));
             circle.setStrokeWidth(2);
@@ -154,9 +152,23 @@ public class MainChatController extends Controller implements SetterServiceMessa
             nameAndMessageVBox.setAlignment(Pos.CENTER_LEFT);
             horizontalBox.setSpacing(10);
             lastMessage.setMaxWidth(110);
-            nameAndMessageVBox.getChildren().setAll(chatName);
         }
 
+        private void setLastMessage(){
+            MessageDTO lastMessageDTO= chat.getLastMessage();
+            if(lastMessageDTO!=null)
+            {
+                UserChatInfoDTO userMessageFrom=lastMessageDTO.getUserFromInfo();
+                String usersNameFrom=userMessageFrom.getNickname();
+                if(userMessageFrom.getUser().getId().equals(idLoggedUser))
+                    usersNameFrom="You";
+                String lastMessageText=usersNameFrom+": "+lastMessageDTO.getText();
+                lastMessage.setText(lastMessageText);
+                nameAndMessageVBox.getChildren().setAll(chatName,lastMessage);
+            }
+            else
+                nameAndMessageVBox.getChildren().setAll(chatName);
+        }
         @Override
         protected void updateItem(ChatDTO item, boolean empty) {
             super.updateItem(item, empty);
@@ -166,20 +178,9 @@ public class MainChatController extends Controller implements SetterServiceMessa
             } else {
                 chat = item;
                 chatName.setText(chat.getName(idLoggedUser));
-                //groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
                 groupImage=item.getImage(idLoggedUser);
                 circle.setFill(new ImagePattern(groupImage));
-                MessageDTO lastMessageDTO= chat.getLastMessage();
-                if(lastMessageDTO!=null)
-                {
-                    UserChatInfoDTO userMessageFrom=lastMessageDTO.getUserFromInfo();
-                    String usersNameFrom=userMessageFrom.getNickname();
-                    if(userMessageFrom.getUser().getId().equals(idLoggedUser))
-                        usersNameFrom="You";
-                    String lastMessageText=usersNameFrom+": "+lastMessageDTO.getText();
-                    lastMessage.setText(lastMessageText);
-                    nameAndMessageVBox.getChildren().setAll(chatName,lastMessage);
-                }
+                setLastMessage();
                 setGraphic(horizontalBox);
             }
         }

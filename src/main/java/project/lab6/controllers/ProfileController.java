@@ -128,9 +128,15 @@ public class ProfileController extends Controller implements Initializable, Sett
     public void changePictureAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Png", "*.png"), new FileChooser.ExtensionFilter("Jpg", "*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png","*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(getStage());
-        System.out.println(selectedFile);
+        try {
+            serviceFriends.saveUserImage(idLoggedUser, selectedFile.getPath());
+            Image userImage = serviceFriends.getUserWithFriends(idLoggedUser).getImage();
+            circle.setFill(new ImagePattern(userImage));
+        } catch (ServiceException serviceException) {
+            AlertMessage.showErrorMessage(serviceException.getMessage());
+        }
 
     }
 
@@ -143,7 +149,7 @@ public class ProfileController extends Controller implements Initializable, Sett
 
         public CustomCellEvent() {
             super();
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");
             dateHBox.getChildren().add(eventDate);

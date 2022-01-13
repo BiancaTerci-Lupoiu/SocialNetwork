@@ -51,9 +51,7 @@ public class CreateGroupController extends Controller implements SetterServiceMe
         this.mainChatController = mainChatController;
     }
 
-    /*todo trebuie setat numele chat-ului(constructor?)--done
-     *  trebuie adaugat userul logat in grup pe langa userii pe care doreste sa ii adauge--done
-     * todo fiecare user adaugat in grup trebuie sters din observable */
+
     @FXML
     public void initialize() {
         addParticipantsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
