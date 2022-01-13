@@ -14,7 +14,6 @@ import project.lab6.utils.Constants;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,35 @@ public class ServiceReports {
         if (startDate.isAfter(endDate))
             throw new ValidationException("The period is not valid!");
     }
+    private void validateFullActivityReport(String reportPath, LocalDate startDate, LocalDate endDate,
+                                        Long idLoggedUser)
+    {
+        String errors= getErrorMessagesForInputArguments(reportPath, startDate, endDate, idLoggedUser);
+        if(!errors.isEmpty())
+            throw new ServiceException(errors);
+    }
+    private void validateMessageReport(String reportPath, LocalDate startDate, LocalDate endDate,
+                                       Long idLoggedUser, Long idFriend)
+    {
+        String errors= getErrorMessagesForInputArguments(reportPath, startDate, endDate, idLoggedUser);
+        if(idFriend==null)
+            errors+="invalid friend!\n";
+        if(!errors.isEmpty())
+            throw new ServiceException(errors);
+    }
+
+    private String getErrorMessagesForInputArguments(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser) {
+        String errors="";
+        if(reportPath==null)
+            errors+="invalid file location!\n";
+        if(startDate==null)
+            errors+="invalid start date!\n";
+        if(endDate==null)
+            errors+="invalid end date!\n";
+        if(idLoggedUser==null)
+            errors+="invalid logged user!\n";
+        return errors;
+    }
 
     private List<Message> getFriendMessagesReport(LocalDate startDate, LocalDate endDate,
                                                   Long idLoggedUser, Long idFriend) {
@@ -52,6 +80,7 @@ public class ServiceReports {
 
     public void createFriendMessagesReport(String reportPath, LocalDate startDate, LocalDate endDate,
                                            Long idLoggedUser, Long idFriend) {
+        validateMessageReport(reportPath,startDate,endDate,idLoggedUser,idFriend);
         var messages = getFriendMessagesReport(startDate, endDate, idLoggedUser, idFriend);
         var loggedUser = repoUsers.findOne(idLoggedUser);
         var friend = repoUsers.findOne(idFriend);
@@ -92,6 +121,7 @@ public class ServiceReports {
 
     public void createFullActivityReport(String reportPath, LocalDate startDate, LocalDate endDate,
                                          Long idLoggedUser){
+        validateFullActivityReport(reportPath,startDate,endDate,idLoggedUser);
 
     }
 }

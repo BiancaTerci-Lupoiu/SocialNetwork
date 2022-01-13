@@ -1,6 +1,5 @@
 package project.lab6.controllers.reports;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -33,9 +32,9 @@ public class ActivityReportController extends Controller implements SetterServic
     @FXML
     public MultiDatePicker multiDatePicker;
 
-    public ActivityReportController(Long idLoggedUser,MainViewController mainViewController) {
+    public ActivityReportController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
-        this.mainViewController=mainViewController;
+        this.mainViewController = mainViewController;
     }
 
     @Override
@@ -54,13 +53,12 @@ public class ActivityReportController extends Controller implements SetterServic
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pdf", "*.pdf"));
         File selectedFile = fileChooser.showSaveDialog(getStage());
-        if (selectedFile != null) {
-            try{
-                serviceReports.createFullActivityReport(selectedFile.getPath(),multiDatePicker.getStartDate(),multiDatePicker.getEndDate(),idLoggedUser);
-            }catch(ServiceException serviceException){
-                AlertMessage.showErrorMessage(serviceException.getMessage());
-            }
+        try {
+            serviceReports.createFullActivityReport(selectedFile.getPath(), multiDatePicker.getStartDate(), multiDatePicker.getEndDate(), idLoggedUser);
+        } catch (ServiceException serviceException) {
+            AlertMessage.showErrorMessage(serviceException.getMessage());
         }
+
 
     }
 

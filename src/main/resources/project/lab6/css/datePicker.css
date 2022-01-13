@@ -3,6 +3,8 @@
     -fx-background-radius: 0;
     -fx-border-width: 2;
     -fx-border-color: #5c0e63;
+    -fx-border-radius: 0 5 5 0;
+    -fx-background-radius: 0 5 5 0;
 }
 .date-picker .arrow-button:hover {
     -fx-background-color: #76117d;
@@ -47,5 +49,5 @@
     -fx-background-color: #ccccff;
     -fx-border-color: #5c0e63;
     -fx-border-radius: 5 0 0 5;
-    -fx-background-radius: 8 0 0 8;
+    -fx-background-radius: 5 0 0 5;
 }

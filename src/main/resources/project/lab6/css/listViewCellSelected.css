@@ -1,0 +1,8 @@
+.list-view:focused .contact-list-cell:selected{
+    -fx-background-color: #76117d;
+    -fx-control-inner-background:#76117d;
+}
+.list-view .cell .selected{
+    -fx-text-fill: white;
+    -fx-control-inner-background:#76117d;
+}

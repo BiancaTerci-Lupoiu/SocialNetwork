@@ -2,17 +2,14 @@ package project.lab6.controllers.reports;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.MainViewController;
 import project.lab6.domain.Friend;
-import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceReports;
@@ -41,9 +38,9 @@ public class FriendMessagesReportController extends Controller implements Setter
     @FXML
     public MultiDatePicker multiDatePicker;
 
-    public FriendMessagesReportController(Long idLoggedUser,MainViewController mainViewController) {
+    public FriendMessagesReportController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
-        this.mainViewController=mainViewController;
+        this.mainViewController = mainViewController;
     }
 
     public void initialize() {
@@ -51,6 +48,7 @@ public class FriendMessagesReportController extends Controller implements Setter
         friendsListView.setItems(friendsObservableList);
         searchFriendsTextField.textProperty().addListener((obs, oldText, newText) -> searchFriendsByName());
         friendsListView.setCellFactory(param -> new CustomCellFriend());
+        friendsListView.getStylesheets().add("project/lab6/css/listViewCellSelected.css");
     }
 
     @Override
@@ -73,14 +71,17 @@ public class FriendMessagesReportController extends Controller implements Setter
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pdf", "*.pdf"));
         File selectedFile = fileChooser.showSaveDialog(getStage());
-        if (selectedFile != null) {
+        Friend selectedFriend = friendsListView.getSelectionModel().getSelectedItem();
+        if (selectedFriend == null)
+            AlertMessage.showErrorMessage("You have to choose a friend from the list!\n");
+        else {
             try {
-                Friend selectedFriend=friendsListView.getSelectionModel().getSelectedItem();
-                serviceReports.createFriendMessagesReport(selectedFile.getPath(),multiDatePicker.getStartDate(),multiDatePicker.getEndDate(),idLoggedUser,selectedFriend.getUser().getId());
-            }catch(ServiceException serviceException){
+                serviceReports.createFriendMessagesReport(selectedFile.getPath(), multiDatePicker.getStartDate(), multiDatePicker.getEndDate(), idLoggedUser, selectedFriend.getUser().getId());
+            } catch (ServiceException serviceException) {
                 AlertMessage.showErrorMessage(serviceException.getMessage());
             }
         }
+
     }
 
     public void searchFriendsByName() {
@@ -99,7 +100,18 @@ public class FriendMessagesReportController extends Controller implements Setter
         public CustomCellFriend() {
             friendName.setStyle("-fx-font-family: Cambria;-fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 16");
             mainHBox.getChildren().setAll(friendName);
-            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;");
+            this.setOnMouseClicked(someEvent->{
+                friendName.setStyle("-fx-text-fill: white;-fx-font-family: Cambria;-fx-font-size: 16");
+                this.setStyle("-fx-background-color: #76117d;-fx-border-radius: 10;-fx-background-radius: 10");
+            });
+            this.focusedProperty().addListener((observable, oldValue, newValue) ->
+            {
+                if (oldValue && !newValue ){
+                    friendName.setStyle("-fx-font-family: Cambria;-fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 16");
+                    this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;");
+                }
+            });
         }
 
         @Override
