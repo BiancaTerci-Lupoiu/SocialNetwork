@@ -2,14 +2,13 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -73,10 +72,10 @@ public class ProfileController extends Controller implements Initializable, Sett
         labelEmail.setText(String.format("Email: %s", user.getEmail()));
         comboBoxReports.setItems(FXCollections.observableArrayList("Activity Report", "Friend Messages Report"));
         comboBoxReports.getSelectionModel().selectedItemProperty().addListener(
-                (observable,oldValue,newValue)->openReportsView(newValue));
-        eventsListView.setCellFactory(listView ->{
-            ListCell<EventForUserDTO> cell =new CustomCellEvent();
-            cell.setOnMouseClicked(someEvent->{
+                (observable, oldValue, newValue) -> openReportsView(newValue));
+        eventsListView.setCellFactory(listView -> {
+            ListCell<EventForUserDTO> cell = new CustomCellEvent();
+            cell.setOnMouseClicked(someEvent -> {
                 editEvent(cell.getItem());
             });
             return cell;
@@ -84,7 +83,7 @@ public class ProfileController extends Controller implements Initializable, Sett
         eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
         eventsListView.setItems(eventsForUserDTOList);
 
-        Image userImage=user.getImage();
+        Image userImage = user.getImage();
         circle.setFill(new ImagePattern(userImage));
         circle.setStrokeWidth(2);
         circle.setRadius(30);
@@ -96,18 +95,20 @@ public class ProfileController extends Controller implements Initializable, Sett
         return Constants.View.PROFILE;
     }
 
-    public void editEvent(EventForUserDTO event){
-        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,event));
+    public void editEvent(EventForUserDTO event) {
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController, event));
     }
+
     public void createEvent() {
-        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,null));
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController, null));
     }
-    public void openReportsView(String reportType){
-        if(reportType.equals("Activity Report")){
-            mainViewController.setView(new ActivityReportController(idLoggedUser,mainViewController));
+
+    public void openReportsView(String reportType) {
+        if (reportType.equals("Activity Report")) {
+            mainViewController.setView(new ActivityReportController(idLoggedUser, mainViewController));
         }
-        if(reportType.equals("Friend Messages Report")){
-            mainViewController.setView(new FriendMessagesReportController(idLoggedUser,mainViewController));
+        if (reportType.equals("Friend Messages Report")) {
+            mainViewController.setView(new FriendMessagesReportController(idLoggedUser, mainViewController));
         }
     }
 
@@ -122,28 +123,34 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
 
     public void openNotifications() {
-        mainViewController.setView(new NotificationsController(idLoggedUser,mainViewController));
+        mainViewController.setView(new NotificationsController(idLoggedUser, mainViewController));
     }
 
     public void changePictureAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Png", "*.png"), new FileChooser.ExtensionFilter("Jpg", "*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png","*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(getStage());
-        System.out.println(selectedFile);
+        try {
+            serviceFriends.saveUserImage(idLoggedUser, selectedFile.getPath());
+            Image userImage = serviceFriends.getUserWithFriends(idLoggedUser).getImage();
+            circle.setFill(new ImagePattern(userImage));
+        } catch (ServiceException serviceException) {
+            AlertMessage.showErrorMessage(serviceException.getMessage());
+        }
 
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
         HBox horizontalBox = new HBox();
-        HBox dateHBox=new HBox();
+        HBox dateHBox = new HBox();
         Label eventTitle = new Label();
         Label eventDate = new Label();
         EventForUserDTO event;
 
         public CustomCellEvent() {
             super();
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             eventDate.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");
             dateHBox.getChildren().add(eventDate);

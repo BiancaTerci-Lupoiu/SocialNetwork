@@ -85,7 +85,7 @@ public class NotificationsController extends Controller implements SetterService
             notificationMessage.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 15");
             notificationDate.setStyle("-fx-font-family: Cambria; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic");
 
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10;-fx-padding: 5 2 5 2");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10;-fx-padding: 5 2 5 2");
 
         }
 

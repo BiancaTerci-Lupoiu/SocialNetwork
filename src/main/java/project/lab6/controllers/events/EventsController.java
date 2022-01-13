@@ -93,7 +93,7 @@ public class EventsController extends Controller implements SetterServiceEvents 
             this.serviceEvents = serviceEvents;
             this.idLoggedUser = idLoggedUser;
             this.updateEventsList = updateEventsList;
-            this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
+            this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;-fx-background-radius: 10 10 10 10;-fx-border-radius: 10 10 10 10");
 
             titleButtonHBox.setSpacing(120);
             eventTitle.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63;-fx-background-color: transparent; -fx-font-size: 16");

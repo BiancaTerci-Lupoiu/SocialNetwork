@@ -36,7 +36,7 @@
    <HBox alignment="CENTER_LEFT" prefHeight="6.0" prefWidth="483.0" spacing="15.0" style="-fx-padding: 0 10 0 17; -fx-spacing: 2;">
       <children>
          <Circle fx:id="circle" fill="DODGERBLUE" radius="21.0" stroke="BLACK" strokeType="INSIDE" />
-          <Label prefHeight="30.0" prefWidth="90.0" text="Profile" textFill="#5a0f61" underline="true">
+          <Label prefHeight="30.0" prefWidth="74.0" text="Profile" textFill="#5a0f61" underline="true">
               <font>
                   <Font name="Cambria Bold" size="22.0" />
               </font>
@@ -48,7 +48,7 @@
                </DropShadow>
             </effect>
           </Label>
-         <Button fx:id="changePictureButton" mnemonicParsing="false" onAction="#changePictureAction" prefHeight="28.0" prefWidth="142.0" style="-fx-background-color: transparent;" text="Change picture" textFill="#5c0e63">
+         <Button fx:id="changePictureButton" mnemonicParsing="false" onAction="#changePictureAction" prefHeight="28.0" prefWidth="135.0" style="-fx-background-color: transparent;" text="Change picture" textFill="#5c0e63">
             <graphic>
                <ImageView fitHeight="17.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true">
                    <image>

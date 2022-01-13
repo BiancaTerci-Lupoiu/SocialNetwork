@@ -79,9 +79,9 @@ public class MultiDatePicker extends DatePicker {
 
                 if (!selectedDates.isEmpty() && selectedDates.contains(item)) {
                     if (Objects.equals(item, selectedDates.toArray()[0]) || Objects.equals(item, selectedDates.toArray()[selectedDates.size() - 1])) {
-                        setStyle("-fx-background-color: rgba(3, 169, 1, 0.7);");
+                        setStyle("-fx-background-color: rgba(255, 240, 0, 1);");
                     } else {
-                        setStyle("-fx-background-color: rgba(3, 169, 244, 0.7);");
+                        setStyle("-fx-background-color: rgba(165, 55, 253, 1);");
                     }
                 } else {
                     setStyle(null);
