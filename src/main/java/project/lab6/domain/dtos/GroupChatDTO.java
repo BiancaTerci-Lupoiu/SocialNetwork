@@ -31,4 +31,9 @@ public class GroupChatDTO extends ChatDTO {
     public Image getImage(Long idLoggedUser) {
         return Images.getImage("chats", Constants.PATH_DEFAULT_GROUP_CHAT_IMAGE, getIdChat());
     }
+
+    @Override
+    public void saveImage(String path) throws IOException {
+        Images.saveImage("chats",getIdChat(), path);
+    }
 }
