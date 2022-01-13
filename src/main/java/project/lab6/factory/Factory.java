@@ -72,8 +72,7 @@ public class Factory implements AutoCloseable {
      * @return the instance of the class
      */
     public static Factory getInstance() {
-        if (instance == null)
-            instance = new Factory();
+        if (instance == null) instance = new Factory();
         return instance;
     }
 
@@ -81,8 +80,7 @@ public class Factory implements AutoCloseable {
      * @return the user validator
      */
     public Validator<User> getUserValidator() {
-        if (userValidator == null)
-            userValidator = new UserValidator();
+        if (userValidator == null) userValidator = new UserValidator();
         return userValidator;
     }
 
@@ -90,14 +88,12 @@ public class Factory implements AutoCloseable {
      * @return the friendship validator
      */
     public Validator<Friendship> getFriendshipValidator() {
-        if (friendshipValidator == null)
-            friendshipValidator = new FriendshipValidator();
+        if (friendshipValidator == null) friendshipValidator = new FriendshipValidator();
         return friendshipValidator;
     }
 
     public Validator<Chat> getChatValidator() {
-        if (chatValidator == null)
-            chatValidator = new ChatValidator();
+        if (chatValidator == null) chatValidator = new ChatValidator();
         return chatValidator;
     }
 
@@ -112,8 +108,7 @@ public class Factory implements AutoCloseable {
     }
 
     public Validator<Event> getEventValidator() {
-        if (eventValidator == null)
-            eventValidator = new EventValidator();
+        if (eventValidator == null) eventValidator = new EventValidator();
         return eventValidator;
     }
 
@@ -173,28 +168,19 @@ public class Factory implements AutoCloseable {
      * @return the ServiceFriends
      */
     public ServiceFriends getServiceFriends() {
-        if (serviceFriends == null)
-            serviceFriends = new ServiceFriends(getUserRepository(),
-                    getFriendshipRepository());
+        if (serviceFriends == null) serviceFriends = new ServiceFriends(getUserRepository(), getFriendshipRepository());
         return serviceFriends;
     }
 
     public ServiceMessages getServiceMessages() {
         if (serviceMessages == null)
-            serviceMessages = new ServiceMessages(
-                    getUserRepository(),
-                    getRepositoryChat(),
-                    getChatValidator(),
-                    getMessageRepository(),
-                    getMessageValidator(),
-                    getUserChatInfoRepository(),
-                    getUserChatInfoValidator());
+            serviceMessages = new ServiceMessages(getUserRepository(), getRepositoryChat(), getChatValidator(), getMessageRepository(), getMessageValidator(), getUserChatInfoRepository(), getUserChatInfoValidator());
         return serviceMessages;
     }
 
     public ServiceReports getServiceReports() {
         if (serviceReports == null)
-            serviceReports = new ServiceReports(getRepositoryChat(), getMessageRepository(), getUserRepository());
+            serviceReports = new ServiceReports(getRepositoryChat(), getMessageRepository(), getUserRepository(), getFriendshipRepository(), getUserChatInfoRepository(), getServiceMessages());
         return serviceReports;
     }
 
