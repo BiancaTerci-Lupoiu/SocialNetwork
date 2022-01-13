@@ -7,6 +7,7 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryUser;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,38 @@ public class ServiceFriends {
     public ServiceFriends(RepositoryUser repoUsers, Repository<Tuple<Long, Long>, Friendship> repoFriendships) {
         this.repoUsers = repoUsers;
         this.repoFriendships = repoFriendships;
+    }
+
+    /**
+     * Saves a user image
+     * @param path the path to the image to save
+     * @throws ServiceException If the saving operation fails
+     */
+    public void saveUserImage(Long idUser, String path)
+    {
+        User user = repoUsers.findOne(idUser);
+        if(user == null)
+            throw new ServiceException("The users doesn't exist!");
+        try
+        {
+            user.saveImage(path);
+        }
+        catch (IOException ex)
+        {
+            throw new ServiceException("The image could not be saved!");
+        }
+    }
+
+    public void deleteUserImage(Long idUser)
+    {
+        User user = repoUsers.findOne(idUser);
+        if(repoUsers.findOne(idUser) == null)
+            throw new ServiceException("The users doesn't exist!");
+        try {
+            user.deleteImage();
+        } catch (IOException e) {
+            throw new ServiceException("The image cannot be deleted");
+        }
     }
 
     /**
@@ -116,7 +149,6 @@ public class ServiceFriends {
                 })
                 .collect(Collectors.toList());
         return usersWithName;
-
     }
 
     /**

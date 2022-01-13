@@ -4,6 +4,8 @@ import project.lab6.domain.TupleWithIdChatUser;
 import project.lab6.domain.entities.chat.UserChatInfo;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +21,11 @@ public class UserChatInfoDbRepository extends AbstractDbRepository<TupleWithIdCh
     @Override
     public List<UserChatInfo> findAll() {
         return genericFindAll("select * from user_infos");
+    }
+
+    @Override
+    public Page<UserChatInfo> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable, "select * from user_infos ORDER BY id_user, id_chat LIMIT ? OFFSET ?");
     }
 
     @Override

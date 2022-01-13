@@ -3,6 +3,9 @@ package project.lab6.repository.database;
 import project.lab6.domain.entities.Entity;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.PageImplementation;
+import project.lab6.repository.paging.Pageable;
 import project.lab6.repository.repointerface.Repository;
 
 import java.sql.Connection;
@@ -49,6 +52,34 @@ public abstract class AbstractDbRepository<ID, E extends Entity<ID>> implements 
                 connectionPool.releaseConnection(connection);
         }
         return entities;
+    }
+
+    /**
+     * @param getAllPagedSqlStatement This statement shoul have 2 parameters: one for Limit and one for offset in this order
+     */
+    protected Page<E> genericFindAllPaged(Pageable pageable, String getAllPagedSqlStatement) {
+        List<E> entities = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            try (PreparedStatement statement = connection.prepareStatement(getAllPagedSqlStatement)) {
+                int limit = pageable.getPageSize();
+                int offset = pageable.getPageNumber() * pageable.getPageSize();
+                statement.setInt(1, limit);
+                statement.setInt(2, offset);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        entities.add(getEntityFromSet(resultSet));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null)
+                connectionPool.releaseConnection(connection);
+        }
+        return new PageImplementation<>(pageable, entities);
     }
 
     protected E genericFindOne(Query query) {

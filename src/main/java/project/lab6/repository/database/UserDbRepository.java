@@ -5,6 +5,8 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 import project.lab6.repository.repointerface.RepositoryUser;
 
 import java.sql.Connection;
@@ -27,6 +29,10 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
         return genericFindAll("SELECT * FROM users");
     }
 
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable, "SELECT * FROM users ORDER BY id LIMIT ? OFFSET ?");
+    }
     /**
      * @param id -the id of the user to be returned
      *           id must not be null

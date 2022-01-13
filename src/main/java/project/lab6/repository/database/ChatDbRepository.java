@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import project.lab6.domain.entities.chat.Chat;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 import project.lab6.repository.repointerface.RepositoryChat;
 
 import java.sql.Connection;
@@ -102,6 +104,11 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
     @Override
     public List<Chat> findAll() {
         return genericFindAll("select * from chats");
+    }
+
+    @Override
+    public Page<Chat> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable,"select * from chats ORDER BY id LIMIT ? OFFSET ?");
     }
 
     @Override

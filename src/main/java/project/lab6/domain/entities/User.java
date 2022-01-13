@@ -1,17 +1,12 @@
 package project.lab6.domain.entities;
 
 import javafx.scene.image.Image;
-import project.lab6.config.Config;
 import project.lab6.domain.DirectedStatus;
 import project.lab6.domain.Friend;
 import project.lab6.utils.Constants;
 import project.lab6.utils.Images;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -179,6 +174,14 @@ public class User extends Entity<Long> {
     }
 
     public Image getImage() {
-        return Images.getImage("users",Constants.PATH_DEFAULT_USER_IMAGE, getId());
+        return Images.getImage("users", Constants.PATH_DEFAULT_USER_IMAGE, getId());
+    }
+
+    public void saveImage(String imagePath) throws IOException {
+        Images.saveImage("users", getId(), imagePath);
+    }
+
+    public void deleteImage() throws IOException{
+        Images.deleteImage("users",getId());
     }
 }

@@ -16,6 +16,7 @@ import project.lab6.repository.repointerface.RepositoryUser;
 import project.lab6.utils.Constants;
 import project.lab6.utils.Lazy;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +41,38 @@ public class ServiceMessages {
         this.validatorMessage = validatorMessage;
         this.repoUserChatInfo = repoUserChatInfo;
         this.validatorUserChatInfo = validatorUserChatInfo;
+    }
+
+    /**
+     * Saves a user image
+     * @param path the path to the image to save
+     * @throws ServiceException If the saving operation fails
+     */
+    public void saveChatImage(Long idChat, String path)
+    {
+        Chat chat = repoChats.findOne(idChat);
+        if(chat == null)
+            throw new ServiceException("The users doesn't exist!");
+        try
+        {
+            getChatDTO(chat).saveImage(path);
+        }
+        catch (IOException ex)
+        {
+            throw new ServiceException("The image could not be saved!");
+        }
+    }
+
+    public void deleteChatImage(Long idChat)
+    {
+        User user = repoUsers.findOne(idChat);
+        if(repoUsers.findOne(idChat) == null)
+            throw new ServiceException("The users doesn't exist!");
+        try {
+            user.deleteImage();
+        } catch (IOException e) {
+            throw new ServiceException("The image cannot be deleted");
+        }
     }
 
     /**

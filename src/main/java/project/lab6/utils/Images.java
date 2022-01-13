@@ -2,9 +2,12 @@ package project.lab6.utils;
 
 import javafx.scene.image.Image;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class Images {
     private Images() {
@@ -30,6 +33,11 @@ public class Images {
     public static void saveImage(String folderName, Long id, String imagePath) throws IOException {
         //This saving in practice is just a copy
         String destinationPath = getPath(folderName, id);
-        Files.copy(Path.of(imagePath), Path.of(destinationPath));
+        Files.copy(Path.of(imagePath), Path.of(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public static void deleteImage(String folderName, Long id) throws IOException{
+        var path = getPath(folderName,id);
+        Files.delete(Path.of(path));
     }
 }
