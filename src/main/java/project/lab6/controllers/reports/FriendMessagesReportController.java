@@ -48,7 +48,7 @@ public class FriendMessagesReportController extends Controller implements Setter
         friendsListView.setItems(friendsObservableList);
         searchFriendsTextField.textProperty().addListener((obs, oldText, newText) -> searchFriendsByName());
         friendsListView.setCellFactory(param -> new CustomCellFriend());
-        friendsListView.getStylesheets().add("project/lab6/css/listViewCellSelected.css");
+
     }
 
     @Override
