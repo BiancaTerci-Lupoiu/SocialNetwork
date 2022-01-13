@@ -10,6 +10,9 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
     private final Predicate<T> filter;
     private final int pageSize;
 
+    private boolean isMoreToLoad = true;
+    private T lastItem = null;
+
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
         this.filter = filter;
@@ -28,6 +31,21 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
             if (content.size() == 0)
                 break;
         }
+        int size = elementsInResult.size();
+        if (size < pageSize)
+            isMoreToLoad = false;
+        if (size > 0)
+            lastItem = elementsInResult.get(size - 1);
         return elementsInResult;
+    }
+
+    @Override
+    public T getLastItemLoaded() {
+        return lastItem;
+    }
+
+    @Override
+    public boolean isMoreToLoad() {
+        return isMoreToLoad;
     }
 }

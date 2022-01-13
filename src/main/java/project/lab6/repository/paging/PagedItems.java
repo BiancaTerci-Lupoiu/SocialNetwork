@@ -7,4 +7,6 @@ public interface PagedItems<T> {
      * @return the next items
      */
     List<T> getNextItems();
+    T getLastItemLoaded();
+    boolean isMoreToLoad();
 }

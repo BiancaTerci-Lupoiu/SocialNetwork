@@ -2,14 +2,13 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -21,7 +20,6 @@ import project.lab6.controllers.reports.FriendMessagesReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
-import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.setter.SetterServiceEvents;
 import project.lab6.setter.SetterServiceFriends;
@@ -73,10 +71,10 @@ public class ProfileController extends Controller implements Initializable, Sett
         labelEmail.setText(String.format("Email: %s", user.getEmail()));
         comboBoxReports.setItems(FXCollections.observableArrayList("Activity Report", "Friend Messages Report"));
         comboBoxReports.getSelectionModel().selectedItemProperty().addListener(
-                (observable,oldValue,newValue)->openReportsView(newValue));
-        eventsListView.setCellFactory(listView ->{
-            ListCell<EventForUserDTO> cell =new CustomCellEvent();
-            cell.setOnMouseClicked(someEvent->{
+                (observable, oldValue, newValue) -> openReportsView(newValue));
+        eventsListView.setCellFactory(listView -> {
+            ListCell<EventForUserDTO> cell = new CustomCellEvent();
+            cell.setOnMouseClicked(someEvent -> {
                 editEvent(cell.getItem());
             });
             return cell;
@@ -84,7 +82,7 @@ public class ProfileController extends Controller implements Initializable, Sett
         eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
         eventsListView.setItems(eventsForUserDTOList);
 
-        Image userImage=user.getImage();
+        Image userImage = user.getImage();
         circle.setFill(new ImagePattern(userImage));
         circle.setStrokeWidth(2);
         circle.setRadius(30);
@@ -96,18 +94,20 @@ public class ProfileController extends Controller implements Initializable, Sett
         return Constants.View.PROFILE;
     }
 
-    public void editEvent(EventForUserDTO event){
-        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,event));
+    public void editEvent(EventForUserDTO event) {
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController, event));
     }
+
     public void createEvent() {
-        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController,null));
+        mainViewController.setView(new CreateEventController(idLoggedUser, mainViewController, null));
     }
-    public void openReportsView(String reportType){
-        if(reportType.equals("Activity Report")){
-            mainViewController.setView(new ActivityReportController(idLoggedUser,mainViewController));
+
+    public void openReportsView(String reportType) {
+        if (reportType.equals("Activity Report")) {
+            mainViewController.setView(new ActivityReportController(idLoggedUser, mainViewController));
         }
-        if(reportType.equals("Friend Messages Report")){
-            mainViewController.setView(new FriendMessagesReportController(idLoggedUser,mainViewController));
+        if (reportType.equals("Friend Messages Report")) {
+            mainViewController.setView(new FriendMessagesReportController(idLoggedUser, mainViewController));
         }
     }
 
@@ -122,7 +122,7 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
 
     public void openNotifications() {
-        mainViewController.setView(new NotificationsController(idLoggedUser,mainViewController));
+        mainViewController.setView(new NotificationsController(idLoggedUser, mainViewController));
     }
 
     public void changePictureAction() {
@@ -136,7 +136,7 @@ public class ProfileController extends Controller implements Initializable, Sett
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
         HBox horizontalBox = new HBox();
-        HBox dateHBox=new HBox();
+        HBox dateHBox = new HBox();
         Label eventTitle = new Label();
         Label eventDate = new Label();
         EventForUserDTO event;

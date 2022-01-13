@@ -36,7 +36,7 @@ public class MainViewController extends Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setView(new ProfileController(idLoggedUser, this));
+        openProfileView();
     }
 
     public void setView(Controller controller) {
