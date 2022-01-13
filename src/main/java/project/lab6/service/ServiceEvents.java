@@ -1,6 +1,5 @@
 package project.lab6.service;
 
-import javafx.scene.image.Image;
 import project.lab6.domain.NotifyTime;
 import project.lab6.domain.TupleWithIdUserEvent;
 import project.lab6.domain.dtos.EventForUserDTO;
@@ -10,9 +9,9 @@ import project.lab6.domain.entities.User;
 import project.lab6.domain.entities.events.Event;
 import project.lab6.domain.entities.events.Subscription;
 import project.lab6.domain.validators.Validator;
+import project.lab6.repository.paging.*;
 import project.lab6.repository.repointerface.Repository;
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,6 +86,59 @@ public class ServiceEvents {
                 })
                 .toList();
         return new EventsList(idUser, sortedAfterSubscribedFirst);
+    }
+
+
+    /**
+     * Gets all the events
+     * @param idUser the user for which to show the events
+     * @return The events paged
+     */
+    public PagedItems<EventForUserDTO> getAllEvents(Long idUser)
+    {
+        return new PagedItemsImplementation<>(pageable ->
+                getEventsDTOPage(idUser, pageable),10);
+    }
+
+    /**
+     * Gets the own events
+     * @param idUser the user for which to show the events
+     * @return The events paged
+     */
+    public PagedItems<EventForUserDTO> getOwnEvents(Long idUser)
+    {
+        return new FilteredPagedItems<>(3, pageable -> getEventsDTOPage(idUser, pageable),
+                eventForUserDTO -> eventForUserDTO.getOwner().getId().equals(idUser));
+    }
+
+    /**
+     * Gets the subscribed or unsubscribed events
+     * @param idUser the user for which to show the events
+     * @param isSubscribed gets the events this user is subscribed to
+     * @return The events paged
+     */
+    public PagedItems<EventForUserDTO> getSubscribedEvents(Long idUser, boolean isSubscribed)
+    {
+        return new FilteredPagedItems<>(10, pageable -> getEventsDTOPage(idUser, pageable),
+                EventForUserDTO::isSubscribed);
+    }
+
+    /**
+     * Utility function that returns the pages of type EventForUserDTO
+     * @param idUser the id of the user
+     * @param pageable the page to return
+     * @return Page<EventForUserDTO>
+     */
+    private Page<EventForUserDTO> getEventsDTOPage(Long idUser, Pageable pageable) {
+        var events = repoEvents.findAll(pageable);
+        var dto = events.getContent().stream().map(event ->
+        {
+            User owner = repoUsers.findOne(event.getIdUserOwner());
+            boolean subscribed = repoSubscription.findOne(new TupleWithIdUserEvent(idUser, event.getId())) != null;
+            return new EventForUserDTO(event.getId(),event.getDate(),event.getTitle(),
+                    event.getDescription(),owner,subscribed);
+        }).toList();
+        return new PageImplementation<>(events.getPageable(), dto);
     }
 
     public void subscribe(Long idLoggedUser, Long idEvent, LocalDateTime date) {
