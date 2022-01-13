@@ -2,13 +2,18 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import project.lab6.controllers.events.CreateEventController;
 import project.lab6.controllers.events.NotificationsController;
 import project.lab6.controllers.reports.ActivityReportController;
@@ -16,19 +21,19 @@ import project.lab6.controllers.reports.FriendMessagesReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.setter.SetterServiceEvents;
 import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ProfileController extends Controller implements Initializable, SetterServiceFriends, SetterServiceEvents {
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-    @FXML
-    public ListView<EventForUserDTO> eventsListView;
     ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
     private ServiceFriends serviceFriends;
 
@@ -47,6 +52,12 @@ public class ProfileController extends Controller implements Initializable, Sett
     Label labelLastName;
     @FXML
     Label labelEmail;
+    @FXML
+    public Circle circle;
+    @FXML
+    public ListView<EventForUserDTO> eventsListView;
+    @FXML
+    public Button changePictureButton;
 
     public ProfileController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
@@ -72,6 +83,12 @@ public class ProfileController extends Controller implements Initializable, Sett
         });
         eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
         eventsListView.setItems(eventsForUserDTOList);
+
+        Image userImage=user.getImage();
+        circle.setFill(new ImagePattern(userImage));
+        circle.setStrokeWidth(2);
+        circle.setRadius(30);
+        circle.setStroke(Color.web("#5c0e63"));
     }
 
     @Override
@@ -106,6 +123,15 @@ public class ProfileController extends Controller implements Initializable, Sett
 
     public void openNotifications() {
         mainViewController.setView(new NotificationsController(idLoggedUser,mainViewController));
+    }
+
+    public void changePictureAction() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Png", "*.png"), new FileChooser.ExtensionFilter("Jpg", "*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(getStage());
+        System.out.println(selectedFile);
+
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {
