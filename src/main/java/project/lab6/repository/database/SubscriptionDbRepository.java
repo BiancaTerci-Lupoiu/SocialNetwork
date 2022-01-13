@@ -4,6 +4,8 @@ import project.lab6.domain.TupleWithIdUserEvent;
 import project.lab6.domain.entities.events.Subscription;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -41,6 +43,11 @@ public class SubscriptionDbRepository extends AbstractDbRepository<TupleWithIdUs
     @Override
     public List<Subscription> findAll() {
         return genericFindAll("select * from subscriptions");
+    }
+
+    @Override
+    public Page<Subscription> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable, "select * from subscriptions ORDER BY id_user,id_event LIMIT ? OFFSET ?");
     }
 
     @Override

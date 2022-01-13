@@ -3,6 +3,8 @@ package project.lab6.repository.database;
 import project.lab6.domain.entities.events.Event;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,11 @@ public class EventDbRepository extends AbstractDbRepository<Long, Event> {
     @Override
     public List<Event> findAll() {
         return genericFindAll("select * from events");
+    }
+
+    @Override
+    public Page<Event> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable, "select * from events ORDER BY id LIMIT ? OFFSET ?");
     }
 
     @Override

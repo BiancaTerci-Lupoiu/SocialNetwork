@@ -3,6 +3,8 @@ package project.lab6.repository.database;
 import project.lab6.domain.entities.chat.Message;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -16,6 +18,11 @@ public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
     @Override
     public List<Message> findAll() {
         return genericFindAll("select * from messages");
+    }
+
+    @Override
+    public Page<Message> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable, "select * from messages ORDER BY id LIMIT ? OFFSET ?");
     }
 
     @Override

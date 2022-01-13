@@ -7,6 +7,8 @@ import project.lab6.domain.validators.ValidationException;
 import project.lab6.domain.validators.Validator;
 import project.lab6.repository.database.query.Query;
 import project.lab6.repository.database.query.SaveQuery;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -23,6 +25,11 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
     @Override
     public List<Friendship> findAll() {
         return genericFindAll("select * from friendships");
+    }
+
+    @Override
+    public Page<Friendship> findAll(Pageable pageable) {
+        return genericFindAllPaged(pageable,"select * from friendships ORDER BY id_user1,id_user2 LIMIT ? OFFSET ?");
     }
 
     /**

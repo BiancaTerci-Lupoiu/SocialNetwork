@@ -2,6 +2,8 @@ package project.lab6.repository.repointerface;
 
 import project.lab6.domain.entities.Entity;
 import project.lab6.domain.validators.ValidationException;
+import project.lab6.repository.paging.Page;
+import project.lab6.repository.paging.Pageable;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public interface Repository<ID, E extends Entity<ID>> {
      */
     List<E> findAll();
 
+    Page<E> findAll(Pageable pageable);
     /**
      * @param entity entity must be not null
      * @return the entity with the id completed or null if the operation failed

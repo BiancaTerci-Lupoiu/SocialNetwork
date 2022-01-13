@@ -18,6 +18,8 @@ module project.lab {
     exports project.lab6.domain.validators;
     exports project.lab6.domain.dtos;
     exports project.lab6.repository.database;
+    exports project.lab6.repository.database.query;
+    exports project.lab6.repository.paging;
     exports project.lab6.utils;
     exports project.lab6.utils.observer;
     exports project.lab6.controllers.friends;
