@@ -45,28 +45,24 @@ public class ServiceMessages {
 
     /**
      * Saves a user image
+     *
      * @param path the path to the image to save
      * @throws ServiceException If the saving operation fails
      */
-    public void saveChatImage(Long idChat, String path)
-    {
+    public void saveChatImage(Long idChat, String path) {
         Chat chat = repoChats.findOne(idChat);
-        if(chat == null)
+        if (chat == null)
             throw new ServiceException("The users doesn't exist!");
-        try
-        {
+        try {
             getChatDTO(chat).saveImage(path);
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             throw new ServiceException("The image could not be saved!");
         }
     }
 
-    public void deleteChatImage(Long idChat)
-    {
+    public void deleteChatImage(Long idChat) {
         User user = repoUsers.findOne(idChat);
-        if(repoUsers.findOne(idChat) == null)
+        if (repoUsers.findOne(idChat) == null)
             throw new ServiceException("The users doesn't exist!");
         try {
             user.deleteImage();
@@ -186,8 +182,7 @@ public class ServiceMessages {
     private List<MessageDTO> getMessagesSortedForChat(Long idChat) {
         return repoMessages.findAll().stream()
                 .filter(message -> message.getIdChat().equals(idChat))
-                .map(message ->
-                        getMessageDTO(message))
+                .map(this::getMessageDTO)
                 .sorted(Comparator.comparing(MessageDTO::getDate))
                 .toList();
     }
@@ -203,9 +198,8 @@ public class ServiceMessages {
     /**
      * Creates a chatDTO from the specified chat
      */
-    public ChatDTO getChatDTO(Chat chat)
-    {
-        Lazy<List<MessageDTO>> messages = new Lazy<>(() -> getMessagesSortedForChat(chat.getId()));
+    public ChatDTO getChatDTO(Chat chat) {
+        var messages = new Lazy<>(() -> getMessagesSortedForChat(chat.getId()));
         Lazy<List<UserChatInfoDTO>> userInfos = new Lazy<>(() -> getUserChatInfoDTOForChat(chat.getId()));
 
         return ChatDTO.createChatDTO(chat.getId(), chat.getName(), chat.getColor(), chat.isPrivateChat(),

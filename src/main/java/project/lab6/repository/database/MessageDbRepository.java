@@ -17,12 +17,12 @@ public class MessageDbRepository extends AbstractDbRepository<Long, Message> {
 
     @Override
     public List<Message> findAll() {
-        return genericFindAll("select * from messages");
+        return genericFindAll("select * from messages order by date");
     }
 
     @Override
     public Page<Message> findAll(Pageable pageable) {
-        return genericFindAllPaged(pageable, "select * from messages ORDER BY id LIMIT ? OFFSET ?");
+        return genericFindAllPaged(pageable, "select * from messages order by date LIMIT ? OFFSET ?");
     }
 
     @Override

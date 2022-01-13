@@ -4,6 +4,8 @@ import project.lab6.domain.*;
 import project.lab6.domain.entities.Friendship;
 import project.lab6.domain.entities.User;
 import project.lab6.domain.validators.ValidationException;
+import project.lab6.repository.paging.FilteredPagedItems;
+import project.lab6.repository.paging.PagedItems;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryUser;
 
@@ -117,9 +119,19 @@ public class ServiceFriends {
      * @param name       string with a name
      * @return a list with users whose name(last name + first name) matches the string name
      */
+    //TODO: Schimba sa returnezi PagedItems<User> si sa folosesti ce e comentat in cod
     public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
         String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
-        List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
+//        return new FilteredPagedItems<>(10, repoUsers::findAll, user ->
+//        {
+//            String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+//            String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+//            return !user.getId().equals(loggedUser.getId()) &&
+//                    !loggedUser.findFriend(user.getId()) &&
+//                    (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
+//                            || firstNameLastName.startsWith(nameWithoutExtraSpaces));
+//        });
+        List<User> usersWithName = repoUsers.findAll().stream()
                 .filter(user -> {
                     String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
                     String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();

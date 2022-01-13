@@ -41,4 +41,9 @@ public class Constants {
         public static String ACTIVITY_REPORT="views/reports/activityReport.fxml";
         public static String FRIEND_MESSAGES_REPORT="views/reports/friendMessagesReport.fxml";
     }
+
+    public static class PageSize
+    {
+        public static final int MESSAGES = 20;
+    }
 }
