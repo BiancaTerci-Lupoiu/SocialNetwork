@@ -12,10 +12,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
+import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.factory.Factory;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter.SetterServiceMessages;
@@ -125,19 +130,31 @@ public class MainChatController extends Controller implements SetterServiceMessa
 
     public static class CustomCellChat extends ListCell<ChatDTO> {
         HBox horizontalBox = new HBox();
+        VBox nameAndMessageVBox =new VBox();
+        Label lastMessage=new Label();
         Label chatName = new Label();
-        ImageView groupImage = new ImageView();
+        Image groupImage;
+        Circle circle=new Circle();
         ChatDTO chat;
         Long idLoggedUser;
 
         public CustomCellChat(Long idLoggedUser) {
             this.idLoggedUser = idLoggedUser;
-            groupImage.setFitWidth(24);
-            groupImage.setFitHeight(24);
-            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 16");
+            //groupImage.setFitWidth(35);
+            //groupImage.setFitHeight(35);
+            circle.setRadius(25);
+            circle.setStroke(Color.web("#5c0e63"));
+            circle.setStrokeWidth(2);
+            chatName.setMaxWidth(120);
+            chatName.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 18;-fx-text-fill: #5c0e63");
             this.setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
-            horizontalBox.getChildren().addAll(groupImage, chatName);
-            horizontalBox.setAlignment(Pos.TOP_LEFT);
+            lastMessage.setStyle("-fx-font-family: Cambria; -fx-background-color: transparent; -fx-font-size: 14;-fx-font-style: Italic;-fx-text-fill: #5c0e63");
+            horizontalBox.getChildren().addAll(circle, nameAndMessageVBox);
+            horizontalBox.setAlignment(Pos.CENTER_LEFT);
+            nameAndMessageVBox.setAlignment(Pos.CENTER_LEFT);
+            horizontalBox.setSpacing(10);
+            lastMessage.setMaxWidth(110);
+            nameAndMessageVBox.getChildren().setAll(chatName);
         }
 
         @Override
@@ -150,7 +167,19 @@ public class MainChatController extends Controller implements SetterServiceMessa
                 chat = item;
                 chatName.setText(chat.getName(idLoggedUser));
                 //groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
-                groupImage.setImage(item.getImage(idLoggedUser));
+                groupImage=item.getImage(idLoggedUser);
+                circle.setFill(new ImagePattern(groupImage));
+                MessageDTO lastMessageDTO= chat.getLastMessage();
+                if(lastMessageDTO!=null)
+                {
+                    UserChatInfoDTO userMessageFrom=lastMessageDTO.getUserFromInfo();
+                    String usersNameFrom=userMessageFrom.getNickname();
+                    if(userMessageFrom.getUser().getId().equals(idLoggedUser))
+                        usersNameFrom="You";
+                    String lastMessageText=usersNameFrom+": "+lastMessageDTO.getText();
+                    lastMessage.setText(lastMessageText);
+                    nameAndMessageVBox.getChildren().setAll(chatName,lastMessage);
+                }
                 setGraphic(horizontalBox);
             }
         }

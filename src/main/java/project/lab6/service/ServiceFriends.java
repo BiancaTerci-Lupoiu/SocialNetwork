@@ -262,6 +262,7 @@ public class ServiceFriends {
         String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
         User user=getUserWithFriends(idLoggedUser);
         List<Friend> friendsWithName = StreamSupport.stream(user.getFriends().spliterator(), false)
+                .filter(friend->friend.getStatus().equals(DirectedStatus.APPROVED))
                 .filter(friend -> {
                     User userFriend=friend.getUser();
                     String lastNameFirstName = (userFriend.getLastName() + " " + userFriend.getFirstName()).toLowerCase();
@@ -270,7 +271,6 @@ public class ServiceFriends {
                                     || firstNameLastName.startsWith(name));
                 })
                 .collect(Collectors.toList());
-        System.out.println(friendsWithName.size());
         return friendsWithName;
 
     }

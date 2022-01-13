@@ -1,6 +1,7 @@
 package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
@@ -28,6 +31,7 @@ import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ConversationController extends Controller implements Observer<ChatDTO>, SetterServiceMessages {
@@ -37,6 +41,8 @@ public class ConversationController extends Controller implements Observer<ChatD
     private final ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
     private final MessageDTO messageToReply;
     private ServiceMessages serviceMessages;
+    boolean isVisibleReplyBar = true;
+
     @FXML
     public Label groupNameLabel;
     @FXML
@@ -48,14 +54,14 @@ public class ConversationController extends Controller implements Observer<ChatD
     @FXML
     public Label labelMessageToReply;
     @FXML
-    public ImageView userImage;
-    @FXML
     public VBox mainVBox;
     @FXML
     public HBox hBoxReplyBar;
     @FXML
     public Button cancelReplyButton;
-    boolean isVisibleReplyBar = true;
+    @FXML
+    public Circle circle;
+
 
     /**
      * Creates a conversation controller and it opens for replying to the message specified
@@ -89,6 +95,12 @@ public class ConversationController extends Controller implements Observer<ChatD
         return Constants.View.CONVERSATION;
     }
 
+    private void moveScrollDown() {
+        //List<MessageDTO> messageDTOList = listViewMessages.getItems();
+        int index = messageDTOList.size();
+        listViewMessages.scrollTo(index-1);
+    }
+
     public void chatInfoButtonClick() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, observableChatDTO));
         Scene scene = new Scene(loader.load(), 600, 400);
@@ -111,7 +123,6 @@ public class ConversationController extends Controller implements Observer<ChatD
         });
         hBoxReplyBar.setSpacing(10);
         hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
-        userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
         listViewMessages.setItems(messageDTOList);
         if (messageToReply != null) {
             labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
@@ -119,7 +130,15 @@ public class ConversationController extends Controller implements Observer<ChatD
         } else {
             setReplyBarVisible(false);
         }
+
+        Image chatImage=chatDTO.getImage(idLoggedUser);
+        circle.setFill(new ImagePattern(chatImage));
+        circle.setStrokeWidth(2);
+        circle.setRadius(25);
+        circle.setStroke(Color.web("#5c0e63"));
+
         update(chatDTO);
+        moveScrollDown();
     }
 
     private String convertColorToString(Color color) {
@@ -140,8 +159,10 @@ public class ConversationController extends Controller implements Observer<ChatD
                 serviceMessages.replyToMessage(idChat, idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
                 cancelReplyAction();
             }
-            messageDTOList.setAll(serviceMessages.getChatDTO(idChat).getMessages());
+            ChatDTO changedChatDTO=serviceMessages.getChatDTO(idChat);
             typeMessageTextField.setText("");
+            observableChatDTO.setResource(changedChatDTO);
+            moveScrollDown();
         }
     }
 

@@ -74,6 +74,16 @@ public abstract class ChatDTO {
     }
 
     /**
+     * @return the last messageDTO from the chat, or null if there are no messages in chat
+     */
+    public MessageDTO getLastMessage(){
+        List<MessageDTO> allMessagesDTO=getMessages();
+        if(allMessagesDTO.isEmpty())
+            return null;
+        return allMessagesDTO.get(allMessagesDTO.size()-1);
+    }
+
+    /**
      * @return the users list of the ChatDTO
      */
     public List<UserChatInfoDTO> getUsersInfo() {
