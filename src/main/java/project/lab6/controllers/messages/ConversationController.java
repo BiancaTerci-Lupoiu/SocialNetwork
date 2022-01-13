@@ -88,6 +88,8 @@ public class ConversationController extends Controller implements Observer<ChatD
         String chatColor = convertColorToString(chatDTO.getColor());
         listViewMessages.setStyle("-fx-background-color:" + chatColor);
         mainVBox.setStyle("-fx-background-color:" + chatColor);
+        Image chatImage=chatDTO.getImage(idLoggedUser);
+        circle.setFill(new ImagePattern(chatImage));
     }
 
     @Override
@@ -125,7 +127,8 @@ public class ConversationController extends Controller implements Observer<ChatD
         hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
         listViewMessages.setItems(messageDTOList);
         if (messageToReply != null) {
-            labelMessageToReply.setText("Reply to:  " + messageToReply.getText());
+            String othersUserNickname=chatDTO.getName(idLoggedUser);
+            labelMessageToReply.setText("Reply to "+othersUserNickname+":  " + messageToReply.getText());
             labelMessageToReply.setId(messageToReply.getId().toString());
         } else {
             setReplyBarVisible(false);
@@ -138,7 +141,7 @@ public class ConversationController extends Controller implements Observer<ChatD
         circle.setStroke(Color.web("#5c0e63"));
 
         update(chatDTO);
-        moveScrollDown();
+       // moveScrollDown();
     }
 
     private String convertColorToString(Color color) {
@@ -162,7 +165,7 @@ public class ConversationController extends Controller implements Observer<ChatD
             ChatDTO changedChatDTO=serviceMessages.getChatDTO(idChat);
             typeMessageTextField.setText("");
             observableChatDTO.setResource(changedChatDTO);
-            moveScrollDown();
+            //moveScrollDown();
         }
     }
 
@@ -229,7 +232,7 @@ public class ConversationController extends Controller implements Observer<ChatD
 
 
             replyInChatButton.setOnAction(event -> {
-                labelShownAboveTypeText.setText("Reply to:  " + messageText.getText());
+                labelShownAboveTypeText.setText("Reply to "+message.getUserFromInfo().getNickname()+":  " + messageText.getText());
                 labelShownAboveTypeText.setId(message.getId().toString());
                 showReplyBar.accept(true);
             });
@@ -246,7 +249,7 @@ public class ConversationController extends Controller implements Observer<ChatD
 
         private void addLabelWithRepliedMessage() {
             verticalBox.getChildren().add(repliedMessageText);
-            repliedMessageText.setText(message.getRepliedMessage().getText());
+            repliedMessageText.setText(message.getRepliedMessage().getUserFromInfo().getNickname()+": "+message.getRepliedMessage().getText());
         }
 
         private void addLabelWithMessage() {

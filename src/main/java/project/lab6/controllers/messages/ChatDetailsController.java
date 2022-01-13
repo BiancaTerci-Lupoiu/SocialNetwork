@@ -14,17 +14,24 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.factory.Factory;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceMessages;
 import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableResource;
 import project.lab6.utils.observer.Observer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,9 +39,15 @@ import java.util.ResourceBundle;
 public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages {
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
-
     private ServiceMessages serviceMessages;
     private final ObservableResource<ChatDTO> observableChatDTO;
+
+    @FXML
+    public HBox hBoxHeading;
+    @FXML
+    public Circle circle;
+    @FXML
+    public Button changePictureButton;
     @FXML
     private HBox hBoxButtons;
     @FXML
@@ -69,8 +82,10 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         listView.setCellFactory(param -> new CustomCellChat(serviceMessages, observableChatDTO));
-        if (observableChatDTO.getResource().isPrivateChat())
+        if (observableChatDTO.getResource().isPrivateChat()) {
             hBoxButtons.getChildren().remove(0);
+            hBoxHeading.getChildren().remove(2);
+        }
         updateChat(observableChatDTO.getResource());
         colorPicker.setValue(observableChatDTO.getResource().getColor());
         colorPicker.setOnAction(someEvent->{
@@ -79,6 +94,12 @@ public class ChatDetailsController extends Controller implements Initializable, 
             ChatDTO newChat = serviceMessages.getChatDTO(oldChat.getIdChat());
             observableChatDTO.setResource(newChat);
         });
+        ChatDTO chatDTO=observableChatDTO.getResource();
+        Image userImage = chatDTO.getImage(idLoggerUser);
+        circle.setFill(new ImagePattern(userImage));
+        circle.setStrokeWidth(2);
+        circle.setRadius(30);
+        circle.setStroke(Color.web("#5c0e63"));
     }
 
     public void addUserToChat() throws IOException {
@@ -93,6 +114,23 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @Override
     public void setServiceMessages(ServiceMessages serviceMessages) {
         this.serviceMessages = serviceMessages;
+    }
+
+    public void changePictureAction() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png","*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(getStage());
+        try {
+            ChatDTO oldChatDTO =observableChatDTO.getResource();
+            serviceMessages.saveChatImage(oldChatDTO.getIdChat(), selectedFile.getPath());
+            ChatDTO newChatDTO=serviceMessages.getChatDTO(oldChatDTO.getIdChat());
+            observableChatDTO.setResource(newChatDTO);
+            Image userImage = newChatDTO.getImage(idLoggerUser);
+            circle.setFill(new ImagePattern(userImage));
+        } catch (ServiceException serviceException) {
+            AlertMessage.showErrorMessage(serviceException.getMessage());
+        }
     }
 
     public static class CustomCellChat extends ListCell<UserChatInfoDTO> {
