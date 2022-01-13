@@ -131,7 +131,6 @@ public class MainChatController extends Controller implements SetterServiceMessa
         Long idLoggedUser;
 
         public CustomCellChat(Long idLoggedUser) {
-            super();
             this.idLoggedUser = idLoggedUser;
             groupImage.setFitWidth(24);
             groupImage.setFitHeight(24);
@@ -150,7 +149,8 @@ public class MainChatController extends Controller implements SetterServiceMessa
             } else {
                 chat = item;
                 chatName.setText(chat.getName(idLoggedUser));
-                groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+                //groupImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+                groupImage.setImage(item.getImage(idLoggedUser));
                 setGraphic(horizontalBox);
             }
         }

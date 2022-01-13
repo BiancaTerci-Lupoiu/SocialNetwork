@@ -40,7 +40,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
         if (chat == null)
             throw new IllegalArgumentException("user must be not null!");
 
-        return genericSave(chat, new SaveQuery<Chat>() {
+        return genericSave(chat, new SaveQuery<>() {
             @Override
             public void setId(Chat entity, Connection connection) throws SQLException {
                 entity.setId(getLongId(connection, "chats", "id"));

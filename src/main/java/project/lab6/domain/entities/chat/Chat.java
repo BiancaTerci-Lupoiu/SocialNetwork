@@ -21,7 +21,6 @@ public class Chat extends Entity<Long> {
         this.name = name;
         this.color = color;
         this.isPrivateChat = isPrivateChat;
-
     }
 
     /**

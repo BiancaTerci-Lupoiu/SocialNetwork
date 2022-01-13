@@ -20,13 +20,11 @@ import java.util.function.Consumer;
 public class EventsController extends Controller implements SetterServiceEvents {
     private final Long idLoggedUser;
     private ServiceEvents serviceEvents;
-
     @FXML
     public ComboBox<String> comboBoxEvents;
     @FXML
     public ListView<EventForUserDTO> eventsListView;
     ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
-
 
     public EventsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -55,13 +53,13 @@ public class EventsController extends Controller implements SetterServiceEvents 
     }
 
     private void setEventsList(String status) {
+        if (status == null)
+            status = "All Events";
         if (status.equals("Subscribed")) {
             eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(true));
-
         }
         if (status.equals("Discover Events")) {
             eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(false));
-
         }
         if (status.equals("All Events")) {
             eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser));
