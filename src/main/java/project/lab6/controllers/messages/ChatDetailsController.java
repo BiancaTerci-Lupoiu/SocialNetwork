@@ -21,6 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
 import project.lab6.factory.Factory;
@@ -36,7 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages {
+public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages, HasTitleBar {
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
     private ServiceMessages serviceMessages;

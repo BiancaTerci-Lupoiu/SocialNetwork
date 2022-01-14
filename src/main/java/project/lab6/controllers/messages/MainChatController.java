@@ -17,7 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.domain.dtos.UserChatInfoDTO;
@@ -31,7 +33,7 @@ import project.lab6.utils.observer.ObserverWrapper;
 import java.io.IOException;
 
 
-public class MainChatController extends Controller implements SetterServiceMessages {
+public class MainChatController extends Controller implements SetterServiceMessages, HasTitleBar {
     private ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     @FXML
@@ -60,16 +62,20 @@ public class MainChatController extends Controller implements SetterServiceMessa
 
     public void createGroupAction() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new CreateGroupController(idLoggedUser, chatDTOList, this));
-        Scene scene = new Scene(loader.load(), 600, 400);
+        Scene scene = new Scene(loader.load(), 600, 430);
+        scene.setFill(Color.TRANSPARENT);
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         stage.showAndWait();
     }
 
     public void createPrivateChatAction() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new OpenPrivateChatController(idLoggedUser, this, chatDTOList));
-        Scene scene = new Scene(loader.load(), 600, 400);
+        Scene scene = new Scene(loader.load(), 600, 430);
+        scene.setFill(Color.TRANSPARENT);
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         stage.showAndWait();
     }

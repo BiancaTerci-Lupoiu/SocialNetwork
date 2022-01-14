@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.entities.User;
@@ -24,7 +25,7 @@ import project.lab6.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateGroupController extends Controller implements SetterServiceMessages, SetterServiceFriends {
+public class CreateGroupController extends Controller implements SetterServiceMessages, SetterServiceFriends, HasTitleBar {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private ServiceMessages serviceMessages;
     private ServiceFriends serviceFriends;

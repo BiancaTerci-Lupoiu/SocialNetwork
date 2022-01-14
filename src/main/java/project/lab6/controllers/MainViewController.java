@@ -8,7 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.lab6.controllers.events.EventsController;
 import project.lab6.controllers.friends.AddFriendsController;
 import project.lab6.controllers.friends.FriendsController;
@@ -22,7 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainViewController extends Controller implements Initializable {
+public class MainViewController extends Controller implements Initializable,HasTitleBar {
     private final Long idLoggedUser;
 
     @FXML
@@ -72,8 +74,10 @@ public class MainViewController extends Controller implements Initializable {
 
     public void logout() throws IOException {
         FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new LoginController());
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 430);
+        scene.setFill(Color.TRANSPARENT);
         Stage stage = (Stage) horizontalBox.getScene().getWindow();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
     }
 
@@ -84,8 +88,10 @@ public class MainViewController extends Controller implements Initializable {
         }
         FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser));
         Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 600, 530);
+        scene.setFill(Color.TRANSPARENT);
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         messagesOpen = true;
         messagesStage = stage;

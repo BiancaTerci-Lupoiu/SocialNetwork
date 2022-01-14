@@ -2,6 +2,7 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -19,6 +20,7 @@ import project.lab6.controllers.reports.ActivityReportController;
 import project.lab6.controllers.reports.FriendMessagesReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
+import project.lab6.repository.paging.PagedItems;
 import project.lab6.service.ServiceEvents;
 import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
@@ -35,7 +37,7 @@ public class ProfileController extends Controller implements Initializable, Sett
     private final MainViewController mainViewController;
     ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
     private ServiceFriends serviceFriends;
-
+    private PagedItems<EventForUserDTO> pagedEvents;
     @FXML
     public Button notificationsButton;
     @FXML
@@ -80,7 +82,8 @@ public class ProfileController extends Controller implements Initializable, Sett
             });
             return cell;
         });
-        eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getOwnEvents());
+        pagedEvents=serviceEvents.getOwnEvents(idLoggedUser);
+        eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         eventsListView.setItems(eventsForUserDTOList);
 
         Image userImage = user.getImage();
@@ -139,6 +142,18 @@ public class ProfileController extends Controller implements Initializable, Sett
             AlertMessage.showErrorMessage(serviceException.getMessage());
         }
 
+    }
+
+    public void previousPage() {
+        var previousPageItems=pagedEvents.getPreviousItems();
+        if(!previousPageItems.isEmpty())
+            eventsForUserDTOList.setAll(previousPageItems);
+    }
+
+    public void nextPage() {
+        var nextPageItems=pagedEvents.getNextItems();
+        if(!nextPageItems.isEmpty())
+            eventsForUserDTOList.setAll(nextPageItems);
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {

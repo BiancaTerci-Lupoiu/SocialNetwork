@@ -2,6 +2,7 @@ package project.lab6.controllers.events;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -10,6 +11,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.EventForUserDTO;
+import project.lab6.repository.paging.PagedItems;
 import project.lab6.service.ServiceEvents;
 import project.lab6.setter.SetterServiceEvents;
 import project.lab6.utils.Constants;
@@ -20,11 +22,13 @@ import java.util.function.Consumer;
 public class EventsController extends Controller implements SetterServiceEvents {
     private final Long idLoggedUser;
     private ServiceEvents serviceEvents;
+    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
+    private PagedItems<EventForUserDTO> pagedEvents;
+
     @FXML
     public ComboBox<String> comboBoxEvents;
     @FXML
     public ListView<EventForUserDTO> eventsListView;
-    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
 
     public EventsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -38,7 +42,7 @@ public class EventsController extends Controller implements SetterServiceEvents 
         eventsListView.setItems(eventsForUserDTOList);
         eventsListView.setCellFactory(someEvent -> new CustomCellEvent(serviceEvents, idLoggedUser, this::updateEventsList));
         eventsListView.getStylesheets().add("project/lab6/css/listViewNoHorizontalScroll.css");
-        comboBoxEvents.setPromptText("All Events");
+        comboBoxEvents.setValue("All Events");
         setEventsList("All Events");
     }
 
@@ -56,18 +60,33 @@ public class EventsController extends Controller implements SetterServiceEvents 
         if (status == null)
             status = "All Events";
         if (status.equals("Subscribed")) {
-            eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(true));
+            pagedEvents=serviceEvents.getSubscribedEvents(idLoggedUser,true);
+            eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
         if (status.equals("Discover Events")) {
-            eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser).getWithSubscription(false));
+            pagedEvents=serviceEvents.getSubscribedEvents(idLoggedUser,false);
+            eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
         if (status.equals("All Events")) {
-            eventsForUserDTOList.setAll(serviceEvents.getEventsForUser(idLoggedUser));
+            pagedEvents=serviceEvents.getAllEvents(idLoggedUser);
+            eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
     }
 
     private void updateEventsList(boolean unused) {
         setEventsList(comboBoxEvents.getValue());
+    }
+
+    public void previousPage() {
+        var previousPageItems=pagedEvents.getPreviousItems();
+        if(!previousPageItems.isEmpty())
+            eventsForUserDTOList.setAll(previousPageItems);
+    }
+
+    public void nextPage() {
+        var nextPageItems=pagedEvents.getNextItems();
+        if(!nextPageItems.isEmpty())
+            eventsForUserDTOList.setAll(nextPageItems);
     }
 
     public static class CustomCellEvent extends ListCell<EventForUserDTO> {

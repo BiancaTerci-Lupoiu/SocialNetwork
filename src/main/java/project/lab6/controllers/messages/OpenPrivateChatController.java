@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.entities.User;
@@ -21,7 +22,7 @@ import project.lab6.utils.Constants;
 
 import java.util.List;
 
-public class OpenPrivateChatController extends Controller implements SetterServiceFriends, SetterServiceMessages {
+public class OpenPrivateChatController extends Controller implements SetterServiceFriends, SetterServiceMessages, HasTitleBar {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
     private ServiceFriends serviceFriends;
     private ServiceMessages serviceMessages;

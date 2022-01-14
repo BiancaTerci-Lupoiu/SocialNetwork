@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FilteredPagedItems<T> implements PagedItems<T> {
     private record Location(Pageable pageable, int elementsNeeded) {
@@ -18,14 +19,15 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
     private final Predicate<T> filter;
     private final int pageSize;
 
+    //Saves all the previous location seen for the getPreviousItems functionality
     private final Stack<Location> locations = new Stack<>();
 
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
         this.filter = filter;
         this.pageSize = size;
-        var curentPageable = new PageableImplementation(0, size);
-        endLocation = new Location(curentPageable, 0);
+        var currentPageable = new PageableImplementation(0, size);
+        endLocation = new Location(currentPageable, 0);
         startLocation = null;
     }
 
@@ -34,7 +36,9 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         int leftOver = location.elementsNeeded();
         List<T> elementsInResult =
                 supplier.getPage(pageable).getContent().stream()
-                        .skip(leftOver).toList();
+                        .filter(filter)
+                        .skip(leftOver)
+                        .collect(Collectors.toList());
         pageable = pageable.nextPageable();
         while (elementsInResult.size() < pageSize) {
             var page = supplier.getPage(pageable);
@@ -45,23 +49,25 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
                 break;
         }
         int size = elementsInResult.size();
-        leftOver = size - pageSize;
+        if (size > pageSize)
+            leftOver = size - pageSize;
+        else
+            leftOver = 0;
         if (size > pageSize) {
             pageable = pageable.previousPageable();
+            elementsInResult = elementsInResult.subList(0, pageSize);
         }
-        elementsInResult = elementsInResult.subList(0, pageSize);
         return new ItemsGet<>(elementsInResult, new Location(pageable, leftOver));
     }
 
     @Override
     public List<T> getNextItems() {
-        if (startLocation != null)
-            locations.push(startLocation);
+        locations.push(startLocation);
         startLocation = endLocation;
         var items = getItems(startLocation);
 
         if (items.items().size() == 0) {
-            locations.pop();
+            startLocation = locations.pop();
         } else {
             startLocation = endLocation;
             endLocation = items.endLocation();
