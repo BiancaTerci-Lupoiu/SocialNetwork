@@ -3,7 +3,7 @@ package project.lab6.controllers;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 
-public abstract class Controller {
+public abstract class Controller{
     private Parent root;
 
     public abstract String getViewPath();

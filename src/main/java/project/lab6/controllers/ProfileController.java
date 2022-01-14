@@ -20,6 +20,7 @@ import project.lab6.controllers.reports.FriendMessagesReportController;
 import project.lab6.domain.dtos.EventForUserDTO;
 import project.lab6.domain.entities.User;
 import project.lab6.service.ServiceEvents;
+import project.lab6.service.ServiceException;
 import project.lab6.service.ServiceFriends;
 import project.lab6.setter.SetterServiceEvents;
 import project.lab6.setter.SetterServiceFriends;

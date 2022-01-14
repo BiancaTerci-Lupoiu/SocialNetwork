@@ -16,11 +16,6 @@ public class PageImplementation<T> implements Page<T> {
     }
 
     @Override
-    public Pageable nextPageable() {
-        return new PageableImplementation(this.pageable.getPageNumber() + 1, this.pageable.getPageSize());
-    }
-
-    @Override
     public List<T> getContent() {
         return this.content;
     }

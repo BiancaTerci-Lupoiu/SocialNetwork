@@ -1,4 +1,5 @@
 package project.lab6.repository.paging;
+
 public class PageableImplementation implements Pageable {
 
     private int pageNumber;
@@ -17,5 +18,15 @@ public class PageableImplementation implements Pageable {
     @Override
     public int getPageSize() {
         return this.pageSize;
+    }
+
+    @Override
+    public Pageable nextPageable() {
+        return new PageableImplementation(getPageNumber() + 1, getPageSize());
+    }
+
+    @Override
+    public Pageable previousPageable() {
+        return new PageableImplementation(getPageNumber() - 1, getPageSize());
     }
 }

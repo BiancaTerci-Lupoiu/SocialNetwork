@@ -10,8 +10,6 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
     private final Predicate<T> filter;
     private final int pageSize;
 
-    private boolean isMoreToLoad = true;
-    private T lastItem = null;
 
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
@@ -25,27 +23,29 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         List<T> elementsInResult = new ArrayList<>();
         while (elementsInResult.size() < pageSize) {
             var page = supplier.getPage(curentPageable);
-            curentPageable = page.nextPageable();
+            curentPageable = curentPageable.nextPageable();
             List<T> content = page.getContent();
-            elementsInResult.addAll(content);
+            elementsInResult.addAll(content.stream().filter(filter).toList());
             if (content.size() == 0)
                 break;
         }
         int size = elementsInResult.size();
-        if (size < pageSize)
-            isMoreToLoad = false;
-        if (size > 0)
-            lastItem = elementsInResult.get(size - 1);
+        if (size == 0)
+            curentPageable = curentPageable.previousPageable();
         return elementsInResult;
     }
 
     @Override
-    public T getLastItemLoaded() {
-        return lastItem;
-    }
-
-    @Override
-    public boolean isMoreToLoad() {
-        return isMoreToLoad;
+    public List<T> getPreviousItems() {
+        List<T> elementsInResult = new ArrayList<>();
+        while (elementsInResult.size() < pageSize) {
+            if (curentPageable.getPageNumber() == 0)
+                break;
+            curentPageable = curentPageable.previousPageable();
+            var page = supplier.getPage(curentPageable);
+            List<T> content = page.getContent();
+            elementsInResult.addAll(content.stream().filter(filter).toList());
+        }
+        return elementsInResult;
     }
 }

@@ -4,9 +4,12 @@ import java.util.List;
 
 public interface PagedItems<T> {
     /**
-     * @return the next items
+     * @return the next items in the list
      */
     List<T> getNextItems();
-    T getLastItemLoaded();
-    boolean isMoreToLoad();
+
+    /**
+     * @return the previous items in the list
+     */
+    List<T> getPreviousItems();
 }
