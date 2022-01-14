@@ -12,11 +12,13 @@ import project.lab6.controllers.Controller;
 import project.lab6.controllers.utils.UserRecord;
 import project.lab6.domain.Status;
 import project.lab6.domain.entities.User;
+import project.lab6.repository.paging.PagedItems;
 import project.lab6.service.ServiceFriends;
 import project.lab6.setter.SetterServiceFriends;
 import project.lab6.utils.Constants;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddFriendsController extends Controller implements SetterServiceFriends {
@@ -33,10 +35,6 @@ public class AddFriendsController extends Controller implements SetterServiceFri
     private TableColumn<UserRecord, String> nameColumn;
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
-    @FXML
-    public Button previousButton;
-    @FXML
-    public Button nextButton;
 
     public AddFriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -62,25 +60,32 @@ public class AddFriendsController extends Controller implements SetterServiceFri
             serviceFriends.addFriendship(idLoggedUser, idUserTo, LocalDate.now(), Status.PENDING);
             findUserByName();
         });
-
         return addFriendButton;
     }
 
-    private List<UserRecord> getUserRecordList(String searchName) {
-        List<User> usersList = serviceFriends.searchUsersByNameNotFriendsWithLoggedUser(serviceFriends.getUserWithFriends(idLoggedUser), searchName);
-        List<UserRecord> userRecordList = FXCollections.observableArrayList();
-        for (User user : usersList) {
+
+    private PagedItems<User> pagedItems;
+
+    private List<UserRecord> getUserRecordFromUsers(List<User> users) {
+        List<UserRecord> list = new ArrayList<>();
+        for (User user : users) {
             String name = user.getLastName() + " " + user.getFirstName();
             Button addFriendButton = createAddButton(user.getId());
             UserRecord userRecord = new UserRecord(user.getId(), name, addFriendButton);
 
-            userRecordList.add(userRecord);
+            list.add(userRecord);
         }
-        return userRecordList;
+        return list;
+    }
+
+    private PagedItems<User> getPagedItemsSearch(String searchName) {
+        User user = serviceFriends.getUserWithFriends(idLoggedUser);
+        return serviceFriends.searchUsersByNameNotFriendsWithLoggedUser(user, searchName);
     }
 
     private void updateTableWithUsersAtSearch(String searchName) {
-        userRecordList.setAll(getUserRecordList(searchName));
+        pagedItems = getPagedItemsSearch(searchName);
+        userRecordList.setAll(getUserRecordFromUsers(pagedItems.getNextItems()));
     }
 
     public void findUserByName() {
@@ -95,5 +100,17 @@ public class AddFriendsController extends Controller implements SetterServiceFri
     @Override
     public void setServiceFriends(ServiceFriends serviceFriends) {
         this.serviceFriends = serviceFriends;
+    }
+
+    public void previousPage() {
+        var items = pagedItems.getPreviousItems();
+        if (items.size() > 0)
+            userRecordList.setAll(getUserRecordFromUsers(items));
+    }
+
+    public void nextPage() {
+        var items = pagedItems.getNextItems();
+        if (items.size() > 0)
+            userRecordList.setAll(getUserRecordFromUsers(items));
     }
 }
