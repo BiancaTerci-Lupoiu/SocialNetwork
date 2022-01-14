@@ -97,7 +97,7 @@ public class ServiceEvents {
     public PagedItems<EventForUserDTO> getAllEvents(Long idUser)
     {
         return new PagedItemsImplementation<>(pageable ->
-                getEventsDTOPage(idUser, pageable),10);
+                getEventsDTOPage(idUser, pageable),3);
     }
 
     /**
