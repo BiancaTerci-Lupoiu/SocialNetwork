@@ -97,7 +97,7 @@ public class ServiceEvents {
     public PagedItems<EventForUserDTO> getAllEvents(Long idUser)
     {
         return new PagedItemsImplementation<>(pageable ->
-                getEventsDTOPage(idUser, pageable),3);
+                getEventsDTOPage(idUser, pageable),7);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ServiceEvents {
      */
     public PagedItems<EventForUserDTO> getSubscribedEvents(Long idUser, boolean isSubscribed)
     {
-        return new FilteredPagedItems<>(10, pageable -> getEventsDTOPage(idUser, pageable),
+        return new FilteredPagedItems<>(7, pageable -> getEventsDTOPage(idUser, pageable),
                 EventForUserDTO::isSubscribed);
     }
 

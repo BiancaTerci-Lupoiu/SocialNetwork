@@ -82,7 +82,7 @@ public class ProfileController extends Controller implements Initializable, Sett
             });
             return cell;
         });
-        pagedEvents=serviceEvents.getAllEvents(idLoggedUser);
+        pagedEvents=serviceEvents.getOwnEvents(idLoggedUser);
         eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         eventsListView.setItems(eventsForUserDTOList);
 
@@ -152,7 +152,7 @@ public class ProfileController extends Controller implements Initializable, Sett
 
     public void nextPage() {
         var nextPageItems=pagedEvents.getNextItems();
-        if(nextPageItems.isEmpty())
+        if(!nextPageItems.isEmpty())
             eventsForUserDTOList.setAll(nextPageItems);
     }
 
