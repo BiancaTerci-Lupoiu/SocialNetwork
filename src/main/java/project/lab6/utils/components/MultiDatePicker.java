@@ -24,8 +24,6 @@ public class MultiDatePicker extends DatePicker {
     private static final DateTimeFormatter DATE_FORMAT = Constants.DATE_FORMATTER;
     private final ObservableSet<LocalDate> selectedDates;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
     private boolean firstDatePicked = false;
 
     public MultiDatePicker() {
@@ -107,8 +105,10 @@ public class MultiDatePicker extends DatePicker {
         setConverter(new StringConverter<>() {
             @Override
             public String toString(LocalDate object) {
+                LocalDate startDate = getStartDate();
+                LocalDate endDate = getEndDate();
                 if (startDate != null && endDate != null) {
-                    return startDate.format(DATE_FORMAT) + " - " + endDate.format(DATE_FORMAT);
+                    return startDate.format(DATE_FORMAT) + " ~ " + endDate.format(DATE_FORMAT);
                 }
                 if (object == null) {
                     return "";
@@ -120,12 +120,13 @@ public class MultiDatePicker extends DatePicker {
             public LocalDate fromString(String string) {
                 if (string.contains("-")) {
                     try {
-                        startDate = LocalDate.parse(string.split("-")[0].trim(), DATE_FORMAT);
-                        endDate = LocalDate.parse(string.split("-")[1].trim(), DATE_FORMAT);
+                        //startDate = LocalDate.parse(string.split("-")[0].trim(), DATE_FORMAT);
+                        //endDate = LocalDate.parse(string.split("-")[1].trim(), DATE_FORMAT);
                     } catch (DateTimeParseException dte) {
                         return LocalDate.parse(string, DATE_FORMAT);
                     }
-                    return startDate;
+                    //return startDate;
+                    return null;
                 }
                 return LocalDate.parse(string, DATE_FORMAT);
             }

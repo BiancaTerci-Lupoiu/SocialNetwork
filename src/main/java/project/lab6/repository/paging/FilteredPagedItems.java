@@ -18,14 +18,15 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
     private final Predicate<T> filter;
     private final int pageSize;
 
+    //Saves all the previous location seen for the getPreviousItems functionality
     private final Stack<Location> locations = new Stack<>();
 
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
         this.filter = filter;
         this.pageSize = size;
-        var curentPageable = new PageableImplementation(0, size);
-        endLocation = new Location(curentPageable, 0);
+        var currentPageable = new PageableImplementation(0, size);
+        endLocation = new Location(currentPageable, 0);
         startLocation = null;
     }
 
@@ -34,6 +35,7 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         int leftOver = location.elementsNeeded();
         List<T> elementsInResult =
                 supplier.getPage(pageable).getContent().stream()
+                        //.filter(filter)
                         .skip(leftOver).toList();
         pageable = pageable.nextPageable();
         while (elementsInResult.size() < pageSize) {
@@ -55,13 +57,12 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
 
     @Override
     public List<T> getNextItems() {
-        if (startLocation != null)
-            locations.push(startLocation);
+        locations.push(startLocation);
         startLocation = endLocation;
         var items = getItems(startLocation);
 
         if (items.items().size() == 0) {
-            locations.pop();
+            startLocation = locations.pop();
         } else {
             startLocation = endLocation;
             endLocation = items.endLocation();

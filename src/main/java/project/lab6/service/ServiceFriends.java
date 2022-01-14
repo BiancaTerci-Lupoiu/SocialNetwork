@@ -9,9 +9,7 @@ import project.lab6.repository.paging.PagedItems;
 import project.lab6.repository.repointerface.Repository;
 import project.lab6.repository.repointerface.RepositoryUser;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,28 +33,24 @@ public class ServiceFriends {
 
     /**
      * Saves a user image
+     *
      * @param path the path to the image to save
      * @throws ServiceException If the saving operation fails
      */
-    public void saveUserImage(Long idUser, String path)
-    {
+    public void saveUserImage(Long idUser, String path) {
         User user = repoUsers.findOne(idUser);
-        if(user == null)
+        if (user == null)
             throw new ServiceException("The users doesn't exist!");
-        try
-        {
+        try {
             user.saveImage(path);
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             throw new ServiceException("The image could not be saved!");
         }
     }
 
-    public void deleteUserImage(Long idUser)
-    {
+    public void deleteUserImage(Long idUser) {
         User user = repoUsers.findOne(idUser);
-        if(repoUsers.findOne(idUser) == null)
+        if (repoUsers.findOne(idUser) == null)
             throw new ServiceException("The users doesn't exist!");
         try {
             user.deleteImage();
@@ -120,28 +114,28 @@ public class ServiceFriends {
      * @return a list with users whose name(last name + first name) matches the string name
      */
     //TODO: Schimba sa returnezi PagedItems<User> si sa folosesti ce e comentat in cod
-    public List<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
+    public PagedItems<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
         String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
-//        return new FilteredPagedItems<>(10, repoUsers::findAll, user ->
-//        {
-//            String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
-//            String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
-//            return !user.getId().equals(loggedUser.getId()) &&
-//                    !loggedUser.findFriend(user.getId()) &&
-//                    (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
-//                            || firstNameLastName.startsWith(nameWithoutExtraSpaces));
-//        });
-        List<User> usersWithName = repoUsers.findAll().stream()
-                .filter(user -> {
-                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
-                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
-                    return !user.getId().equals(loggedUser.getId()) &&
-                            !loggedUser.findFriend(user.getId()) &&
-                            (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
-                                    || firstNameLastName.startsWith(nameWithoutExtraSpaces));
-                })
-                .collect(Collectors.toList());
-        return usersWithName;
+        return new FilteredPagedItems<>(3, repoUsers::findAll, user ->
+        {
+            String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+            String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+            return !user.getId().equals(loggedUser.getId()) &&
+                    !loggedUser.findFriend(user.getId()) &&
+                    (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
+                            || firstNameLastName.startsWith(nameWithoutExtraSpaces));
+        });
+//        List<User> usersWithName = repoUsers.findAll().stream()
+//                .filter(user -> {
+//                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
+//                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
+//                    return !user.getId().equals(loggedUser.getId()) &&
+//                            !loggedUser.findFriend(user.getId()) &&
+//                            (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
+//                                    || firstNameLastName.startsWith(nameWithoutExtraSpaces));
+//                })
+//                .collect(Collectors.toList());
+//        return usersWithName;
     }
 
     /**
@@ -255,20 +249,20 @@ public class ServiceFriends {
      * Returns a list with user's friends whose name(last name + first name) matches the string name
      *
      * @param idLoggedUser the id of the logged user
-     * @param searchName       string with a name
+     * @param searchName   string with a name
      * @return a list with friends whose name(last name + first name) matches the string searchName
      */
     public List<Friend> searchFriendsByName(Long idLoggedUser, String searchName) {
         String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
-        User user=getUserWithFriends(idLoggedUser);
+        User user = getUserWithFriends(idLoggedUser);
         List<Friend> friendsWithName = StreamSupport.stream(user.getFriends().spliterator(), false)
-                .filter(friend->friend.getStatus().equals(DirectedStatus.APPROVED))
+                .filter(friend -> friend.getStatus().equals(DirectedStatus.APPROVED))
                 .filter(friend -> {
-                    User userFriend=friend.getUser();
+                    User userFriend = friend.getUser();
                     String lastNameFirstName = (userFriend.getLastName() + " " + userFriend.getFirstName()).toLowerCase();
                     String firstNameLastName = (userFriend.getFirstName() + " " + userFriend.getLastName()).toLowerCase();
                     return (lastNameFirstName.startsWith(name)
-                                    || firstNameLastName.startsWith(name));
+                            || firstNameLastName.startsWith(name));
                 })
                 .collect(Collectors.toList());
         return friendsWithName;
