@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
@@ -97,16 +98,12 @@ public class ConversationController extends Controller implements Observer<ChatD
         return Constants.View.CONVERSATION;
     }
 
-    private void moveScrollDown() {
-        //List<MessageDTO> messageDTOList = listViewMessages.getItems();
-        int index = messageDTOList.size();
-        listViewMessages.scrollTo(index-1);
-    }
-
     public void chatInfoButtonClick() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new ChatDetailsController(idLoggedUser, observableChatDTO));
-        Scene scene = new Scene(loader.load(), 600, 400);
+        Scene scene = new Scene(loader.load(), 600, 430);
+        scene.setFill(Color.TRANSPARENT);
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         stage.showAndWait();
     }
@@ -141,7 +138,6 @@ public class ConversationController extends Controller implements Observer<ChatD
         circle.setStroke(Color.web("#5c0e63"));
 
         update(chatDTO);
-       // moveScrollDown();
     }
 
     private String convertColorToString(Color color) {
@@ -165,7 +161,6 @@ public class ConversationController extends Controller implements Observer<ChatD
             ChatDTO changedChatDTO=serviceMessages.getChatDTO(idChat);
             typeMessageTextField.setText("");
             observableChatDTO.setResource(changedChatDTO);
-            //moveScrollDown();
         }
     }
 
@@ -175,6 +170,7 @@ public class ConversationController extends Controller implements Observer<ChatD
         isVisibleReplyBar = visible;
         if (visible) {
             mainVBox.getChildren().add(2, hBoxReplyBar);
+            typeMessageTextField.requestFocus();
         } else {
             mainVBox.getChildren().remove(2);
         }

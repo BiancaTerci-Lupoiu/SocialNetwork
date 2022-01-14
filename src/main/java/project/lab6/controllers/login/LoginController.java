@@ -7,9 +7,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.controllers.MainViewController;
 import project.lab6.domain.entities.User;
 import project.lab6.factory.Factory;
@@ -19,7 +22,7 @@ import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class LoginController extends Controller implements SetterServiceFriends {
+public class LoginController extends Controller implements SetterServiceFriends , HasTitleBar {
     private ServiceFriends serviceFriends;
     @FXML
     private Button closeLoginButton;
@@ -62,7 +65,9 @@ public class LoginController extends Controller implements SetterServiceFriends 
         else {
             FXMLLoader loader = Factory.getInstance().getLoader(new MainViewController(loggedUser.getId()));
             Stage mainStage = new Stage();
-            Scene scene = new Scene(loader.load(), 600, 500);
+            mainStage.initStyle(StageStyle.TRANSPARENT);
+            Scene scene = new Scene(loader.load(), 600, 530);
+            scene.setFill(Color.TRANSPARENT);
             mainStage.setScene(scene);
             mainStage.setResizable(false);
             mainStage.show();
@@ -74,7 +79,9 @@ public class LoginController extends Controller implements SetterServiceFriends 
     public void createNewAccount() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new NewAccountController());
         Stage newAccountStage = new Stage();
-        Scene scene = new Scene(loader.load(), 400, 570);
+        newAccountStage.initStyle(StageStyle.TRANSPARENT);
+        Scene scene = new Scene(loader.load(), 400, 600);
+        scene.setFill(Color.TRANSPARENT);
         newAccountStage.setScene(scene);
         newAccountStage.setResizable(false);
         newAccountStage.show();

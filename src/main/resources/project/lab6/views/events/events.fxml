@@ -32,13 +32,13 @@
         </HBox>
         <AnchorPane prefHeight="379.0" prefWidth="458.0">
             <children>
-                <ListView fx:id="eventsListView" layoutX="28.0" layoutY="36.0" prefHeight="306.0" prefWidth="407.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
-            <Button layoutX="385.0" layoutY="351.0" mnemonicParsing="false" onAction="#previousPage" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5c0e63;" text="&lt;" textFill="WHITE">
+                <ListView fx:id="eventsListView" layoutX="27.0" layoutY="14.0" prefHeight="306.0" prefWidth="407.0" style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 0 0 5 0;" />
+            <Button layoutX="382.0" layoutY="328.0" mnemonicParsing="false" onAction="#previousPage" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5c0e63;" text="&lt;" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="15.0" />
                </font>
             </Button>
-            <Button layoutX="420.0" layoutY="351.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5c0e63;" text="&gt;" textFill="WHITE">
+            <Button layoutX="419.0" layoutY="328.0" mnemonicParsing="false" onAction="#nextPage" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5c0e63;" text="&gt;" textFill="WHITE">
                <font>
                   <Font name="Cambria Bold" size="15.0" />
                </font>
