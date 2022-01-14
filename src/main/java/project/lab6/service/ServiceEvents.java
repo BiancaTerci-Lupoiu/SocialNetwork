@@ -120,7 +120,7 @@ public class ServiceEvents {
      */
     public PagedItems<EventForUserDTO> getSubscribedEvents(Long idUser, boolean isSubscribed) {
         return new FilteredPagedItems<>(7, pageable -> getEventsDTOPage(idUser, pageable),
-                EventForUserDTO::isSubscribed);
+                eventForUserDTO -> eventForUserDTO.isSubscribed() == isSubscribed);
     }
 
     /**
