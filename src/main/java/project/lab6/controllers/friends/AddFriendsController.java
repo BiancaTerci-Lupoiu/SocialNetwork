@@ -24,6 +24,7 @@ public class AddFriendsController extends Controller implements SetterServiceFri
     private final ObservableList<UserRecord> userRecordList = FXCollections.observableArrayList();
     private final Long idLoggedUser;
     private ServiceFriends serviceFriends;
+
     @FXML
     private TextField userNameTextField;
     @FXML
@@ -32,12 +33,15 @@ public class AddFriendsController extends Controller implements SetterServiceFri
     private TableColumn<UserRecord, String> nameColumn;
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
+    @FXML
+    public Button previousButton;
+    @FXML
+    public Button nextButton;
 
     public AddFriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
     }
 
-    @FXML
     public void initialize() {
         addFriendsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         nameColumn.prefWidthProperty().bind(addFriendsTableView.widthProperty().divide(2));
