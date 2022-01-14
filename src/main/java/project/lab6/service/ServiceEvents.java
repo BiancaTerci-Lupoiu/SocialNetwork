@@ -91,41 +91,42 @@ public class ServiceEvents {
 
     /**
      * Gets all the events
+     *
      * @param idUser the user for which to show the events
      * @return The events paged
      */
-    public PagedItems<EventForUserDTO> getAllEvents(Long idUser)
-    {
+    public PagedItems<EventForUserDTO> getAllEvents(Long idUser) {
         return new PagedItemsImplementation<>(pageable ->
-                getEventsDTOPage(idUser, pageable),7);
+                getEventsDTOPage(idUser, pageable), 7);
     }
 
     /**
      * Gets the own events
+     *
      * @param idUser the user for which to show the events
      * @return The events paged
      */
-    public PagedItems<EventForUserDTO> getOwnEvents(Long idUser)
-    {
+    public PagedItems<EventForUserDTO> getOwnEvents(Long idUser) {
         return new FilteredPagedItems<>(3, pageable -> getEventsDTOPage(idUser, pageable),
                 eventForUserDTO -> eventForUserDTO.getOwner().getId().equals(idUser));
     }
 
     /**
      * Gets the subscribed or unsubscribed events
-     * @param idUser the user for which to show the events
+     *
+     * @param idUser       the user for which to show the events
      * @param isSubscribed gets the events this user is subscribed to
      * @return The events paged
      */
-    public PagedItems<EventForUserDTO> getSubscribedEvents(Long idUser, boolean isSubscribed)
-    {
+    public PagedItems<EventForUserDTO> getSubscribedEvents(Long idUser, boolean isSubscribed) {
         return new FilteredPagedItems<>(7, pageable -> getEventsDTOPage(idUser, pageable),
                 EventForUserDTO::isSubscribed);
     }
 
     /**
      * Utility function that returns the pages of type EventForUserDTO
-     * @param idUser the id of the user
+     *
+     * @param idUser   the id of the user
      * @param pageable the page to return
      * @return Page<EventForUserDTO>
      */
@@ -135,8 +136,8 @@ public class ServiceEvents {
         {
             User owner = repoUsers.findOne(event.getIdUserOwner());
             boolean subscribed = repoSubscription.findOne(new TupleWithIdUserEvent(idUser, event.getId())) != null;
-            return new EventForUserDTO(event.getId(),event.getDate(),event.getTitle(),
-                    event.getDescription(),owner,subscribed);
+            return new EventForUserDTO(event.getId(), event.getDate(), event.getTitle(),
+                    event.getDescription(), owner, subscribed);
         }).toList();
         return new PageImplementation<>(events.getPageable(), dto);
     }

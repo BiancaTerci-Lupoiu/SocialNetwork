@@ -49,7 +49,10 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
                 break;
         }
         int size = elementsInResult.size();
-        leftOver = size - pageSize;
+        if (size > pageSize)
+            leftOver = size - pageSize;
+        else
+            leftOver = 0;
         if (size > pageSize) {
             pageable = pageable.previousPageable();
             elementsInResult = elementsInResult.subList(0, pageSize);

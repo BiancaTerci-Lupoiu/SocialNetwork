@@ -113,7 +113,6 @@ public class ServiceFriends {
      * @param name       string with a name
      * @return a list with users whose name(last name + first name) matches the string name
      */
-    //TODO: Schimba sa returnezi PagedItems<User> si sa folosesti ce e comentat in cod
     public PagedItems<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
         String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
         return new FilteredPagedItems<>(3, repoUsers::findAll, user ->
