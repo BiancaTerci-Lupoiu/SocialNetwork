@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PagedItemsImplementation<T> implements PagedItems<T> {
+    //curentPage represents the start of the nextItems call
     Pageable curentPage;
     private final PageSupplier<T> supplier;
 
@@ -28,9 +29,9 @@ public class PagedItemsImplementation<T> implements PagedItems<T> {
 
     @Override
     public List<T> getPreviousItems() {
-        if (curentPage.getPageNumber() == 0)
+        if (curentPage.getPageNumber() <= 1)
             return new ArrayList<>();
         curentPage = curentPage.previousPageable();
-        return getItems(curentPage);
+        return getItems(curentPage.previousPageable());
     }
 }

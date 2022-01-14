@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import project.lab6.SocialNetworkApplication;
 import project.lab6.controllers.Controller;
+import project.lab6.controllers.HasTitleBar;
 import project.lab6.factory.Factory;
 import project.lab6.setter.SetterServiceEvents;
 import project.lab6.setter.SetterServiceFriends;
@@ -34,17 +35,15 @@ public class CustomLoader extends FXMLLoader {
             setter.setServiceReports(factory.getServiceReports());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T load() throws IOException {
         T result = super.load();
-        controller.setRoot((Parent) result);
-        return result;
-    }
 
-    @Override
-    public <T> T load(InputStream inputStream) throws IOException {
-        T result = super.load(inputStream);
         controller.setRoot((Parent) result);
-        return result;
+        if (controller instanceof HasTitleBar) {
+            //TODO: adauga acel TitleBar si seteaza ca root-ul controlerului sa fie acest nou root
+        }
+        return (T) controller.getRoot();
     }
 }

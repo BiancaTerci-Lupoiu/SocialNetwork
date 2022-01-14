@@ -2,50 +2,80 @@ package project.lab6.repository.paging;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.function.Predicate;
 
 public class FilteredPagedItems<T> implements PagedItems<T> {
-    private Pageable curentPageable;
+    private record Location(Pageable pageable, int elementsNeeded) {
+    }
+
+    private record ItemsGet<T>(List<T> items, Location endLocation) {
+    }
+
+    private Location startLocation;
+    private Location endLocation;
     private final PageSupplier<T> supplier;
     private final Predicate<T> filter;
     private final int pageSize;
 
+    private final Stack<Location> locations = new Stack<>();
 
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
         this.filter = filter;
         this.pageSize = size;
-        curentPageable = new PageableImplementation(0, size);
+        var curentPageable = new PageableImplementation(0, size);
+        endLocation = new Location(curentPageable, 0);
+        startLocation = null;
     }
 
-    @Override
-    public List<T> getNextItems() {
-        List<T> elementsInResult = new ArrayList<>();
+    private ItemsGet<T> getItems(Location location) {
+        Pageable pageable = location.pageable();
+        int leftOver = location.elementsNeeded();
+        List<T> elementsInResult =
+                supplier.getPage(pageable).getContent().stream()
+                        .skip(leftOver).toList();
+        pageable = pageable.nextPageable();
         while (elementsInResult.size() < pageSize) {
-            var page = supplier.getPage(curentPageable);
-            curentPageable = curentPageable.nextPageable();
+            var page = supplier.getPage(pageable);
+            pageable = pageable.nextPageable();
             List<T> content = page.getContent();
             elementsInResult.addAll(content.stream().filter(filter).toList());
             if (content.size() == 0)
                 break;
         }
         int size = elementsInResult.size();
-        if (size == 0)
-            curentPageable = curentPageable.previousPageable();
-        return elementsInResult;
+        leftOver = size - pageSize;
+        if (size > pageSize) {
+            pageable = pageable.previousPageable();
+        }
+        elementsInResult = elementsInResult.subList(0, pageSize);
+        return new ItemsGet<>(elementsInResult, new Location(pageable, leftOver));
+    }
+
+    @Override
+    public List<T> getNextItems() {
+        if (startLocation != null)
+            locations.push(startLocation);
+        startLocation = endLocation;
+        var items = getItems(startLocation);
+
+        if (items.items().size() == 0) {
+            locations.pop();
+        } else {
+            startLocation = endLocation;
+            endLocation = items.endLocation();
+        }
+        return items.items();
     }
 
     @Override
     public List<T> getPreviousItems() {
-        List<T> elementsInResult = new ArrayList<>();
-        while (elementsInResult.size() < pageSize) {
-            if (curentPageable.getPageNumber() == 0)
-                break;
-            curentPageable = curentPageable.previousPageable();
-            var page = supplier.getPage(curentPageable);
-            List<T> content = page.getContent();
-            elementsInResult.addAll(content.stream().filter(filter).toList());
-        }
-        return elementsInResult;
+        if (locations.size() < 2)
+            return new ArrayList<>();
+        startLocation = locations.pop();
+        var items = getItems(startLocation);
+        endLocation = items.endLocation();
+        return items.items();
     }
 }
