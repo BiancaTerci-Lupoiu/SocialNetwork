@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FilteredPagedItems<T> implements PagedItems<T> {
     private record Location(Pageable pageable, int elementsNeeded) {
@@ -35,8 +36,9 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         int leftOver = location.elementsNeeded();
         List<T> elementsInResult =
                 supplier.getPage(pageable).getContent().stream()
-                        //.filter(filter)
-                        .skip(leftOver).toList();
+                        .filter(filter)
+                        .skip(leftOver)
+                        .collect(Collectors.toList());
         pageable = pageable.nextPageable();
         while (elementsInResult.size() < pageSize) {
             var page = supplier.getPage(pageable);
@@ -50,8 +52,8 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         leftOver = size - pageSize;
         if (size > pageSize) {
             pageable = pageable.previousPageable();
+            elementsInResult = elementsInResult.subList(0, pageSize);
         }
-        elementsInResult = elementsInResult.subList(0, pageSize);
         return new ItemsGet<>(elementsInResult, new Location(pageable, leftOver));
     }
 

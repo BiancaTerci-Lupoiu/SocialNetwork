@@ -85,7 +85,14 @@ public class AddFriendsController extends Controller implements SetterServiceFri
 
     private void updateTableWithUsersAtSearch(String searchName) {
         pagedItems = getPagedItemsSearch(searchName);
-        userRecordList.setAll(getUserRecordFromUsers(pagedItems.getNextItems()));
+        var items = pagedItems.getNextItems();
+        var record = getUserRecordFromUsers(items);
+        try {
+            userRecordList.setAll(record);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void findUserByName() {
