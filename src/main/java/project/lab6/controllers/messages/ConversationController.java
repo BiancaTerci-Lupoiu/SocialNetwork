@@ -249,7 +249,16 @@ public class ConversationController extends Controller implements Observer<ChatD
 
         private void addLabelWithRepliedMessage() {
             verticalBox.getChildren().add(repliedMessageText);
-            repliedMessageText.setText(message.getRepliedMessage().getUserFromInfo().getNickname()+": "+message.getRepliedMessage().getText());
+            Long idChat = message.getChat().getId();
+            Long idChatReplied = message.getRepliedMessage().getChat().getId();
+            if(!idChat.equals(idChatReplied))
+            {
+                repliedMessageText.setText(message.getRepliedMessage().getChat().getName()+": "+message.getRepliedMessage().getText());
+            }
+            else{
+                repliedMessageText.setText(message.getRepliedMessage().getUserFromInfo().getNickname()+": "+message.getRepliedMessage().getText());
+
+            }
         }
 
         private void addLabelWithMessage() {
