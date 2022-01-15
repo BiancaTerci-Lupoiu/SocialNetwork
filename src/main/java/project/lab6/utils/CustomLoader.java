@@ -51,6 +51,8 @@ public class CustomLoader extends FXMLLoader {
         HBox buttonsHBox=new HBox();
         buttonsHBox.setAlignment(Pos.CENTER_RIGHT);
         buttonsHBox.setPrefHeight(30);
+        buttonsHBox.setMinHeight(30);
+        buttonsHBox.setMaxHeight(30);
         buttonsHBox.setStyle("-fx-background-color: #5c0e63;-fx-background-radius: 15 15 0 0");
         Button closeButton=new Button("x");
         closeButton.setStyle("-fx-background-color: transparent;-fx-text-fill: white;-fx-font-family: Cambria Bold;-fx-font-size: 18");
@@ -88,7 +90,6 @@ public class CustomLoader extends FXMLLoader {
             VBox vBox=getTitleBar();
             vBox.getChildren().add(controller.getRoot());
             controller.setRoot(vBox);
-            //TODO: adauga acel TitleBar si seteaza ca root-ul controlerului sa fie acest nou root
         }
         return (T) controller.getRoot();
     }

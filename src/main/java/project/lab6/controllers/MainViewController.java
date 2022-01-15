@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainViewController extends Controller implements Initializable,HasTitleBar {
+public class MainViewController extends Controller implements Initializable, HasTitleBar {
     private final Long idLoggedUser;
 
     @FXML

@@ -89,13 +89,13 @@ public class ChatDetailsController extends Controller implements Initializable, 
         }
         updateChat(observableChatDTO.getResource());
         colorPicker.setValue(observableChatDTO.getResource().getColor());
-        colorPicker.setOnAction(someEvent->{
+        colorPicker.setOnAction(someEvent -> {
             ChatDTO oldChat = observableChatDTO.getResource();
-            serviceMessages.changeChatColor(oldChat.getIdChat(),colorPicker.getValue());
+            serviceMessages.changeChatColor(oldChat.getIdChat(), colorPicker.getValue());
             ChatDTO newChat = serviceMessages.getChatDTO(oldChat.getIdChat());
             observableChatDTO.setResource(newChat);
         });
-        ChatDTO chatDTO=observableChatDTO.getResource();
+        ChatDTO chatDTO = observableChatDTO.getResource();
         Image userImage = chatDTO.getImage(idLoggerUser);
         circle.setFill(new ImagePattern(userImage));
         circle.setStrokeWidth(2);
@@ -120,12 +120,14 @@ public class ChatDetailsController extends Controller implements Initializable, 
     public void changePictureAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png","*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(getStage());
+        if (selectedFile == null)
+            return;
         try {
-            ChatDTO oldChatDTO =observableChatDTO.getResource();
+            ChatDTO oldChatDTO = observableChatDTO.getResource();
             serviceMessages.saveChatImage(oldChatDTO.getIdChat(), selectedFile.getPath());
-            ChatDTO newChatDTO=serviceMessages.getChatDTO(oldChatDTO.getIdChat());
+            ChatDTO newChatDTO = serviceMessages.getChatDTO(oldChatDTO.getIdChat());
             observableChatDTO.setResource(newChatDTO);
             Image userImage = newChatDTO.getImage(idLoggerUser);
             circle.setFill(new ImagePattern(userImage));

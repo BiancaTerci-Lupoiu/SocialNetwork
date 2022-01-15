@@ -2,7 +2,6 @@ package project.lab6.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -82,7 +81,7 @@ public class ProfileController extends Controller implements Initializable, Sett
             });
             return cell;
         });
-        pagedEvents=serviceEvents.getOwnEvents(idLoggedUser);
+        pagedEvents = serviceEvents.getOwnEvents(idLoggedUser);
         eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         eventsListView.setItems(eventsForUserDTOList);
 
@@ -132,8 +131,10 @@ public class ProfileController extends Controller implements Initializable, Sett
     public void changePictureAction() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png","*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Pictures(.png,.jpg)", "*.png", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(getStage());
+        if (selectedFile == null)
+            return;
         try {
             serviceFriends.saveUserImage(idLoggedUser, selectedFile.getPath());
             Image userImage = serviceFriends.getUserWithFriends(idLoggedUser).getImage();
@@ -145,14 +146,14 @@ public class ProfileController extends Controller implements Initializable, Sett
     }
 
     public void previousPage() {
-        var previousPageItems=pagedEvents.getPreviousItems();
-        if(!previousPageItems.isEmpty())
+        var previousPageItems = pagedEvents.getPreviousItems();
+        if (!previousPageItems.isEmpty())
             eventsForUserDTOList.setAll(previousPageItems);
     }
 
     public void nextPage() {
-        var nextPageItems=pagedEvents.getNextItems();
-        if(!nextPageItems.isEmpty())
+        var nextPageItems = pagedEvents.getNextItems();
+        if (!nextPageItems.isEmpty())
             eventsForUserDTOList.setAll(nextPageItems);
     }
 
