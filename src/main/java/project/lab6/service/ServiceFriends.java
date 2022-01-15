@@ -115,7 +115,7 @@ public class ServiceFriends {
      */
     public PagedItems<User> searchUsersByNameNotFriendsWithLoggedUser(User loggedUser, String name) {
         String nameWithoutExtraSpaces = name.trim().replaceAll("[ ]+", " ").toLowerCase();
-        return new FilteredPagedItems<>(3, repoUsers::findAll, user ->
+        return new FilteredPagedItems<>(6, repoUsers::findAll, user ->
         {
             String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
             String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
