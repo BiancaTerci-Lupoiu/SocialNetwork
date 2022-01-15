@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox fx:id="mainHorizontalBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.MainChatController">
+<HBox fx:id="mainHorizontalBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.MainChatController"
+      stylesheets="@../../css/handButton.css">
     <children>
         <VBox alignment="BOTTOM_RIGHT" maxHeight="Infinity" prefHeight="478.0" prefWidth="218.0" style="-fx-border-width: 0 4 4 4; -fx-border-color: #5c0e63; -fx-background-color: #bb99ff;">
             <children>

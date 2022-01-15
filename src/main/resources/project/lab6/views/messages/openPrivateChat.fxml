@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
-            style="-fx-background-color: #bb99ff;" stylesheets="@../../css/createChatTable.css"
-            xmlns="http://javafx.com/javafx/17"
-            fx:controller="project.lab6.controllers.messages.OpenPrivateChatController">
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.messages.OpenPrivateChatController">
     <children>
-        <TableView fx:id="usersTable" layoutX="29.0" layoutY="157.0" prefHeight="214.0" prefWidth="500.0"
-                   style="-fx-background-color: #bb99ff;">
+        <TableView fx:id="usersTable" layoutX="29.0" layoutY="157.0" prefHeight="214.0" prefWidth="500.0" style="-fx-background-color: #bb99ff;">
             <placeholder>
-                <Label text=""/>
+                <Label text="" />
             </placeholder>
             <columns>
-                <TableColumn fx:id="name" prefWidth="240.666748046875" style="-fx-background-color: #bb99ff;"
-                             text="Name"/>
-                <TableColumn fx:id="addButton" prefWidth="257.99993896484375" style="-fx-background-color: #bb99ff;"/>
+                <TableColumn fx:id="name" prefWidth="240.666748046875" style="-fx-background-color: #bb99ff;" text="Name" />
+                <TableColumn fx:id="addButton" prefWidth="257.99993896484375" style="-fx-background-color: #bb99ff;" />
             </columns>
         </TableView>
-        <Label layoutX="29.0" layoutY="25.0" prefHeight="47.0" prefWidth="165.0"
-               style="-fx-border-color: #5c0e63; -fx-border-radius: 10;" text="  Open Chat" textFill="#5c0e63">
+        <Label layoutX="29.0" layoutY="25.0" prefHeight="47.0" prefWidth="165.0" style="-fx-border-color: #5c0e63; -fx-border-radius: 10;" text="  Open Chat" textFill="#5c0e63">
             <font>
-                <Font name="Cambria Bold" size="29.0"/>
+                <Font name="Cambria Bold" size="29.0" />
             </font>
             <effect>
                 <DropShadow>
                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0"/>
+                        <Color red="1.0" green="1.0" blue="1.0" />
                     </color>
                 </DropShadow>
             </effect>
         </Label>
-        <TextField fx:id="searchField" layoutX="29.0" layoutY="100.0" prefHeight="40.0" prefWidth="298.0"
-                   promptText="Search user..." style="-fx-background-color: #ccccff;">
+        <TextField fx:id="searchField" layoutX="29.0" layoutY="100.0" prefHeight="40.0" prefWidth="298.0" promptText="Search user..." style="-fx-background-color: #ccccff;">
             <font>
-                <Font name="Cambria" size="16.0"/>
+                <Font name="Cambria" size="16.0" />
             </font>
             <effect>
                 <InnerShadow radius="8.245000000000001" width="13.98">
                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0"/>
+                        <Color red="1.0" green="1.0" blue="1.0" />
                     </color>
                 </InnerShadow>
             </effect>
         </TextField>
     </children>
+   <stylesheets>
+      <URL value="@../../css/createChatTable.css" />
+      <URL value="@../../css/handButton.css" />
+   </stylesheets>
 </AnchorPane>

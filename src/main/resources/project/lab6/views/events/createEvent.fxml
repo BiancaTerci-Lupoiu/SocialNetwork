@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="504.0" prefWidth="428.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/textArea.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.events.CreateEventController">
+<AnchorPane prefHeight="504.0" prefWidth="428.0" style="-fx-background-color: #bb99ff;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.events.CreateEventController">
     <children>
         <TextArea fx:id="descriptionTextArea" layoutX="80.0" layoutY="236.0" prefHeight="178.0" prefWidth="297.0" promptText="Description.." style="-fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-radius: 10; -fx-background-radius: 10;" wrapText="true">
             <font>
@@ -66,9 +60,9 @@
                 </ImageView>
             </graphic>
         </Button>
-        <DatePicker fx:id="datePicker" stylesheets="@../../css/datePicker.css" layoutX="79.0" layoutY="165.0" prefHeight="26.0" prefWidth="125.0" style="-fx-background-color: #ccccff;" />
-        <Spinner fx:id="minutesSpinner" stylesheets="@../../css/spinner.css" editable="true" layoutX="352.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #ccccff;" />
-        <Spinner fx:id="hoursSpinner" stylesheets="@../../css/spinner.css" editable="true" layoutX="282.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #ccccff;" />
+        <DatePicker fx:id="datePicker" layoutX="79.0" layoutY="165.0" prefHeight="26.0" prefWidth="125.0" style="-fx-background-color: #ccccff;" stylesheets="@../../css/datePicker.css" />
+        <Spinner fx:id="minutesSpinner" editable="true" layoutX="352.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #ccccff;" stylesheets="@../../css/spinner.css" />
+        <Spinner fx:id="hoursSpinner" editable="true" layoutX="282.0" layoutY="164.0" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #ccccff;" stylesheets="@../../css/spinner.css" />
         <Label layoutX="30.0" layoutY="166.0" text="Date:" textFill="#5c0e63">
             <font>
                 <Font name="Cambria Bold" size="19.0" />
@@ -85,4 +79,8 @@
             </font>
         </Label>
     </children>
+   <stylesheets>
+      <URL value="@../../css/handButton.css" />
+      <URL value="@../../css/textArea.css" />
+   </stylesheets>
 </AnchorPane>
