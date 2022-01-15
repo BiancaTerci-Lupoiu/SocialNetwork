@@ -29,8 +29,6 @@ public class MainViewController extends Controller implements Initializable, Has
 
     @FXML
     private HBox horizontalBox;
-    private boolean messagesOpen = false;
-    private Stage messagesStage = null;
 
     public MainViewController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -49,10 +47,16 @@ public class MainViewController extends Controller implements Initializable, Has
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(region == null)
+            return;
         if (horizontalBox.getChildren().size() > 1)
             horizontalBox.getChildren().set(1, region);
         else
             horizontalBox.getChildren().add(region);
+        //region.setMaxSize(Double.MIN_VALUE,Double.MIN_VALUE);
+        //region.setMinSize(Double.MIN_VALUE,Double.MIN_VALUE);
+        region.setPrefHeight(500);
+        region.setPrefWidth(500);
         HBox.setHgrow(region, Priority.ALWAYS);
     }
 
@@ -81,10 +85,6 @@ public class MainViewController extends Controller implements Initializable, Has
     }
 
     public void openMessagesView() throws IOException {
-        if (messagesOpen) {
-            messagesStage.toFront();
-            return;
-        }
         FXMLLoader fxmlLoader = Factory.getInstance().getLoader(new MainChatController(idLoggedUser));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 600, 530);
@@ -92,9 +92,6 @@ public class MainViewController extends Controller implements Initializable, Has
         Stage stage = new Stage();
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
-        messagesOpen = true;
-        messagesStage = stage;
-        stage.setOnCloseRequest(handle -> messagesOpen = false);
         getStage().hide();
         stage.showAndWait();
         getStage().show();

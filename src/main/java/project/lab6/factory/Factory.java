@@ -199,14 +199,6 @@ public class Factory implements AutoCloseable {
         return new CustomLoader(this, controller);
     }
 
-    public Scene getScene(Controller controller, int width, int height) throws IOException {
-        Parent root = getLoader(controller).load();
-        if (controller instanceof HasTitleBar) {
-            height += 30;
-        }
-        return new Scene(root, width, height);
-    }
-
     @Override
     public void close() throws Exception {
         if (connectionPool != null) connectionPool.close();
