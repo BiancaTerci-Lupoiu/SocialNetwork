@@ -77,7 +77,6 @@ public class MainViewController extends Controller implements Initializable,HasT
         Scene scene = new Scene(fxmlLoader.load(), 600, 430);
         scene.setFill(Color.TRANSPARENT);
         Stage stage = (Stage) horizontalBox.getScene().getWindow();
-        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
     }
 

@@ -11,7 +11,7 @@ public class Items {
 
     public static <T> List<T> getAllItems(PagedItems<T> pagedItems) {
         List<T> result = new ArrayList<>();
-        List<T> page = new ArrayList<>();
+        List<T> page;
         do {
             page = pagedItems.getNextItems();
             result.addAll(page);
