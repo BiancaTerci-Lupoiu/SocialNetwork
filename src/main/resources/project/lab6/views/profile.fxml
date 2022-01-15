@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -94,7 +95,11 @@
                <Font name="Cambria" size="18.0" />
             </font>
          </Label>
-          <ListView fx:id="eventsListView" stylesheets="@../css/listViewNoVerticalScroll.css" layoutX="22.0" layoutY="18.0" prefHeight="93.0" prefWidth="407.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-width: 2; -fx-padding: 0 0 5 0;" />
+          <ListView fx:id="eventsListView" layoutX="22.0" layoutY="18.0" prefHeight="93.0" prefWidth="407.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #ccccff; -fx-border-color: #5c0e63; -fx-border-width: 2; -fx-padding: 0 0 5 0;">
+            <stylesheets>
+               <URL value="@../css/listViewNoVerticalScroll.css" />
+               <URL value="@../css/customVerticalScrollListView.css" />
+            </stylesheets></ListView>
          <Button layoutX="381.0" layoutY="-15.0" mnemonicParsing="false" onAction="#previousPage" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #5c0e63;" text="&lt;" textFill="WHITE">
             <font>
                <Font name="Cambria Bold" size="15.0" />
