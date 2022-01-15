@@ -173,14 +173,26 @@ public class User extends Entity<Long> {
         return Objects.hash(getFirstName(), getLastName(), getFriends());
     }
 
+    /**
+     * @return user's profile picture
+     */
     public Image getImage() {
         return Images.getImage("users", Constants.PATH_DEFAULT_USER_IMAGE, getId());
     }
 
+    /**
+     * saves user's profile picture
+     * @param imagePath the path to the image we want to save
+     * @throws IOException if the path is not a valid path
+     */
     public void saveImage(String imagePath) throws IOException {
         Images.saveImage("users", getId(), imagePath);
     }
 
+    /**
+     * deletes user's profile picture
+     * @throws IOException
+     */
     public void deleteImage() throws IOException {
         Images.deleteImage("users", getId());
     }

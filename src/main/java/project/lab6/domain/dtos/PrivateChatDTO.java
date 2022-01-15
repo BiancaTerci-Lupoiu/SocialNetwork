@@ -12,6 +12,10 @@ public class PrivateChatDTO extends ChatDTO {
         super(idChat, color, true, messages, users);
     }
 
+    /**
+     * @param idLoggedUser
+     * @return the UserChatInfoDTO of the participant in the private chat, other than the logged user
+     */
     private UserChatInfoDTO getOtherUser(Long idLoggedUser) {
         List<UserChatInfoDTO> info = getUsersInfo();
         int yoursIndex;
@@ -30,6 +34,11 @@ public class PrivateChatDTO extends ChatDTO {
         return getOtherUser(idLoggedUser).getNickname();
     }
 
+    /**
+     * the image of the participant in the private chat other than the logged user
+     * @param idLoggedUser
+     * @return
+     */
     @Override
     public Image getImage(Long idLoggedUser) {
         return getOtherUser(idLoggedUser).getUser().getImage();

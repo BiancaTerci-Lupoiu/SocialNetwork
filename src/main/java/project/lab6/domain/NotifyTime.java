@@ -24,6 +24,10 @@ public enum NotifyTime {
         return differenceInTime;
     }
 
+    /**
+     * @param eventForUserDTO
+     * @return the specific notification message for the given event
+     */
     public String getMessage(EventForUserDTO eventForUserDTO) {
         return String.format(message, eventForUserDTO.getTitle());
     }

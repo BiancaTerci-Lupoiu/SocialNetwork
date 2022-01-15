@@ -35,21 +35,56 @@ public class ServiceReports {
         this.serviceMessages = serviceMessages;
     }
 
+    /**
+     * validates a period of time (startDate<endDate)
+     *
+     * @param startDate
+     * @param endDate
+     */
     private void validatePeriod(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) throw new ValidationException("The period is not valid!");
     }
 
+    /**
+     * validates the input parameters for the full activity report
+     *
+     * @param reportPath
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     * @throws ServiceException if the input arguments are equal to null
+     */
     private void validateFullActivityReport(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser) {
         String errors = getErrorMessagesForInputArguments(reportPath, startDate, endDate, idLoggedUser);
         if (!errors.isEmpty()) throw new ServiceException(errors);
     }
 
+    /**
+     * validate the input parameters for the message report
+     *
+     * @param reportPath
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     * @param idFriend
+     * @throws ServiceException if the input arguments are equal to null
+     */
     private void validateMessageReport(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser, Long idFriend) {
         String errors = getErrorMessagesForInputArguments(reportPath, startDate, endDate, idLoggedUser);
         if (idFriend == null) errors += "invalid friend!\n";
         if (!errors.isEmpty()) throw new ServiceException(errors);
     }
 
+    /**
+     * @param reportPath
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     * @return a string with all the errors: -reportPath-null
+     * -startDate-null
+     * -endDate-null
+     * -idLoggedUser-null
+     */
     private String getErrorMessagesForInputArguments(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser) {
         String errors = "";
         if (reportPath == null) errors += "invalid file location!\n";
@@ -59,6 +94,14 @@ public class ServiceReports {
         return errors;
     }
 
+    /**
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     * @param idFriend
+     * @return the list of messages the logged user received from the friend with the id=idFriend in the period of time startDate-endDate
+     * @throws ServiceException if the period of time is invalid
+     */
     private List<Message> getFriendMessagesReport(LocalDate startDate, LocalDate endDate, Long idLoggedUser, Long idFriend) {
         validatePeriod(startDate, endDate);
         Chat chat = repoChats.getPrivateChatBetweenUsers(idLoggedUser, idFriend);
@@ -71,6 +114,16 @@ public class ServiceReports {
         return messages;
     }
 
+    /**
+     * creates a pdf document with all the messages the logged user received from the friend with the id=idFriend in the period of time startDate-endDate
+     *
+     * @param reportPath
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     * @param idFriend
+     * @throws ServiceException if the report couldn't be saved
+     */
     public void createFriendMessagesReport(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser, Long idFriend) {
         validateMessageReport(reportPath, startDate, endDate, idLoggedUser, idFriend);
         var messages = getFriendMessagesReport(startDate, endDate, idLoggedUser, idFriend);
@@ -119,6 +172,12 @@ public class ServiceReports {
         }
     }
 
+    /**
+     * @param idUserFor
+     * @param startDate
+     * @param endDate
+     * @return a list with the friends that the user with id=idUserFor made in the period of time startDate-endDate
+     */
     public List<Friend> getFriendsInPeriod(Long idUserFor, LocalDate startDate, LocalDate endDate) {
         var friendships = repoFriendships.findAll().stream().filter(x -> x.getId().getLeft().equals(idUserFor) || x.getId().getRight().equals(idUserFor)).filter(x -> x.getStatus() == Status.APPROVED).filter(x -> x.getDate().isAfter(startDate) && x.getDate().isBefore(endDate));
 
@@ -129,11 +188,14 @@ public class ServiceReports {
         }).toList();
     }
 
-
-    private void writeFriendsToPage(PDDocument document, PDPage pageFriends, List<Friend> friends) throws IOException {
-
-    }
-
+    /**
+     * creates a pdf document with all the messages the logged user received in the period of time startDate-endDate and all the friends made in the same period
+     *
+     * @param reportPath
+     * @param startDate
+     * @param endDate
+     * @param idLoggedUser
+     */
     public void createFullActivityReport(String reportPath, LocalDate startDate, LocalDate endDate, Long idLoggedUser) {
         validateFullActivityReport(reportPath, startDate, endDate, idLoggedUser);
 

@@ -11,10 +11,16 @@ public class TupleWithIdChatUser {
         this.idUser = idUser;
     }
 
+    /**
+     * @return the chat id
+     */
     public Long getIdChat() {
         return idChat;
     }
 
+    /**
+     * @return the user id
+     */
     public Long getIdUser() {
         return idUser;
     }

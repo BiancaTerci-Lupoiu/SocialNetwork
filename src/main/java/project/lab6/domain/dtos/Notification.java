@@ -8,6 +8,11 @@ public class Notification {
     private final EventForUserDTO forEvent;
     private final NotifyTime time;
 
+    /**
+     * constructor
+     * @param forEvent
+     * @param time
+     */
     public Notification(EventForUserDTO forEvent, NotifyTime time) {
         this.forEvent = forEvent;
         this.time = time;
@@ -27,6 +32,9 @@ public class Notification {
         return time.getMessage(forEvent);
     }
 
+    /**
+     * @return the difference in time between when the event starts and when should the user be notified
+     */
     public LocalDateTime getTimeOfNotifying() {
         return forEvent.getDate().minus(time.getDifferenceInTime());
     }

@@ -5,6 +5,6 @@ import project.lab6.domain.entities.events.Subscription;
 public class SubscriptionValidator implements Validator<Subscription> {
     @Override
     public void validate(Subscription entity) throws ValidationException {
-        //TODO: Oare trebuie validat ceva? Nu cred :))
+
     }
 }

@@ -12,6 +12,15 @@ public class EventForUserDTO {
     private final User owner;
     private boolean subscribed;
 
+    /**
+     * constructor
+     * @param id
+     * @param date
+     * @param title
+     * @param description
+     * @param owner
+     * @param subscribed
+     */
     public EventForUserDTO(Long id, LocalDateTime date, String title, String description, User owner, boolean subscribed) {
         this.id = id;
         this.date = date;
@@ -21,22 +30,33 @@ public class EventForUserDTO {
         this.subscribed = subscribed;
     }
 
+    /**
+     * @return event's id
+     */
     public Long getId() {
         return id;
     }
-
+    /**
+     * @return event's date
+     */
     public LocalDateTime getDate() {
         return date;
     }
-
+    /**
+     * @return event's title
+     */
     public String getTitle() {
         return title;
     }
-
+    /**
+     * @return event's description
+     */
     public String getDescription() {
         return description;
     }
-
+    /**
+     * @return event's user owner
+     */
     public User getOwner() {
         return owner;
     }
@@ -48,6 +68,10 @@ public class EventForUserDTO {
         return subscribed;
     }
 
+    /**
+     * sets the subscribed status of the event to the value subscribed
+     * @param subscribed
+     */
     public void setSubscribed(boolean subscribed) {
         this.subscribed = subscribed;
     }

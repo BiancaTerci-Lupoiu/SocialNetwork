@@ -33,18 +33,32 @@ public class Friendship extends Entity<Tuple<Long, Long>> {
         return "Friendship{" + "idUser1=" + getId().getLeft() + " , " + "idUser2=" + getId().getRight() + "}";
     }
 
+    /**
+     * @return the date when the friendship was created
+     */
     public LocalDate getDate() {
         return date;
     }
 
+    /**
+     * sets the friendship's date to date
+     * @param date
+     */
     public void setDate(LocalDate date) {
         this.date = date;
     }
 
+    /**
+     * @return the status of the friendship
+     */
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * sets friendship's status to status
+     * @param status
+     */
     public void setStatus(Status status) {
         this.status = status;
     }

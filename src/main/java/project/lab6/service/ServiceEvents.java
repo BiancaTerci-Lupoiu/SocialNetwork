@@ -34,6 +34,13 @@ public class ServiceEvents {
         this.validatorSubscription = validatorSubscription;
     }
 
+    /**
+     * Creates an event
+     * @param idLoggedUser the id of the user owner
+     * @param title the title of the event
+     * @param description the description of the event
+     * @param date the date of the event
+     */
     public void createEvent(Long idLoggedUser, String title, String description, LocalDateTime date) {
         Event event = new Event(idLoggedUser, title, description, date);
         validatorEvent.validate(event);
@@ -43,6 +50,13 @@ public class ServiceEvents {
         subscribe(idLoggedUser, event.getId(), date);
     }
 
+    /**
+     * Modifies an event
+     * @param idEvent the id of the event to be modified
+     * @param newTitle the new title of the event
+     * @param newDescription the new description of the event
+     * @param newDate the new date of the event
+     */
     public void modifyEvent(Long idEvent, String newTitle, String newDescription, LocalDateTime newDate) {
         Event event = repoEvents.findOne(idEvent);
         if (event == null)
@@ -141,7 +155,12 @@ public class ServiceEvents {
         }).toList();
         return new PageImplementation<>(events.getPageable(), dto);
     }
-
+    /**
+     * subscribes the user from an event
+     * @param idLoggedUser the id of the user to be subscribed
+     * @param idEvent the id of the event to subscribe
+     * @throws ServiceException if the subscription can not be created
+     */
     public void subscribe(Long idLoggedUser, Long idEvent, LocalDateTime date) {
         Subscription subscription = new Subscription(idLoggedUser, idEvent, date);
         validatorSubscription.validate(subscription);
@@ -150,11 +169,21 @@ public class ServiceEvents {
             throw new ServiceException("Can't create subscription!");
     }
 
+    /**
+     * unsubscribes the user from an event
+     * @param idLoggedUser the id of the user to be unsubscribed
+     * @param idEvent the id of the event to unsubscribe
+     */
     public void unsubscribe(Long idLoggedUser, Long idEvent) {
         if (!repoSubscription.delete(new TupleWithIdUserEvent(idLoggedUser, idEvent)))
             throw new ServiceException("Can't unsubscribe from event!");
     }
 
+    /**
+     * returns a list with all the notifications from the events the user with the id idUser is subscribed to
+     * @param idUser
+     * @return the list with notifications
+     */
     public List<Notification> getNotification(Long idUser) {
         List<Notification> notifications = new ArrayList<>();
         for (var subscription : repoSubscription.findAll()) {

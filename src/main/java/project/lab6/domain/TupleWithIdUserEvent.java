@@ -11,10 +11,16 @@ public class TupleWithIdUserEvent {
         this.idEvent = idEvent;
     }
 
+    /**
+     * @return the user id
+     */
     public Long getIdUser() {
         return idUser;
     }
 
+    /**
+     * @return the event id
+     */
     public Long getIdEvent() {
         return idEvent;
     }

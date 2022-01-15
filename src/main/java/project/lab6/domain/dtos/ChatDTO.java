@@ -93,5 +93,10 @@ public abstract class ChatDTO {
      */
     public abstract Image getImage(Long idLoggedUser);
 
+    /**
+     * saves the image from the given path as chat image
+     * @param path
+     * @throws IOException
+     */
     public abstract void saveImage(String path) throws IOException;
 }
