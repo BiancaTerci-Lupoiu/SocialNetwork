@@ -42,7 +42,7 @@
                 </HBox>
             <AnchorPane prefHeight="230.0" prefWidth="292.0">
                <children>
-                  <ListView fx:id="friendsListView" layoutY="44.0" prefHeight="158.0" prefWidth="243.0" style="-fx-background-color: #ccccff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #5c0e63; -fx-padding: 0 0 5 0;" />
+                  <ListView fx:id="friendsListView" stylesheets="@../../css/customVerticalScrollListView.css" layoutY="44.0" prefHeight="158.0" prefWidth="243.0" style="-fx-background-color: #ccccff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #5c0e63; -fx-padding: 0 0 5 0;" />
                   <HBox prefHeight="40.0" prefWidth="292.0">
                      <children>
                         <TextField fx:id="searchFriendsTextField" prefHeight="40.0" prefWidth="204.0" promptText="Search and select friend..." style="-fx-background-color: #e0ccff; -fx-border-color: #5c0e63; -fx-border-radius: 5; -fx-background-radius: 5;">

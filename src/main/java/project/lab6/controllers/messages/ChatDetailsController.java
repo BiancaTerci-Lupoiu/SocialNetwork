@@ -19,6 +19,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.lab6.controllers.AlertMessage;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.HasTitleBar;
@@ -106,7 +107,9 @@ public class ChatDetailsController extends Controller implements Initializable, 
     public void addUserToChat() throws IOException {
         FXMLLoader loader = Factory.getInstance().getLoader(new AddMemberController(idLoggerUser, observableChatDTO));
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
         Scene scene = new Scene(loader.load(), 600, 400);
+        scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
         stage.showAndWait();
     }
