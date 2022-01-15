@@ -7,12 +7,12 @@ import project.lab6.utils.Images;
 import project.lab6.utils.Lazy;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public class GroupChatDTO extends ChatDTO {
 
     private final String chatName;
+
     public GroupChatDTO(Long idChat, String chatName, Color color, Lazy<List<MessageDTO>> messages, Lazy<List<UserChatInfoDTO>> users) {
         super(idChat, color, false, messages, users);
         this.chatName = chatName;
@@ -34,6 +34,6 @@ public class GroupChatDTO extends ChatDTO {
 
     @Override
     public void saveImage(String path) throws IOException {
-        Images.saveImage("chats",getIdChat(), path);
+        Images.saveImage("chats", getIdChat(), path);
     }
 }

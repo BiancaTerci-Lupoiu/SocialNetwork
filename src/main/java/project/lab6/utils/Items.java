@@ -15,7 +15,7 @@ public class Items {
         do {
             page = pagedItems.getNextItems();
             result.addAll(page);
-        }while (page.size()>0);
+        } while (page.size() > 0);
         return result;
     }
 }

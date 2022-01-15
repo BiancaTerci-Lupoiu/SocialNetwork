@@ -22,7 +22,7 @@ import project.lab6.utils.Constants;
 
 import java.io.IOException;
 
-public class LoginController extends Controller implements SetterServiceFriends , HasTitleBar {
+public class LoginController extends Controller implements SetterServiceFriends, HasTitleBar {
     private ServiceFriends serviceFriends;
     @FXML
     private Button closeLoginButton;

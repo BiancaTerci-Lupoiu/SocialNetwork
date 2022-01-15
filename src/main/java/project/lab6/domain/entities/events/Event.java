@@ -1,9 +1,6 @@
 package project.lab6.domain.entities.events;
 
-import javafx.scene.image.Image;
 import project.lab6.domain.entities.Entity;
-import project.lab6.utils.Constants;
-import project.lab6.utils.Images;
 
 import java.time.LocalDateTime;
 

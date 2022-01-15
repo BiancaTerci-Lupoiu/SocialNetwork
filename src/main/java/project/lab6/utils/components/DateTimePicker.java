@@ -76,12 +76,12 @@ public class DateTimePicker extends DatePicker {
         return format.get();
     }
 
-    public ObjectProperty<String> formatProperty() {
-        return format;
-    }
-
     public void setFormat(String format) {
         this.format.set(format);
+    }
+
+    public ObjectProperty<String> formatProperty() {
+        return format;
     }
 
     class InternalConverter extends StringConverter<LocalDate> {

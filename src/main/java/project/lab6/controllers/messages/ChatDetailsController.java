@@ -41,9 +41,7 @@ import java.util.ResourceBundle;
 public class ChatDetailsController extends Controller implements Initializable, Observer<ChatDTO>, SetterServiceMessages, HasTitleBar {
     private final ObservableList<UserChatInfoDTO> userChatInfos = FXCollections.observableArrayList();
     private final Long idLoggerUser;
-    private ServiceMessages serviceMessages;
     private final ObservableResource<ChatDTO> observableChatDTO;
-
     @FXML
     public HBox hBoxHeading;
     @FXML
@@ -51,13 +49,14 @@ public class ChatDetailsController extends Controller implements Initializable, 
     @FXML
     public Button changePictureButton;
     @FXML
+    public ColorPicker colorPicker;
+    private ServiceMessages serviceMessages;
+    @FXML
     private HBox hBoxButtons;
     @FXML
     private ListView<UserChatInfoDTO> listView;
     @FXML
     private Label chatNameLabel;
-    @FXML
-    public ColorPicker colorPicker;
 
     public ChatDetailsController(Long idLoggerUser, ObservableResource<ChatDTO> observableChatDTO) {
         this.idLoggerUser = idLoggerUser;

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PagedItemsImplementation<T> implements PagedItems<T> {
+    private final PageSupplier<T> supplier;
     //curentPage represents the start of the nextItems call
     Pageable curentPage;
-    private final PageSupplier<T> supplier;
 
     public PagedItemsImplementation(PageSupplier<T> supplier, int size) {
         this.supplier = supplier;

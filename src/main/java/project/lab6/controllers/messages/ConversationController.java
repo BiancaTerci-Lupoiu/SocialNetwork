@@ -1,7 +1,6 @@
 package project.lab6.controllers.messages;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,9 +20,7 @@ import project.lab6.controllers.Controller;
 import project.lab6.domain.dtos.ChatDTO;
 import project.lab6.domain.dtos.MessageDTO;
 import project.lab6.factory.Factory;
-import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
-import project.lab6.setter.SetterServiceFriends;
 import project.lab6.setter.SetterServiceMessages;
 import project.lab6.utils.Constants;
 import project.lab6.utils.observer.ObservableResource;
@@ -32,7 +28,6 @@ import project.lab6.utils.observer.Observer;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ConversationController extends Controller implements Observer<ChatDTO>, SetterServiceMessages {
@@ -41,9 +36,6 @@ public class ConversationController extends Controller implements Observer<ChatD
     private final MainChatController mainChatController;
     private final ObservableList<MessageDTO> messageDTOList = FXCollections.observableArrayList();
     private final MessageDTO messageToReply;
-    private ServiceMessages serviceMessages;
-    boolean isVisibleReplyBar = true;
-
     @FXML
     public Label groupNameLabel;
     @FXML
@@ -62,6 +54,8 @@ public class ConversationController extends Controller implements Observer<ChatD
     public Button cancelReplyButton;
     @FXML
     public Circle circle;
+    boolean isVisibleReplyBar = true;
+    private ServiceMessages serviceMessages;
 
 
     /**
@@ -89,7 +83,7 @@ public class ConversationController extends Controller implements Observer<ChatD
         String chatColor = convertColorToString(chatDTO.getColor());
         listViewMessages.setStyle("-fx-background-color:" + chatColor);
         mainVBox.setStyle("-fx-background-color:" + chatColor);
-        Image chatImage=chatDTO.getImage(idLoggedUser);
+        Image chatImage = chatDTO.getImage(idLoggedUser);
         circle.setFill(new ImagePattern(chatImage));
     }
 
@@ -124,14 +118,14 @@ public class ConversationController extends Controller implements Observer<ChatD
         hBoxReplyBar.setStyle("-fx-padding: 0px 10px 0px 0px");
         listViewMessages.setItems(messageDTOList);
         if (messageToReply != null) {
-            String othersUserNickname=chatDTO.getName(idLoggedUser);
-            labelMessageToReply.setText("Reply to "+othersUserNickname+":  " + messageToReply.getText());
+            String othersUserNickname = chatDTO.getName(idLoggedUser);
+            labelMessageToReply.setText("Reply to " + othersUserNickname + ":  " + messageToReply.getText());
             labelMessageToReply.setId(messageToReply.getId().toString());
         } else {
             setReplyBarVisible(false);
         }
 
-        Image chatImage=chatDTO.getImage(idLoggedUser);
+        Image chatImage = chatDTO.getImage(idLoggedUser);
         circle.setFill(new ImagePattern(chatImage));
         circle.setStrokeWidth(2);
         circle.setRadius(25);
@@ -158,7 +152,7 @@ public class ConversationController extends Controller implements Observer<ChatD
                 serviceMessages.replyToMessage(idChat, idLoggedUser, idMessageToReply, typeMessageTextField.getText(), LocalDateTime.now());
                 cancelReplyAction();
             }
-            ChatDTO changedChatDTO=serviceMessages.getChatDTO(idChat);
+            ChatDTO changedChatDTO = serviceMessages.getChatDTO(idChat);
             typeMessageTextField.setText("");
             observableChatDTO.setResource(changedChatDTO);
         }
@@ -228,7 +222,7 @@ public class ConversationController extends Controller implements Observer<ChatD
 
 
             replyInChatButton.setOnAction(event -> {
-                labelShownAboveTypeText.setText("Reply to "+message.getUserFromInfo().getNickname()+":  " + messageText.getText());
+                labelShownAboveTypeText.setText("Reply to " + message.getUserFromInfo().getNickname() + ":  " + messageText.getText());
                 labelShownAboveTypeText.setId(message.getId().toString());
                 showReplyBar.accept(true);
             });
@@ -247,12 +241,10 @@ public class ConversationController extends Controller implements Observer<ChatD
             verticalBox.getChildren().add(repliedMessageText);
             Long idChat = message.getChat().getId();
             Long idChatReplied = message.getRepliedMessage().getChat().getId();
-            if(!idChat.equals(idChatReplied))
-            {
-                repliedMessageText.setText(message.getRepliedMessage().getChat().getName()+": "+message.getRepliedMessage().getText());
-            }
-            else{
-                repliedMessageText.setText(message.getRepliedMessage().getUserFromInfo().getNickname()+": "+message.getRepliedMessage().getText());
+            if (!idChat.equals(idChatReplied)) {
+                repliedMessageText.setText(message.getRepliedMessage().getChat().getName() + ": " + message.getRepliedMessage().getText());
+            } else {
+                repliedMessageText.setText(message.getRepliedMessage().getUserFromInfo().getNickname() + ": " + message.getRepliedMessage().getText());
 
             }
         }

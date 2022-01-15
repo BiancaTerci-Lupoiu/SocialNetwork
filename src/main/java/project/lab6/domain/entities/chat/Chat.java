@@ -2,7 +2,6 @@ package project.lab6.domain.entities.chat;
 
 import javafx.scene.paint.Color;
 import project.lab6.domain.entities.Entity;
-import project.lab6.utils.Images;
 
 public class Chat extends Entity<Long> {
     private final String name;

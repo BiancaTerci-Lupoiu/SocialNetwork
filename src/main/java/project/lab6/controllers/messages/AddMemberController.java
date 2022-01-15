@@ -25,10 +25,10 @@ import java.util.List;
 
 public class AddMemberController extends Controller implements SetterServiceFriends, SetterServiceMessages, HasTitleBar {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private ServiceFriends serviceFriends;
-    private ServiceMessages serviceMessages;
     private final ObservableResource<ChatDTO> observableChatDTO;
     private final Long idLoggedUser;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     @FXML
     private TextField searchField;
     @FXML

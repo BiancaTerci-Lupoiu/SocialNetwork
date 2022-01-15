@@ -8,7 +8,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -34,7 +33,6 @@ import java.io.IOException;
 
 
 public class MainChatController extends Controller implements SetterServiceMessages, HasTitleBar {
-    private ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     @FXML
     public TextField searchChatTextField;
@@ -45,6 +43,7 @@ public class MainChatController extends Controller implements SetterServiceMessa
     @FXML
     public ListView<ChatDTO> listViewChats;
     ObservableList<ChatDTO> chatDTOList = FXCollections.observableArrayList();
+    private ServiceMessages serviceMessages;
 
 
     public MainChatController(Long idLoggedUser) {
@@ -53,6 +52,11 @@ public class MainChatController extends Controller implements SetterServiceMessa
 
     public ServiceMessages getServiceMessages() {
         return serviceMessages;
+    }
+
+    @Override
+    public void setServiceMessages(ServiceMessages serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 
     @Override
@@ -129,18 +133,13 @@ public class MainChatController extends Controller implements SetterServiceMessa
         HBox.setHgrow(region, Priority.ALWAYS);
     }
 
-    @Override
-    public void setServiceMessages(ServiceMessages serviceMessages) {
-        this.serviceMessages = serviceMessages;
-    }
-
     public static class CustomCellChat extends ListCell<ChatDTO> {
         HBox horizontalBox = new HBox();
-        VBox nameAndMessageVBox =new VBox();
-        Label lastMessage=new Label();
+        VBox nameAndMessageVBox = new VBox();
+        Label lastMessage = new Label();
         Label chatName = new Label();
         Image groupImage;
-        Circle circle=new Circle();
+        Circle circle = new Circle();
         ChatDTO chat;
         Long idLoggedUser;
 
@@ -160,21 +159,20 @@ public class MainChatController extends Controller implements SetterServiceMessa
             lastMessage.setMaxWidth(110);
         }
 
-        private void setLastMessage(){
-            MessageDTO lastMessageDTO= chat.getLastMessage();
-            if(lastMessageDTO!=null)
-            {
-                UserChatInfoDTO userMessageFrom=lastMessageDTO.getUserFromInfo();
-                String usersNameFrom=userMessageFrom.getNickname();
-                if(userMessageFrom.getUser().getId().equals(idLoggedUser))
-                    usersNameFrom="You";
-                String lastMessageText=usersNameFrom+": "+lastMessageDTO.getText();
+        private void setLastMessage() {
+            MessageDTO lastMessageDTO = chat.getLastMessage();
+            if (lastMessageDTO != null) {
+                UserChatInfoDTO userMessageFrom = lastMessageDTO.getUserFromInfo();
+                String usersNameFrom = userMessageFrom.getNickname();
+                if (userMessageFrom.getUser().getId().equals(idLoggedUser))
+                    usersNameFrom = "You";
+                String lastMessageText = usersNameFrom + ": " + lastMessageDTO.getText();
                 lastMessage.setText(lastMessageText);
-                nameAndMessageVBox.getChildren().setAll(chatName,lastMessage);
-            }
-            else
+                nameAndMessageVBox.getChildren().setAll(chatName, lastMessage);
+            } else
                 nameAndMessageVBox.getChildren().setAll(chatName);
         }
+
         @Override
         protected void updateItem(ChatDTO item, boolean empty) {
             super.updateItem(item, empty);
@@ -184,7 +182,7 @@ public class MainChatController extends Controller implements SetterServiceMessa
             } else {
                 chat = item;
                 chatName.setText(chat.getName(idLoggedUser));
-                groupImage=item.getImage(idLoggedUser);
+                groupImage = item.getImage(idLoggedUser);
                 circle.setFill(new ImagePattern(groupImage));
                 setLastMessage();
                 setGraphic(horizontalBox);

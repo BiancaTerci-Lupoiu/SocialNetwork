@@ -124,17 +124,6 @@ public class ServiceFriends {
                     (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
                             || firstNameLastName.startsWith(nameWithoutExtraSpaces));
         });
-//        List<User> usersWithName = repoUsers.findAll().stream()
-//                .filter(user -> {
-//                    String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
-//                    String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
-//                    return !user.getId().equals(loggedUser.getId()) &&
-//                            !loggedUser.findFriend(user.getId()) &&
-//                            (lastNameFirstName.startsWith(nameWithoutExtraSpaces)
-//                                    || firstNameLastName.startsWith(nameWithoutExtraSpaces));
-//                })
-//                .collect(Collectors.toList());
-//        return usersWithName;
     }
 
     /**

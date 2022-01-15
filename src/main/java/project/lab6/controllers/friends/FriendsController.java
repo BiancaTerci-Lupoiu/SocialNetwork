@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 
 public class FriendsController extends Controller implements SetterServiceFriends {
-    private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
     @FXML
@@ -30,6 +29,7 @@ public class FriendsController extends Controller implements SetterServiceFriend
     TableColumn<UserFriend, Button> button;
     @FXML
     TableView<UserFriend> tableViewFriends;
+    private ServiceFriends serviceFriends;
 
     public FriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;

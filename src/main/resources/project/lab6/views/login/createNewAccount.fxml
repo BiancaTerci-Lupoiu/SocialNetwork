@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
-<AnchorPane prefHeight="512.0" prefWidth="391.0" style="-fx-background-color: #bb99ff;" stylesheets="@../../css/handButton.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.lab6.controllers.login.NewAccountController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="512.0" prefWidth="391.0"
+            style="-fx-background-color: #bb99ff;" stylesheets="@../../css/handButton.css"
+            xmlns="http://javafx.com/javafx/11.0.2" fx:controller="project.lab6.controllers.login.NewAccountController">
     <effect>
-        <DropShadow />
+        <DropShadow/>
     </effect>
     <children>
         <Label layoutX="100.0" layoutY="130.0" text="Create account" textAlignment="CENTER" textFill="#5c0e63">
             <font>
-                <Font name="Cambria Bold" size="30.0" />
+                <Font name="Cambria Bold" size="30.0"/>
             </font>
         </Label>
-        <Button fx:id="backToLogInButton" layoutX="320.0" layoutY="444.0" mnemonicParsing="false" onAction="#backToLogIn" prefHeight="38.0" prefWidth="49.0" style="-fx-background-color: transparent; ">
+        <Button fx:id="backToLogInButton" layoutX="320.0" layoutY="444.0" mnemonicParsing="false"
+                onAction="#backToLogIn" prefHeight="38.0" prefWidth="49.0" style="-fx-background-color: transparent; ">
             <graphic>
                 <ImageView fitHeight="32.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../images/back.png" />
+                        <Image url="@../../images/back.png"/>
                     </image>
                 </ImageView>
             </graphic>
@@ -29,52 +32,59 @@
             <children>
                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="287.0">
                     <children>
-                        <TextField fx:id="firstNameTextField" prefHeight="30.0" prefWidth="140.0" promptText="First Name">
+                        <TextField fx:id="firstNameTextField" prefHeight="30.0" prefWidth="140.0"
+                                   promptText="First Name">
                             <font>
-                                <Font name="Cambria" size="14.0" />
+                                <Font name="Cambria" size="14.0"/>
                             </font>
                         </TextField>
                         <TextField fx:id="lastNameTextField" prefHeight="30.0" prefWidth="147.0" promptText="Last Name">
                             <font>
-                                <Font name="Cambria" size="14.0" />
+                                <Font name="Cambria" size="14.0"/>
                             </font>
                         </TextField>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="38.0" prefWidth="287.0">
                     <children>
-                        <TextField fx:id="emailTextField" prefHeight="30.0" prefWidth="288.0" promptText="Email Address">
+                        <TextField fx:id="emailTextField" prefHeight="30.0" prefWidth="288.0"
+                                   promptText="Email Address">
                             <font>
-                                <Font name="Cambria" size="14.0" />
+                                <Font name="Cambria" size="14.0"/>
                             </font>
                         </TextField>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="38.0" prefWidth="287.0">
                     <children>
-                        <PasswordField fx:id="passwordTextField" prefHeight="30.0" prefWidth="320.0" promptText="Password">
+                        <PasswordField fx:id="passwordTextField" prefHeight="30.0" prefWidth="320.0"
+                                       promptText="Password">
                             <font>
-                                <Font name="Cambria" size="14.0" />
+                                <Font name="Cambria" size="14.0"/>
                             </font>
                         </PasswordField>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" prefHeight="82.0" prefWidth="287.0">
                     <children>
-                        <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerUser" prefHeight="35.0" prefWidth="110.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 15;" text="Register" textFill="WHITE">
+                        <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerUser"
+                                prefHeight="35.0" prefWidth="110.0"
+                                style="-fx-background-color: #5c0e63; -fx-background-radius: 15;" text="Register"
+                                textFill="WHITE">
                             <font>
-                                <Font name="Cambria Bold" size="19.0" />
+                                <Font name="Cambria Bold" size="19.0"/>
                             </font>
                         </Button>
                     </children>
                 </HBox>
             </children>
         </VBox>
-        <ImageView fitHeight="96.0" fitWidth="99.0" layoutX="157.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="96.0" fitWidth="99.0" layoutX="157.0" layoutY="41.0" pickOnBounds="true"
+                   preserveRatio="true">
             <image>
-                <Image url="@../../images/newAcc-logo.png" />
+                <Image url="@../../images/newAcc-logo.png"/>
             </image>
         </ImageView>
-        <TextField layoutX="-219.0" layoutY="137.0" />
+        <TextField layoutX="-219.0" layoutY="137.0"/>
     </children>
 </AnchorPane>

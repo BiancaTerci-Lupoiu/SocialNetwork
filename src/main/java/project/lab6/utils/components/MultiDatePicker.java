@@ -33,6 +33,69 @@ public class MultiDatePicker extends DatePicker {
         this.getStylesheets().add("project/lab6/css/datePicker.css");
     }
 
+    private static Set<LocalDate> getTailEndDatesToRemove(Set<LocalDate> dates, LocalDate date) {
+
+        TreeSet<LocalDate> tempTree = new TreeSet<>(dates);
+
+        tempTree.add(date);
+
+        int higher = tempTree.tailSet(date).size();
+        int lower = tempTree.headSet(date).size();
+
+        if (lower <= higher) {
+            return tempTree.headSet(date);
+        } else {
+            return tempTree.tailSet(date);
+        }
+
+    }
+
+    private static LocalDate getClosestDateInTree(TreeSet<LocalDate> dates, LocalDate date) {
+        Long lower = null;
+        Long higher = null;
+
+        if (dates.isEmpty()) {
+            return null;
+        }
+
+        if (dates.size() == 1) {
+            return dates.first();
+        }
+
+        if (dates.lower(date) != null) {
+            lower = Math.abs(DAYS.between(date, dates.lower(date)));
+        }
+        if (dates.higher(date) != null) {
+            higher = Math.abs(DAYS.between(date, dates.higher(date)));
+        }
+
+        if (lower == null) {
+            return dates.higher(date);
+        } else if (higher == null) {
+            return dates.lower(date);
+        } else if (lower <= higher) {
+            return dates.lower(date);
+        } else {
+            return dates.higher(date);
+        }
+    }
+
+    private static Set<LocalDate> getRangeGaps(LocalDate min, LocalDate max) {
+        Set<LocalDate> rangeGaps = new LinkedHashSet<>();
+
+        if (min == null || max == null) {
+            return rangeGaps;
+        }
+
+        LocalDate lastDate = min.plusDays(1);
+        while (lastDate.isAfter(min) && lastDate.isBefore(max)) {
+            rangeGaps.add(lastDate);
+            lastDate = lastDate.plusDays(1);
+
+        }
+        return rangeGaps;
+    }
+
     private void withRangeSelectionMode() {
         EventHandler<MouseEvent> mouseClickedEventHandler = (MouseEvent clickEvent) -> {
             if (clickEvent.getButton() == MouseButton.PRIMARY) {
@@ -58,12 +121,10 @@ public class MultiDatePicker extends DatePicker {
             clickEvent.consume();
         };
 
-        super.setDayCellFactory((DatePicker param) -> new DateCell()
-        {
+        super.setDayCellFactory((DatePicker param) -> new DateCell() {
 
             @Override
-            public void updateItem(LocalDate item, boolean empty)
-            {
+            public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
 
                 //...
@@ -134,13 +195,10 @@ public class MultiDatePicker extends DatePicker {
 
         EventHandler<MouseEvent> mouseClickedEventHandler = (MouseEvent clickEvent) ->
         {
-            if (clickEvent.getButton() == MouseButton.PRIMARY)
-            {
-                if (!this.selectedDates.contains(super.getValue()))
-                {
+            if (clickEvent.getButton() == MouseButton.PRIMARY) {
+                if (!this.selectedDates.contains(super.getValue())) {
                     this.selectedDates.add(super.getValue());
-                } else
-                {
+                } else {
                     this.selectedDates.remove(super.getValue());
 
                     super.setValue(getClosestDateInTree(new TreeSet<>(this.selectedDates), super.getValue()));
@@ -152,112 +210,30 @@ public class MultiDatePicker extends DatePicker {
             clickEvent.consume();
         };
 
-        super.setDayCellFactory((DatePicker param) -> new DateCell()
-        {
+        super.setDayCellFactory((DatePicker param) -> new DateCell() {
             @Override
-            public void updateItem(LocalDate item, boolean empty)
-            {
+            public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
 
                 //...
-                if (item != null && !empty)
-                {
+                if (item != null && !empty) {
                     //...
                     addEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
-                } else
-                {
+                } else {
                     //...
                     removeEventHandler(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
                 }
 
-                if (selectedDates.contains(item))
-                {
+                if (selectedDates.contains(item)) {
 
                     setStyle("-fx-background-color: rgba(3, 169, 244, 0.7);");
 
-                } else
-                {
+                } else {
                     setStyle(null);
 
                 }
             }
         });
 
-    }
-
-    private static Set<LocalDate> getTailEndDatesToRemove(Set<LocalDate> dates, LocalDate date)
-    {
-
-        TreeSet<LocalDate> tempTree = new TreeSet<>(dates);
-
-        tempTree.add(date);
-
-        int higher = tempTree.tailSet(date).size();
-        int lower = tempTree.headSet(date).size();
-
-        if (lower <= higher)
-        {
-            return tempTree.headSet(date);
-        } else {
-            return tempTree.tailSet(date);
-        }
-
-    }
-
-    private static LocalDate getClosestDateInTree(TreeSet<LocalDate> dates, LocalDate date)
-    {
-        Long lower = null;
-        Long higher = null;
-
-        if (dates.isEmpty())
-        {
-            return null;
-        }
-
-        if (dates.size() == 1)
-        {
-            return dates.first();
-        }
-
-        if (dates.lower(date) != null)
-        {
-            lower = Math.abs(DAYS.between(date, dates.lower(date)));
-        }
-        if (dates.higher(date) != null)
-        {
-            higher = Math.abs(DAYS.between(date, dates.higher(date)));
-        }
-
-        if (lower == null)
-        {
-            return dates.higher(date);
-        } else if (higher == null)
-        {
-            return dates.lower(date);
-        } else if (lower <= higher)
-        {
-            return dates.lower(date);
-        } else {
-            return dates.higher(date);
-        }
-    }
-
-    private static Set<LocalDate> getRangeGaps(LocalDate min, LocalDate max)
-    {
-        Set<LocalDate> rangeGaps = new LinkedHashSet<>();
-
-        if (min == null || max == null)
-        {
-            return rangeGaps;
-        }
-
-        LocalDate lastDate = min.plusDays(1);
-        while (lastDate.isAfter(min) && lastDate.isBefore(max))
-        {
-            rangeGaps.add(lastDate);
-            lastDate = lastDate.plusDays(1);
-
-        }
-        return rangeGaps;
     }
 }

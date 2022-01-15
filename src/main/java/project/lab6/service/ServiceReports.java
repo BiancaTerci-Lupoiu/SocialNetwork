@@ -199,8 +199,8 @@ public class ServiceReports {
                     for (var message : chat.getMessages()) {
                         if (message.getUserFromInfo().getUser().getId().equals(idLoggedUser))
                             continue;
-                        if(message.getDate().isBefore(startDate.atStartOfDay()) ||
-                           message.getDate().isAfter(endDate.atStartOfDay()))
+                        if (message.getDate().isBefore(startDate.atStartOfDay()) ||
+                                message.getDate().isAfter(endDate.atStartOfDay()))
                             continue;
                         pageContentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
                         pageContentStream.showText(message.getUserFromInfo().getNickname());

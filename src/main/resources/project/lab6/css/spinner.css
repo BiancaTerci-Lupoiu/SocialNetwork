@@ -2,16 +2,18 @@
 .spinner .increment-arrow-button {
     -fx-background-color: #5c0e63;
 }
+
 .spinner .increment-arrow {
     -fx-background-color: white;
     -fx-fill: white;
 }
+
 .spinner .decrement-arrow-button {
     -fx-background-color: #5c0e63;
 }
 
-.spinner .decrement-arrow{
-    -fx-background-color:white;
+.spinner .decrement-arrow {
+    -fx-background-color: white;
     -fx-fill: white;
 }
 

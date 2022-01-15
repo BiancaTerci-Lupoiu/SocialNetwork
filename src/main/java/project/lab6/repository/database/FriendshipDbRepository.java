@@ -29,7 +29,7 @@ public class FriendshipDbRepository extends AbstractDbRepository<Tuple<Long, Lon
 
     @Override
     public Page<Friendship> findAll(Pageable pageable) {
-        return genericFindAllPaged(pageable,"select * from friendships ORDER BY id_user1,id_user2 LIMIT ? OFFSET ?");
+        return genericFindAllPaged(pageable, "select * from friendships ORDER BY id_user1,id_user2 LIMIT ? OFFSET ?");
     }
 
     /**

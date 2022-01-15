@@ -17,9 +17,7 @@ import java.time.LocalTime;
 public class CreateEventController extends Controller implements SetterServiceEvents {
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-    private ServiceEvents serviceEvents;
     private final EventForUserDTO event;
-
     @FXML
     public TextArea descriptionTextArea;
     @FXML
@@ -34,6 +32,7 @@ public class CreateEventController extends Controller implements SetterServiceEv
     public Spinner<Integer> hoursSpinner;
     @FXML
     public Button backToProfileButton;
+    private ServiceEvents serviceEvents;
 
 
     public CreateEventController(Long idLoggedUser, MainViewController mainViewController, EventForUserDTO event) {

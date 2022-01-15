@@ -1,16 +1,17 @@
 .table-view .virtual-flow .scroll-bar:vertical,
 .table-view .virtual-flow .scroll-bar:vertical .track,
-.table-view .virtual-flow .scroll-bar:vertical .track-background{
+.table-view .virtual-flow .scroll-bar:vertical .track-background {
     -fx-background-color: transparent;
 }
+
 .table-view .virtual-flow .scroll-bar:vertical .increment-button,
 .table-view .virtual-flow .scroll-bar:vertical .decrement-button {
     -fx-opacity: 0;
     -fx-padding: 2;
 }
 
-.table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  linear-gradient(to bottom, #5c0e63, rgb(130, 21, 139));
+.table-view .virtual-flow .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #5c0e63, rgb(130, 21, 139));
 }
 
 .scroll-bar:vertical {

@@ -19,10 +19,8 @@ import java.io.File;
 public class ActivityReportController extends Controller implements SetterServiceReports {
 
 
-    private ServiceReports serviceReports;
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-
     @FXML
     public AnchorPane mainAnchorPane;
     @FXML
@@ -31,6 +29,7 @@ public class ActivityReportController extends Controller implements SetterServic
     public Button chooseFileButton;
     @FXML
     public MultiDatePicker multiDatePicker;
+    private ServiceReports serviceReports;
 
     public ActivityReportController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;

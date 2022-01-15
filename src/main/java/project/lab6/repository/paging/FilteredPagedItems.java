@@ -7,21 +7,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FilteredPagedItems<T> implements PagedItems<T> {
-    private record Location(Pageable pageable, int elementsNeeded) {
-    }
-
-    private record ItemsGet<T>(List<T> items, Location endLocation) {
-    }
-
-    private Location startLocation;
-    private Location endLocation;
     private final PageSupplier<T> supplier;
     private final Predicate<T> filter;
     private final int pageSize;
-
     //Saves all the previous location seen for the getPreviousItems functionality
     private final Stack<Location> locations = new Stack<>();
-
+    private Location startLocation;
+    private Location endLocation;
     public FilteredPagedItems(int size, PageSupplier<T> supplier, Predicate<T> filter) {
         this.supplier = supplier;
         this.filter = filter;
@@ -83,5 +75,11 @@ public class FilteredPagedItems<T> implements PagedItems<T> {
         var items = getItems(startLocation);
         endLocation = items.endLocation();
         return items.items();
+    }
+
+    private record Location(Pageable pageable, int elementsNeeded) {
+    }
+
+    private record ItemsGet<T>(List<T> items, Location endLocation) {
     }
 }

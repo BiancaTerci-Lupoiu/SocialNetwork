@@ -9,8 +9,8 @@ import java.util.Set;
  * @param <Resource> the resource that needs to be observed
  */
 public class ObservableResource<Resource> implements Observable<Resource> {
-    private Resource resource;
     Set<Observer<Resource>> observerSet = new HashSet<>();
+    private Resource resource;
 
     public ObservableResource(Resource resource) {
         this.resource = resource;

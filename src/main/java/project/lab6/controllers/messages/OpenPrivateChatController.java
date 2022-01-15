@@ -24,11 +24,11 @@ import java.util.List;
 
 public class OpenPrivateChatController extends Controller implements SetterServiceFriends, SetterServiceMessages, HasTitleBar {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private ServiceFriends serviceFriends;
-    private ServiceMessages serviceMessages;
     private final Long idLoggedUser;
     private final MainChatController mainChatController;
     private final ObservableList<ChatDTO> observableList;
+    private ServiceFriends serviceFriends;
+    private ServiceMessages serviceMessages;
     @FXML
     private TextField searchField;
     @FXML

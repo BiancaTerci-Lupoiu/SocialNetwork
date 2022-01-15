@@ -34,16 +34,19 @@ import java.util.ResourceBundle;
 public class ProfileController extends Controller implements Initializable, SetterServiceFriends, SetterServiceEvents {
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
-    private ServiceFriends serviceFriends;
-    private PagedItems<EventForUserDTO> pagedEvents;
     @FXML
     public Button notificationsButton;
     @FXML
     public ComboBox<String> comboBoxReports;
     @FXML
     public Button createEventButton;
-    private ServiceEvents serviceEvents;
+    @FXML
+    public Circle circle;
+    @FXML
+    public ListView<EventForUserDTO> eventsListView;
+    @FXML
+    public Button changePictureButton;
+    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
     @FXML
     Label labelHello;
     @FXML
@@ -52,12 +55,9 @@ public class ProfileController extends Controller implements Initializable, Sett
     Label labelLastName;
     @FXML
     Label labelEmail;
-    @FXML
-    public Circle circle;
-    @FXML
-    public ListView<EventForUserDTO> eventsListView;
-    @FXML
-    public Button changePictureButton;
+    private ServiceFriends serviceFriends;
+    private PagedItems<EventForUserDTO> pagedEvents;
+    private ServiceEvents serviceEvents;
 
     public ProfileController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;

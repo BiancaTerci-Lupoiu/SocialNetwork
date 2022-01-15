@@ -35,6 +35,7 @@ public class AddFriendsController extends Controller implements SetterServiceFri
     private TableColumn<UserRecord, String> nameColumn;
     @FXML
     private TableColumn<UserRecord, Button> addFriendColumn;
+    private PagedItems<User> pagedItems;
 
     public AddFriendsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -62,9 +63,6 @@ public class AddFriendsController extends Controller implements SetterServiceFri
         });
         return addFriendButton;
     }
-
-
-    private PagedItems<User> pagedItems;
 
     private List<UserRecord> getUserRecordFromUsers(List<User> users) {
         List<UserRecord> list = new ArrayList<>();

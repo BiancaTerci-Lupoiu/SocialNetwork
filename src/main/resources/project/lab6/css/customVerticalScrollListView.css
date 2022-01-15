@@ -1,16 +1,17 @@
 .list-view .virtual-flow .scroll-bar:vertical,
 .list-view .virtual-flow .scroll-bar:vertical .track,
-.list-view .virtual-flow .scroll-bar:vertical .track-background{
+.list-view .virtual-flow .scroll-bar:vertical .track-background {
     -fx-background-color: transparent;
 }
+
 .list-view .virtual-flow .scroll-bar:vertical .increment-button,
 .list-view .virtual-flow .scroll-bar:vertical .decrement-button {
     -fx-opacity: 0;
     -fx-padding: 2;
 }
 
-.list-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  linear-gradient(to bottom, #5c0e63, rgb(130, 21, 139));
+.list-view .virtual-flow .scroll-bar:vertical .thumb {
+    -fx-background-color: linear-gradient(to bottom, #5c0e63, rgb(130, 21, 139));
 }
 
 .scroll-bar:vertical {

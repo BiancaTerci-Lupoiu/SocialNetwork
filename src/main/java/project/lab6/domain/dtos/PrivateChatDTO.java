@@ -2,11 +2,9 @@ package project.lab6.domain.dtos;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import project.lab6.service.ServiceEvents;
 import project.lab6.service.ServiceException;
 import project.lab6.utils.Lazy;
 
-import java.io.IOException;
 import java.util.List;
 
 public class PrivateChatDTO extends ChatDTO {

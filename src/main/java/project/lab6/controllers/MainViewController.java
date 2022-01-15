@@ -47,7 +47,7 @@ public class MainViewController extends Controller implements Initializable, Has
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(region == null)
+        if (region == null)
             return;
         if (horizontalBox.getChildren().size() > 1)
             horizontalBox.getChildren().set(1, region);

@@ -4,9 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import project.lab6.utils.Lazy;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 public abstract class ChatDTO {
@@ -76,11 +74,11 @@ public abstract class ChatDTO {
     /**
      * @return the last messageDTO from the chat, or null if there are no messages in chat
      */
-    public MessageDTO getLastMessage(){
-        List<MessageDTO> allMessagesDTO=getMessages();
-        if(allMessagesDTO.isEmpty())
+    public MessageDTO getLastMessage() {
+        List<MessageDTO> allMessagesDTO = getMessages();
+        if (allMessagesDTO.isEmpty())
             return null;
-        return allMessagesDTO.get(allMessagesDTO.size()-1);
+        return allMessagesDTO.get(allMessagesDTO.size() - 1);
     }
 
     /**

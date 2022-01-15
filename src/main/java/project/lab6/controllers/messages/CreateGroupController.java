@@ -27,12 +27,12 @@ import java.util.List;
 
 public class CreateGroupController extends Controller implements SetterServiceMessages, SetterServiceFriends, HasTitleBar {
     private final ObservableList<UserRecord> usersRecord = FXCollections.observableArrayList();
-    private ServiceMessages serviceMessages;
-    private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     private final ObservableList<ChatDTO> observableList;
     private final MainChatController mainChatController;
     private final List<Long> participants = new ArrayList<>();
+    private ServiceMessages serviceMessages;
+    private ServiceFriends serviceFriends;
     @FXML
     private TableColumn<UserRecord, String> name;
     @FXML

@@ -23,12 +23,8 @@ import java.io.File;
 public class FriendMessagesReportController extends Controller implements SetterServiceReports, SetterServiceFriends {
 
 
-    private ServiceReports serviceReports;
-    private ServiceFriends serviceFriends;
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-    ObservableList<Friend> friendsObservableList = FXCollections.observableArrayList();
-
     @FXML
     public ListView<Friend> friendsListView;
     @FXML
@@ -37,6 +33,9 @@ public class FriendMessagesReportController extends Controller implements Setter
     public Button searchFriendsButton;
     @FXML
     public MultiDatePicker multiDatePicker;
+    ObservableList<Friend> friendsObservableList = FXCollections.observableArrayList();
+    private ServiceReports serviceReports;
+    private ServiceFriends serviceFriends;
 
     public FriendMessagesReportController(Long idLoggedUser, MainViewController mainViewController) {
         this.idLoggedUser = idLoggedUser;
@@ -101,13 +100,13 @@ public class FriendMessagesReportController extends Controller implements Setter
             friendName.setStyle("-fx-font-family: Cambria;-fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 16");
             mainHBox.getChildren().setAll(friendName);
             this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;");
-            this.setOnMouseClicked(someEvent->{
+            this.setOnMouseClicked(someEvent -> {
                 friendName.setStyle("-fx-text-fill: white;-fx-font-family: Cambria;-fx-font-size: 16");
                 this.setStyle("-fx-background-color: #76117d;-fx-border-radius: 10;-fx-background-radius: 10");
             });
             this.focusedProperty().addListener((observable, oldValue, newValue) ->
             {
-                if (oldValue && !newValue ){
+                if (oldValue && !newValue) {
                     friendName.setStyle("-fx-font-family: Cambria;-fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 16");
                     this.setStyle("-fx-background-color: transparent;-fx-border-color: transparent;");
                 }

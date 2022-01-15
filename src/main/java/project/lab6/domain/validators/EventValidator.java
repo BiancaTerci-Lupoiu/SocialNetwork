@@ -13,8 +13,8 @@ public class EventValidator implements Validator<Event> {
             errors += "invalid title!\n";
         if (entity.getIdUserOwner() == null)
             errors += "invalid owner id!\n";
-        if(entity.getDate()==null || entity.getDate().isBefore(LocalDateTime.now()))
-            errors+="invalid date! (it should be a future date)\n";
+        if (entity.getDate() == null || entity.getDate().isBefore(LocalDateTime.now()))
+            errors += "invalid date! (it should be a future date)\n";
         if (!errors.isEmpty())
             throw new ValidationException(errors);
     }

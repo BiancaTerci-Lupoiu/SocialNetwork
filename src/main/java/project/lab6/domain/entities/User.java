@@ -181,7 +181,7 @@ public class User extends Entity<Long> {
         Images.saveImage("users", getId(), imagePath);
     }
 
-    public void deleteImage() throws IOException{
-        Images.deleteImage("users",getId());
+    public void deleteImage() throws IOException {
+        Images.deleteImage("users", getId());
     }
 }

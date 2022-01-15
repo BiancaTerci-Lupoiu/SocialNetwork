@@ -6,6 +6,7 @@
     -fx-border-radius: 0 5 5 0;
     -fx-background-radius: 0 5 5 0;
 }
+
 .date-picker .arrow-button:hover {
     -fx-background-color: #76117d;
 }
@@ -15,7 +16,7 @@
 }
 
 .date-picker .cell {
-    -fx-background-color:  #ccccff;
+    -fx-background-color: #ccccff;
     -fx-base: #ccccff;
 }
 
@@ -28,18 +29,22 @@
     -fx-text-fill: white;
 }
 
-.date-picker-popup  {
+.date-picker-popup {
     -fx-border-color: transparent;
 }
+
 .date-picker-popup .month-year-pane {
     -fx-background-color: #5c0e63;
 }
+
 .date-picker-popup .month-year-pane .label {
     -fx-text-fill: white;
 }
+
 .date-picker-popup .week-number-cell {
     -fx-text-fill: #5c0e63;
 }
+
 .date-picker-popup .spinner .button .left-arrow,
 .date-picker-popup .spinner .button .right-arrow {
     -fx-background-color: white;

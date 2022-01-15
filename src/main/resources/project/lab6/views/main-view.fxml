@@ -4,7 +4,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="horizontalBox" prefHeight="500.0" prefWidth="600.0"
-      xmlns="http://javafx.com/javafx/11.0.2" fx:controller="project.lab6.controllers.MainViewController" stylesheets="@../css/handButton.css">
+      xmlns="http://javafx.com/javafx/11.0.2" fx:controller="project.lab6.controllers.MainViewController"
+      stylesheets="@../css/handButton.css">
     <VBox maxHeight="Infinity" minWidth="150" stylesheets="@../css/main-view.css">
         <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#openProfileView" text="Profile" VBox.vgrow="ALWAYS"
                 alignment="CENTER_LEFT">

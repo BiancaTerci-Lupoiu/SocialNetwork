@@ -1,4 +1,5 @@
 package project.lab6.repository.paging;
+
 import java.util.List;
 
 public class PageImplementation<T> implements Page<T> {

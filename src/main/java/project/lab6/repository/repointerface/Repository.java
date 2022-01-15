@@ -29,6 +29,7 @@ public interface Repository<ID, E extends Entity<ID>> {
     List<E> findAll();
 
     Page<E> findAll(Pageable pageable);
+
     /**
      * @param entity entity must be not null
      * @return the entity with the id completed or null if the operation failed

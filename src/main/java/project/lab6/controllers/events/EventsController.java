@@ -2,7 +2,6 @@ package project.lab6.controllers.events;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -21,14 +20,13 @@ import java.util.function.Consumer;
 
 public class EventsController extends Controller implements SetterServiceEvents {
     private final Long idLoggedUser;
-    private ServiceEvents serviceEvents;
-    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
-    private PagedItems<EventForUserDTO> pagedEvents;
-
     @FXML
     public ComboBox<String> comboBoxEvents;
     @FXML
     public ListView<EventForUserDTO> eventsListView;
+    ObservableList<EventForUserDTO> eventsForUserDTOList = FXCollections.observableArrayList();
+    private ServiceEvents serviceEvents;
+    private PagedItems<EventForUserDTO> pagedEvents;
 
     public EventsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;
@@ -60,15 +58,15 @@ public class EventsController extends Controller implements SetterServiceEvents 
         if (status == null)
             status = "All Events";
         if (status.equals("Subscribed")) {
-            pagedEvents=serviceEvents.getSubscribedEvents(idLoggedUser,true);
+            pagedEvents = serviceEvents.getSubscribedEvents(idLoggedUser, true);
             eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
         if (status.equals("Discover Events")) {
-            pagedEvents=serviceEvents.getSubscribedEvents(idLoggedUser,false);
+            pagedEvents = serviceEvents.getSubscribedEvents(idLoggedUser, false);
             eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
         if (status.equals("All Events")) {
-            pagedEvents=serviceEvents.getAllEvents(idLoggedUser);
+            pagedEvents = serviceEvents.getAllEvents(idLoggedUser);
             eventsForUserDTOList.setAll(pagedEvents.getNextItems());
         }
     }
@@ -78,14 +76,14 @@ public class EventsController extends Controller implements SetterServiceEvents 
     }
 
     public void previousPage() {
-        var previousPageItems=pagedEvents.getPreviousItems();
-        if(!previousPageItems.isEmpty())
+        var previousPageItems = pagedEvents.getPreviousItems();
+        if (!previousPageItems.isEmpty())
             eventsForUserDTOList.setAll(previousPageItems);
     }
 
     public void nextPage() {
-        var nextPageItems=pagedEvents.getNextItems();
-        if(!nextPageItems.isEmpty())
+        var nextPageItems = pagedEvents.getNextItems();
+        if (!nextPageItems.isEmpty())
             eventsForUserDTOList.setAll(nextPageItems);
     }
 

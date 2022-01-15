@@ -1,11 +1,8 @@
 package project.lab6.factory;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import project.lab6.config.ApplicationContext;
 import project.lab6.controllers.Controller;
-import project.lab6.controllers.HasTitleBar;
 import project.lab6.domain.Tuple;
 import project.lab6.domain.TupleWithIdChatUser;
 import project.lab6.domain.TupleWithIdUserEvent;
@@ -26,8 +23,6 @@ import project.lab6.service.ServiceFriends;
 import project.lab6.service.ServiceMessages;
 import project.lab6.service.ServiceReports;
 import project.lab6.utils.CustomLoader;
-
-import java.io.IOException;
 
 /**
  * Factory class to construct the skeleton of the application

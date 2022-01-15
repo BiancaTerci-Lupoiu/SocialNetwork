@@ -108,7 +108,7 @@ public class ChatDbRepository extends AbstractDbRepository<Long, Chat> implement
 
     @Override
     public Page<Chat> findAll(Pageable pageable) {
-        return genericFindAllPaged(pageable,"select * from chats ORDER BY id LIMIT ? OFFSET ?");
+        return genericFindAllPaged(pageable, "select * from chats ORDER BY id LIMIT ? OFFSET ?");
     }
 
     @Override

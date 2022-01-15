@@ -33,6 +33,7 @@ public class UserDbRepository extends AbstractDbRepository<Long, User> implement
     public Page<User> findAll(Pageable pageable) {
         return genericFindAllPaged(pageable, "SELECT * FROM users ORDER BY id LIMIT ? OFFSET ?");
     }
+
     /**
      * @param id -the id of the user to be returned
      *           id must not be null

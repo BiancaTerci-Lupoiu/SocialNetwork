@@ -24,9 +24,7 @@ import java.util.Objects;
 
 public class RequestsController extends Controller implements SetterServiceFriends {
     private final Long idLoggedUser;
-    private ServiceFriends serviceFriends;
     ObservableList<UserFriend> modelFriends = FXCollections.observableArrayList();
-
     @FXML
     ComboBox<String> comboBoxStatus;
     @FXML
@@ -43,6 +41,7 @@ public class RequestsController extends Controller implements SetterServiceFrien
     TableColumn<UserFriend, Button> buttonDeny;
     @FXML
     TableView<UserFriend> tableViewRequests;
+    private ServiceFriends serviceFriends;
 
     public RequestsController(Long idLoggedUser) {
         this.idLoggedUser = idLoggedUser;

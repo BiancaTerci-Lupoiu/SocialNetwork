@@ -2,7 +2,6 @@ package project.lab6.controllers.events;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,7 +13,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import project.lab6.controllers.Controller;
 import project.lab6.controllers.MainViewController;
-import project.lab6.controllers.ProfileController;
 import project.lab6.domain.dtos.Notification;
 import project.lab6.service.ServiceEvents;
 import project.lab6.setter.SetterServiceEvents;
@@ -22,24 +20,23 @@ import project.lab6.utils.Constants;
 
 public class NotificationsController extends Controller implements SetterServiceEvents {
 
-    private ServiceEvents serviceEvents;
     private final Long idLoggedUser;
     private final MainViewController mainViewController;
-    ObservableList<Notification> notificationsObservableList= FXCollections.observableArrayList();
-
     @FXML
     public ListView<Notification> notificationsListView;
     @FXML
     public Button refreshButton;
+    ObservableList<Notification> notificationsObservableList = FXCollections.observableArrayList();
+    private ServiceEvents serviceEvents;
 
-    public NotificationsController(Long idLoggedUser,MainViewController mainViewController){
-        this.idLoggedUser=idLoggedUser;
-        this.mainViewController=mainViewController;
+    public NotificationsController(Long idLoggedUser, MainViewController mainViewController) {
+        this.idLoggedUser = idLoggedUser;
+        this.mainViewController = mainViewController;
     }
 
     @Override
     public void setServiceEvents(ServiceEvents serviceEvents) {
-        this.serviceEvents=serviceEvents;
+        this.serviceEvents = serviceEvents;
     }
 
     @Override
@@ -47,10 +44,10 @@ public class NotificationsController extends Controller implements SetterService
         return Constants.View.NOTIFICATIONS;
     }
 
-    public void initialize(){
+    public void initialize() {
         notificationsObservableList.setAll(serviceEvents.getNotification(idLoggedUser));
         notificationsListView.setItems(notificationsObservableList);
-        notificationsListView.setCellFactory(param->new CustomCellNotification());
+        notificationsListView.setCellFactory(param -> new CustomCellNotification());
     }
 
     public void refreshNotifications() {
@@ -61,15 +58,15 @@ public class NotificationsController extends Controller implements SetterService
         mainViewController.openProfileView();
     }
 
-    public static class CustomCellNotification extends ListCell<Notification>{
-        HBox mainHBox=new HBox();
-        VBox messageVBox=new VBox();
-        HBox dateHBox =new HBox();
-        Label notificationMessage=new Label();
-        Label notificationDate=new Label();
+    public static class CustomCellNotification extends ListCell<Notification> {
+        HBox mainHBox = new HBox();
+        VBox messageVBox = new VBox();
+        HBox dateHBox = new HBox();
+        Label notificationMessage = new Label();
+        Label notificationDate = new Label();
         Notification notification;
 
-        public CustomCellNotification(){
+        public CustomCellNotification() {
             super();
             mainHBox.setSpacing(20);
             mainHBox.setAlignment(Pos.CENTER_LEFT);
@@ -89,20 +86,20 @@ public class NotificationsController extends Controller implements SetterService
 
         }
 
-       @Override
-       protected void updateItem(Notification item, boolean empty) {
-           super.updateItem(item, empty);
-           if (empty) {
-               notification = null;
-               setGraphic(null);
-           } else {
-               notification = item;
-               notificationMessage.setText(notification.getMessage());
-               notificationDate.setText(notification.getTimeOfNotifying().format(Constants.DATETIME_FORMATTER));
-               setGraphic(mainHBox);
-           }
-       }
+        @Override
+        protected void updateItem(Notification item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty) {
+                notification = null;
+                setGraphic(null);
+            } else {
+                notification = item;
+                notificationMessage.setText(notification.getMessage());
+                notificationDate.setText(notification.getTimeOfNotifying().format(Constants.DATETIME_FORMATTER));
+                setGraphic(mainHBox);
+            }
+        }
 
-   }
+    }
 
 }
