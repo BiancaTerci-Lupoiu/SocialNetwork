@@ -63,9 +63,9 @@ public class OpenPrivateChatController extends Controller implements SetterServi
         addParticipantButton.setOnAction(event ->
         {
             Chat chat = serviceMessages.getOrCreatePrivateChatBetweenUsers(idLoggedUser, id);
-            observableList.add(0, serviceMessages.getChatDTO(chat.getId()));
+            if (observableList.filtered(x -> x.getIdChat().equals(chat.getId())).isEmpty())
+                observableList.add(0, serviceMessages.getChatDTO(chat.getId()));
             mainChatController.setConversationView(chat.getId());
-            //todo
             getStage().close();
         });
         return addParticipantButton;
