@@ -24,7 +24,7 @@
             </DropShadow>
          </effect>
       </Label>
-      <ListView fx:id="notificationsListView" layoutX="27.0" layoutY="150.0" prefHeight="276.0" prefWidth="398.0" style="-fx-background-color: #ccccff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #5c0e63; -fx-padding: 0 0 5 0;" />
+      <ListView fx:id="notificationsListView" layoutX="21.0" layoutY="150.0" prefHeight="276.0" prefWidth="404.0" style="-fx-background-color: #ccccff; -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #5c0e63; -fx-padding: 0 0 5 0;" stylesheets="@../../css/listViewNoHorizontalScroll.css" />
       <Button fx:id="refreshButton" layoutX="39.0" layoutY="440.0" mnemonicParsing="false" onAction="#refreshNotifications" prefHeight="28.0" prefWidth="74.0" style="-fx-background-color: #5c0e63; -fx-background-radius: 5; -fx-border-radius: 5;" text="Refresh" textFill="WHITE">
          <font>
             <Font name="Cambria" size="14.0" />
