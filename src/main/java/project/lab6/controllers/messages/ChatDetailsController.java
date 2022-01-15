@@ -143,21 +143,24 @@ public class ChatDetailsController extends Controller implements Initializable, 
         private final HBox horizontalBox = new HBox();
         private final Label nicknameLabel = new Label();
         private final TextField changeTextField = new TextField();
-        private final ImageView userImage = new ImageView();
         private final Button changeNickname = new Button("Change nickname");
         private final ServiceMessages serviceMessages;
         private final ObservableResource<ChatDTO> observableChatDTO;
         private UserChatInfoDTO userInfo = null;
+        Image userImage;
+        Circle circle = new Circle();
 
         public CustomCellChat(ServiceMessages serviceMessages, ObservableResource<ChatDTO> observableChatDTO) {
             this.serviceMessages = serviceMessages;
             this.observableChatDTO = observableChatDTO;
-            userImage.setFitWidth(50);
-            userImage.setFitHeight(50);
+
+            circle.setRadius(25);
+            circle.setStroke(Color.web("#5c0e63"));
+            circle.setStrokeWidth(2);
             nicknameLabel.setStyle("-fx-font-family: Cambria Bold; -fx-text-fill: #5c0e63; -fx-background-color: transparent; -fx-font-size: 20");
             setStyle("-fx-background-color: #ccccff;-fx-border-color: transparent");
             changeNickname.setStyle("-fx-background-color: #5c0e63;-fx-font-family: Cambria;-fx-font-size: 14;-fx-text-fill: white;-fx-background-radius: 10;-fx-border-radius: 10");
-            horizontalBox.getChildren().addAll(userImage, nicknameLabel);
+            horizontalBox.getChildren().addAll(circle, nicknameLabel);
             horizontalBox.setAlignment(Pos.CENTER_LEFT);
             VBox box = new VBox();
             box.setAlignment(Pos.CENTER_RIGHT);
@@ -165,7 +168,7 @@ public class ChatDetailsController extends Controller implements Initializable, 
             rootAnchor.getChildren().addAll(horizontalBox, box);
             box.setPrefHeight(50);
             AnchorPane.setRightAnchor(box, 20d);
-            //AnchorPane.setTopAnchor(changeNickname, 25d);
+
             changeTextField.setOnKeyPressed(keyEvent ->
             {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -202,7 +205,8 @@ public class ChatDetailsController extends Controller implements Initializable, 
                 setGraphic(null);
             } else {
                 nicknameLabel.setText(item.getNickname());
-                userImage.setImage(new Image("project/lab6/images/icon-chat-basic.png"));
+                userImage = item.getUser().getImage();
+                circle.setFill(new ImagePattern(userImage));
                 setGraphic(rootAnchor);
             }
         }
