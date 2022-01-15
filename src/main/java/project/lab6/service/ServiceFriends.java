@@ -133,7 +133,7 @@ public class ServiceFriends {
      */
     public List<User> searchUsersByName(User loggedUser, String searchName) {
         String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
-        List<User> usersWithName = StreamSupport.stream(repoUsers.findAll().spliterator(), false)
+        return repoUsers.findAll().stream()
                 .filter(user -> {
                     String lastNameFirstName = (user.getLastName() + " " + user.getFirstName()).toLowerCase();
                     String firstNameLastName = (user.getFirstName() + " " + user.getLastName()).toLowerCase();
@@ -142,7 +142,6 @@ public class ServiceFriends {
                                     || firstNameLastName.startsWith(name));
                 })
                 .collect(Collectors.toList());
-        return usersWithName;
     }
 
     /**
@@ -168,7 +167,7 @@ public class ServiceFriends {
      * otherwise returns false (id already exists)
      */
     public boolean addUser(String email, String firstName, String lastName, String password) {
-        String salt = generateSalt(); //generam un salt random pentru acest user
+        String salt = generateSalt(); //generate random salt for this user
         String hashPassword = generateHashPassword(password, salt);
         User user = new User(email, firstName, lastName, hashPassword, salt);
         user = repoUsers.save(user);
@@ -179,9 +178,7 @@ public class ServiceFriends {
      * @return all the users
      */
     public Map<Long, User> getAllUsers() throws IOException {
-        // trebuie sa completam si listele de prietenie
         Map<Long, User> usersWithFriends = new HashMap<>();
-        // facem copie la prieteni pt a nu aparea duplicate in cazul repo in memory/file
         for (User user : repoUsers.findAll()) {
             User newUser = new User(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
                     user.getHashPassword(), user.getSalt());
@@ -206,14 +203,14 @@ public class ServiceFriends {
         User user = repoUsers.findOne(id);
         if (user == null)
             throw new ServiceException("No user with id=" + id);
-        StreamSupport.stream(repoFriendships.findAll().spliterator(), false)
+        repoFriendships.findAll().stream()
                 .filter(x -> x.getId().getLeft().equals(user.getId()))
                 .map(x -> new Friend(repoUsers.findOne(x.getId().getRight()),
                         x.getDate(),
                         x.getStatus().toDirectedStatus(true)))
                 .forEach(user::addFriend);
 
-        StreamSupport.stream(repoFriendships.findAll().spliterator(), false)
+        repoFriendships.findAll().stream()
                 .filter(x -> x.getId().getRight().equals(user.getId()))
                 .map(x -> new Friend(repoUsers.findOne(x.getId().getLeft()),
                         x.getDate(),
@@ -243,7 +240,7 @@ public class ServiceFriends {
     public List<Friend> searchFriendsByName(Long idLoggedUser, String searchName) {
         String name = searchName.trim().replaceAll("[ ]+", " ").toLowerCase();
         User user = getUserWithFriends(idLoggedUser);
-        List<Friend> friendsWithName = StreamSupport.stream(user.getFriends().spliterator(), false)
+        return StreamSupport.stream(user.getFriends().spliterator(), false)
                 .filter(friend -> friend.getStatus().equals(DirectedStatus.APPROVED))
                 .filter(friend -> {
                     User userFriend = friend.getUser();
@@ -253,7 +250,6 @@ public class ServiceFriends {
                             || firstNameLastName.startsWith(name));
                 })
                 .collect(Collectors.toList());
-        return friendsWithName;
 
     }
 
@@ -325,7 +321,6 @@ public class ServiceFriends {
      * @throws ServiceException         if the users does not exist
      */
     public boolean addFriendship(Long id1, Long id2, LocalDate date, Status status) {
-        //verifica daca exista userii
         Friendship friendship = repoFriendships.findOne(new Tuple<>(id2, id1));
         if (friendship != null)
             if (friendship.getStatus() == Status.APPROVED)
@@ -378,7 +373,6 @@ public class ServiceFriends {
      * @return a list with all the communities
      */
     private List<Community> findAllCommunities() throws IOException {
-        // pastram toti userii si marcam daca i am vizitat sau nu
         Map<Long, Boolean> nodes = new HashMap<>();
 
         Map<Long, User> usersWithFriends = getAllUsers();
