@@ -29,3 +29,4 @@ Mai jos sunt cateva printscreen-uri ale aplicatiei:
 ![proiectMAP6](https://user-images.githubusercontent.com/100185123/160125354-f9bab366-5e3e-41a8-8460-d8cc6a0365a0.png)
 ![proiectMAP8](https://user-images.githubusercontent.com/100185123/160125363-9ca9a7bf-9de4-4e23-88ad-7f7e0bfda033.png)
 ![proiectMAP7](https://user-images.githubusercontent.com/100185123/160125365-c783dcce-f3b2-473b-89e0-7ba79d3e248b.png)
+![proiectMAP9](https://user-images.githubusercontent.com/100185123/160125685-5ab3ac3d-beff-4d35-a6d1-d9c94dbd165a.png)
